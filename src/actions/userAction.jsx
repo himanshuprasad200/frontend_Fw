@@ -41,7 +41,7 @@ import {
   USER_REVIEW_SUCCESS,
 } from "../constants/userConstant";
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://backend-i86g.onrender.com';
+const API_URL = 'https://backend-i86g.onrender.com';
 
 //Login User
 export const login = (email, password) => async (dispatch) => {

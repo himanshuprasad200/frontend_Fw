@@ -1,42 +1,45 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+body {
+  font-family: Arial, sans-serif;
+  background-color: rgb(235, 237, 237);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* App.css */
+.profile-img-container {
+  z-index: 2;
+  position: fixed;
+  right: 5.4vmax;
+  top: 16px;
+}
+
+.profile-img {
+  width: 50px; /* Adjust size as needed */
+  height: 50px;
+  border-radius: 100%;
+ 
+}
+
+@media (max-width: 768px) {
+  .profile-img-container {
+    right: 3.6vmax;
+    top: 16px;
   }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.greenColor{
+  color: green !important;
 }
 
-.card {
-  padding: 2em;
+.redColor{
+  color: red !important;
 }
 
-.read-the-docs {
-  color: #888;
+.orangeColor{
+  color: orange !important;;
 }

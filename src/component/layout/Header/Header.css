@@ -1,0 +1,214 @@
+/* Header.css */
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center; 
+  padding: 1rem;
+  background-color: #12151b;
+  color: #fff;
+  position: fixed; 
+  top: 0;         
+  left: 0;
+  width: 100%; 
+  z-index: 2;
+}
+
+.navbar-logo a > img {
+  height: 50px;
+}
+
+.navbar-links {
+  display: flex;
+  list-style: none;
+}
+
+.navbar-links li {
+  margin: 0 1rem;
+}
+
+.navbar-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 20px;
+  font-family: "Roboto";
+}
+
+.navbar-links a:hover {
+  color: #1772eb;
+}
+
+.navbar-icons {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-icons a {
+  color: #fff;
+}
+
+.navbar-icons a:hover {
+  color: #1772eb;
+}
+
+.navbar-icon {
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
+.mobile-menu-icon {
+  display: none;
+  cursor: pointer;
+}
+
+.navbar-links-mobile {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 85px;
+  left: 0px;
+  width: 100%;
+  background-color: #12151b;
+  padding: 1rem 0;
+}
+
+.navbar-links-mobile li {
+  margin: 1rem 0;
+}
+
+.speedDial {
+  position: fixed;
+  right: 5.7vmax;
+  top: 16px;
+}
+
+.speedDialIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 100%;
+}
+
+@media (max-width: 768px) {
+
+  .speedDial {
+    right: 3.6vmax;
+    top: 16px;
+  }
+
+  .navbar {
+    justify-content: space-between;
+  }
+
+  .navbar-logo {
+    left: 88px;
+    position: relative;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  ul li a {
+    text-decoration: none;
+    color: #fff;
+  }
+
+  .navbar-icons {
+    right: 290px;
+    font-size: 25px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-links-mobile {
+    z-index: 2;
+    align-items: center;
+    list-style: none;
+    display: flex;
+  }
+
+  .mobile-menu-icon {
+    font-size: 25px;
+    display: block;
+    position: absolute;
+    left: 1rem;
+  }
+}
+
+@media (min-width: 300px) {
+  .navbar-icons {
+    right: 275px;
+  }
+
+  .navbar-logo {
+    left: 80px;
+  }
+}
+
+@media (min-width: 360px) {
+  .navbar-icons {
+    right: 265px;
+  }
+
+  .navbar-logo {
+    left: 68px;
+  }
+}
+
+@media (min-width: 375px) {
+  .navbar-icons {
+    right: 280px;
+  }
+
+  .navbar-logo {
+    left: 68px;
+  }
+}
+
+@media (min-width: 390px) {
+  .navbar-icons {
+    right: 292px;
+  }
+
+  .navbar-logo {
+    left: 88px;
+  }
+}
+@media (min-width: 411px) {
+  .navbar-icons {
+    right: 310px;
+  }
+
+  .navbar-logo {
+    left: 88px;
+  }
+}
+@media (min-width: 414px) {
+  .navbar-icons {
+    right: 310px;
+  }
+
+  .navbar-logo {
+    left: 88px;
+  }
+}
+@media (min-width: 430px) {
+  .navbar-icons {
+    right: 330px;
+  }
+
+  .navbar-logo {
+    left: 100px;
+  }
+}
+@media (min-width: 768px) {
+  .navbar-icons {
+    display: flex;
+    right: 490px;
+  }
+
+  .navbar-logo {
+    left: 88px;
+  }
+}

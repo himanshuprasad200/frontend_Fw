@@ -62,9 +62,9 @@
 }
 
 .projectCardSpan {
-  /* display: flex;
-    justify-content: center;
-    align-items: center; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 5px;
   margin: 8px 0;
 }

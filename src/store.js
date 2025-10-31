@@ -20,6 +20,14 @@ import {
   projectReducer,
   projectsReducer,
 } from "./reducers/projectReducer";
+import {
+  allBidsReducer,
+  bidDetailsReducer,
+  bidReducer,
+  myBidsReducer,
+  newBidReducer,
+} from "./reducers/bidReducer";
+import { bidItemsReducer } from "./reducers/bidReducer";
 
 const rootReducers = combineReducers({
   //Users
@@ -36,6 +44,14 @@ const rootReducers = combineReducers({
   newProjectReview: newProjectReviewReducer,
   newProject: newProjectReducer,
   project: projectReducer,
+
+  //Bids
+  bidItems: bidItemsReducer,
+  newBid: newBidReducer,
+  myBids: myBidsReducer,
+  bidDetails: bidDetailsReducer,
+  allBids: allBidsReducer,
+  bid: bidReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

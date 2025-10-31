@@ -8,6 +8,7 @@ import Navbar from "./component/layout/Header/Header";
 import Home from "./component/Home/Home";
 import LoginSignUp from "./component/User/LoginSignUp";
 import Profile from "./component/User/Profile";
+import ProjectDetails from "./component/Project/ProjectDetails";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginSignUp/>}/>
         <Route path="account" element={<Profile/>}/>
+        <Route path="/project/:id" element={<ProjectDetails/>}/>
       </Routes>
     </>
   );

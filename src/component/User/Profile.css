@@ -1,0 +1,185 @@
+.profileContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 100px auto;
+    padding: 20px;
+    max-width: 800px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .profileContainer h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .profileContainer img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+  
+  .profileContainer a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  
+  .profileContainer a:hover {
+    background-color: #0056b3;
+  }
+  
+  .profileContainer > div {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profileContainer > div > div {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    gap: 10px;
+  }
+  
+  .profileContainer h4 {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .profileContainer p {
+    font-size: 1rem;
+    color: #777;
+  }
+  
+  .profileContainer .profileLinks {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .profileContainer .profileLinks a {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+  }
+  
+  .profileContainer .profileLinks a:hover {
+    background-color: #0056b3;
+  }
+
+  .userReviewsHeading {
+    color: #000000be;
+    font: 500 1.4vmax "Roboto";
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.226);
+    padding: 1vmax;
+    width: 20vmax;
+    margin: auto;
+    margin-bottom: 2vmax;
+  }
+
+  .reviews {
+    justify-content: center;
+    display: grid;
+    overflow-y: auto;
+    padding: 10px;
+    max-height: 500px;
+  }
+
+  .userReviewCard {
+    flex: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.226);
+    border: 1px solid rgba(56, 56, 56, 0.116);
+    background-color: white;
+    width: 30vmax;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1vmax;
+    padding: 3vmax;
+  }
+  
+  .userReviewCard > img {
+    border-radius: 100%;
+    margin: 10px;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .userReviewCard > p {
+    color: rgba(0, 0, 0, 0.836);
+    font: 600 1.2vmax "Roboto";
+  } 
+  
+  .userReviewCardComment {
+    color: rgba(0, 0, 0, 0.445);
+    font: 300 1.3vmax "Gill Sans";
+  }
+  
+  .noReviewss {
+    font: 400 1.3vmax "Gill Sans";
+    text-align: center;
+    color: #555;
+    padding: 10px;
+  }
+
+  .rating {
+  display: inline-flex;
+  gap: 2px;
+  font-size: 1.5rem;
+}
+
+.rating .star {
+  color: #e0e0e0;
+}
+
+.rating .star.filled {
+  color: #ffc107;
+}
+
+.rating .star.half {
+  position: relative;
+  color: #e0e0e0;
+}
+
+.rating .star.half::before {
+  content: '★';
+  position: absolute;
+  left: 0;
+  color: #ffc107;
+  width: 50%;
+  overflow: hidden;
+}
+  
+  @media screen and (max-width: 600px) {
+
+    .profileContainer {
+      margin-top: 10vmax
+    }
+
+    .userReviewCard > p {
+      font: 600 2vmax "Roboto";
+    } 
+
+    .userReviewCardComment {
+      font: 500 1.9vmax "Gill Sans";
+    }
+
+  }

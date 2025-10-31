@@ -2,7 +2,7 @@ import React from "react";
 import ReactStars from "react-rating-stars-component";
 import { Link } from "react-router-dom";
 import "./ProjectCard.css";
-
+ 
 const ProjectCard = ({ project }) => {
   const options = {
     value: project.ratings,

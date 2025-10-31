@@ -7,7 +7,7 @@ import { clearErrors, getProject } from "../../actions/projectAction.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import Loader from "../layout/Loader/Loader.jsx";
 import { toast, Toaster } from "react-hot-toast";
-
+ 
 const Home = () => {
   const dispatch = useDispatch();
   const { loading, error, projects } = useSelector((state) => state.projects);

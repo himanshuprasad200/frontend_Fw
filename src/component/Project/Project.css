@@ -1,145 +1,179 @@
+/* Project.css – Final, Beautiful, Responsive */
+
+.projectsPage {
+  display: flex;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .projectsHeading {
-  margin: 5vmax auto;
-  width: 15vw;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.171);
-  padding: 2vmax;
-  color: rgba(0, 0, 0, 0.678);
-  font: 500 1.5vmax "Roboto";
   text-align: center;
+  font-size: 2.2rem;
+  margin: 2rem 0 1.5rem;
+  color: #1a1a1a;
+  font-weight: 600;
+  padding-top: 100px;
+
+  position: relative;
 }
 
-.projects {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 10px 5vmax;
-  justify-content: center;
-  min-height: 30vh;
+.projectsHeading::after {
+  content: '';
+  width: 80px;
+  height: 4px;
+  background: #1976d2;
+  display: block;
+  margin: 10px auto;
+  border-radius: 2px;
 }
 
-.paginationBox {
-  display: flex;
-  justify-content: center;
-  margin: 6vmax;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  padding: 0;
-}
-
-.page-item {
-  background-color: rgb(255, 255, 255);
-  list-style: none;
-  border: 1px solid rgba(0, 0, 0, 0.178);
-  padding: 1vmax 1.5vmax;
-  transition: all 0.3s;
-  cursor: pointer;
-}
-.page-item:first-child {
-  border-radius: 5px 0 0 5px;
-}
-
-.page-item:last-child {
-  border-radius: 0 5px 5px 0;
-}
-.page-link {
-  text-decoration: none;
-  font: 300 0.7vmax "Roboto";
-  color: rgb(80, 80, 80);
-  transition: all 0.3s;
-}
-
-.page-item:hover {
-  background-color: rgb(230, 230, 230);
-}
-
-.page-item:hover .page-link {
-  color: rgb(0, 0, 0);
-}
-
-.pageItemActive {
-  background-color: #007bff;
-}
-
-.pageLinkActive {
-  color: white;
-}
-
-.filterBox {
-  width: 9vmax;
-  position: absolute;
-  top: 7vmax;
-  left: 4vmax;
-}
-
-.categoryBox {
-  padding: 0%;
-}
-
-.category-link {
-  list-style: none;
-  color: rgba(0, 0, 0, 0.61);
-  font: 400 0.8vmax "Roboto";
-  margin: 0.4vmax;
-  cursor: pointer;
-  transition: all 0.5s;
-}
-.category-link:hover {
-  color: #007bff;
-}
-
-.filterBox > fieldset {
-  border: 1px solid rgba(0, 0, 0, 0.329);
-}
-
-.filterBox {
-  padding: 20px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  margin: 20px 0;
+/* Sidebar Filter */
+.filterSidebar {
+  flex: 1;
+  min-width: 260px;
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  height: fit-content;
+  position: sticky;
+  top: 100px;
 }
 
 .filterItem {
-  margin-bottom: 20px;
+  margin-bottom: 1.8rem;
 }
 
 .filterItem label {
   display: block;
   font-weight: 600;
-  margin-bottom: 8px;
-  color: #333;
+  margin-bottom: 0.8rem;
+  color: #2c3e50;
+  font-size: 1.05rem;
+}
+
+.rangeContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .rangeSlider {
+  -webkit-appearance: none;
   width: 100%;
-  margin: 8px 0;
+  height: 8px;
+  border-radius: 5px;
+  background: #e0e0e0;
+  outline: none;
+  margin: 10px 0;
 }
 
+.rangeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #1976d2;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(25, 118, 210, 0.3);
+}
+
+.rangeSlider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #1976d2;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(25, 118, 210, 0.3);
+}
+
+.priceDisplay {
+  font-weight: 500;
+  color: #1976d2;
+  font-size: 0.95rem;
+}
+
+/* Category Pills */
 .categoryBox {
-  list-style: none;
-  padding: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  list-style: none;
+  padding: 0;
 }
 
 .category-link {
-  padding: 8px 12px;
-  background: #eee;
-  border-radius: 6px;
-  cursor: pointer;
+  padding: 8px 14px;
+  background: white;
+  border: 1.5px solid #ddd;
+  border-radius: 20px;
   font-size: 0.9rem;
-  transition: 0.2s;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #555;
 }
 
 .category-link:hover {
-  background: #ddd;
+  background: #f0f7ff;
+  border-color: #1976d2;
 }
 
 .category-link.active {
   background: #1976d2;
   color: white;
+  border-color: #1976d2;
+  font-weight: 500;
+}
+
+/* Main Content */
+.projectsContent {
+  flex: 3;
+  min-width: 0;
+}
+
+/* 3 CARDS PER ROW – NO GAPS */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .projects {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .projectsPage {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .filterSidebar {
+    position: static;
+    order: 2;
+  }
+
+  .projectsContent {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .projects {
+    grid-template-columns: 1fr;
+  }
+
+  .projectsHeading {
+    font-size: 1.8rem;
+  }
 }
 
 /* Pagination */
@@ -148,57 +182,43 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin: 30px 0;
+  margin: 3rem 0 2rem;
   flex-wrap: wrap;
 }
 
 .pageBtn {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
+  padding: 10px 16px;
+  border: 1.5px solid #ddd;
   background: white;
+  color: #555;
+  font-size: 0.95rem;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  transition: 0.2s;
+  transition: all 0.2s ease;
+  min-width: 44px;
 }
 
 .pageBtn:hover:not(:disabled) {
-  background: #f0f0f0;
+  background: #f0f7ff;
+  border-color: #1976d2;
+  color: #1976d2;
 }
 
 .pageBtn.active {
   background: #1976d2;
   color: white;
   border-color: #1976d2;
+  font-weight: 600;
 }
 
 .pageBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  background: #f5f5f5;
 }
 
 .pageDots {
-  padding: 8px;
+  padding: 10px;
+  color: #999;
   font-weight: bold;
-}
-
-@media screen and (max-width: 600px) {
-  .projectsHeading {
-    margin-top: 95px;
-    width: 22vw;
-  }
-
-  .filterBox {
-    width: 20vmax;
-    position: static;
-    margin: auto;
-    padding-bottom: 15px;
-  }
-
-  .page-link {
-    font: 300 1.7vmax "Roboto";
-  }
-  .category-link {
-    font: 400 1.8vmax "Roboto";
-  }
 }

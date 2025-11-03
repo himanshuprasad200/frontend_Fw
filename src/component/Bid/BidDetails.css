@@ -1,0 +1,193 @@
+/* BidDetails.css – Clean, Modern, Responsive */
+
+.bidDetailsPage {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.bidDetailsContainer {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+}
+
+.bidHeader {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #1976d2;
+}
+
+.sectionHeader {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 1.5rem 0 1rem;
+}
+
+.bidDetailsContainerBox {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.bidDetail {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.bidDetail:last-child {
+  border-bottom: none;
+}
+
+.bidDetailLabel {
+  font-weight: 600;
+  color: #555;
+  min-width: 120px;
+}
+
+.bidDetailValue {
+  color: #333;
+  flex: 1;
+  text-align: right;
+}
+
+/* Status Colors */
+.statusLabel {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.greenColor { background: #d4edda; color: #155724; }
+.orangeColor { background: #fff3cd; color: #856404; }
+.redColor { background: #f8d7da; color: #721c24; }
+
+/* Bid Items Section */
+.bidDetailsBidItems {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  padding: 0 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #1976d2;
+}
+
+.bidDetailsBidItemsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.bidItemCard {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.bidItemCard:hover {
+  transform: translateY(-4px);
+}
+
+.bidItemImageContainer {
+  height: 180px;
+  overflow: hidden;
+}
+
+.bidItemImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.bidItemCard:hover .bidItemImage {
+  transform: scale(1.05);
+}
+
+.bidItemContent {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bidItemName {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.bidItemTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1976d2;
+  text-decoration: none;
+  display: block;
+  margin: 0.25rem 0;
+}
+
+.bidItemTitle:hover {
+  text-decoration: underline;
+}
+
+.bidItemCategory {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.bidItemPrice {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-top: auto;
+}
+
+.noItems {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bidDetailsContainer {
+    padding: 1.5rem;
+  }
+
+  .bidHeader {
+    font-size: 1.6rem;
+  }
+
+  .sectionHeader,
+  .sectionTitle {
+    font-size: 1.3rem;
+  }
+
+  .bidDetailsBidItemsContainer {
+    grid-template-columns: 1fr;
+  }
+}

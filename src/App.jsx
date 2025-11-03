@@ -10,6 +10,9 @@ import LoginSignUp from "./component/User/LoginSignUp";
 import Profile from "./component/User/Profile";
 import ProjectDetails from "./component/Project/ProjectDetails";
 import Projects from "./component/Project/Projects";
+import BidDetails from "./component/Bid/BidDetails";
+import Proposal from "./component/Project/Proposal";
+import Footer from "./component/layout/Footer/Footer";
 
 function App() {
   return (
@@ -18,12 +21,15 @@ function App() {
       <Toaster position="top-right" />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginSignUp/>}/>
-        <Route path="/account" element={<Profile/>}/>
-        <Route path="/project/:id" element={<ProjectDetails/>}/>
-        <Route path="/projects" element={<Projects/>}/>
-        <Route path="/projects/:keyword" element={<Projects/>}/>
+        <Route path="/login" element={<LoginSignUp />} />
+        <Route path="/account" element={<Profile />} />
+        <Route path="/project/:id" element={<ProjectDetails />} />
+        <Route path="/projects" element={<Projects />} />
+        <Route path="/projects/:keyword" element={<Projects />} />
+        <Route path="/bid/:id" element={<BidDetails />} />
+        <Route path="/proposal" element={<Proposal />} />
       </Routes>
+      <Footer />
     </>
   );
 }

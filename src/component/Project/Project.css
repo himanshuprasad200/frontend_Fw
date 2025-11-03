@@ -6,7 +6,34 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
+  padding-top: 100px; /* navbar spacing */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  /* Background Image */
+  background-image: url("../../images/mountain.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Dark overlay for readability */
+.projectsPage::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255, 255, 255, 0.271);
+  backdrop-filter: blur(2px);
+  z-index: 0;
+}
+
+/* Make content appear above overlay */
+.filterSidebar,
+.projectsContent,
+.projectsHeading {
+  position: relative;
+  z-index: 1;
 }
 
 .projectsHeading {

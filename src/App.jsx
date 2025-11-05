@@ -13,6 +13,7 @@ import Projects from "./component/Project/Projects";
 import BidDetails from "./component/Bid/BidDetails";
 import Proposal from "./component/Project/Proposal";
 import Footer from "./component/layout/Footer/Footer";
+import BidSuccess from "./component/Project/BidSuccess";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/projects/:keyword" element={<Projects />} />
         <Route path="/bid/:id" element={<BidDetails />} />
         <Route path="/proposal" element={<Proposal />} />
+          <Route path="/success" element={<BidSuccess />} />
       </Routes>
       <Footer />
     </>

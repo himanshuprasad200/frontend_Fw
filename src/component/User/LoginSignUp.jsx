@@ -124,7 +124,7 @@ const LoginSignUp = () => {
             <div className="auth-card-full">
               {/* Header */}
               <div className="auth-header">
-                <h1>{isLogin ? "Welcome Back" : "Join Freelanzo"}</h1>
+                <h1>{isLogin ? "Welcome Back" : "Join FlexiWork"}</h1>
                 <p>
                   {isLogin
                     ? "Log in to your account"

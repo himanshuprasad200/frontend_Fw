@@ -12,17 +12,32 @@ const Proposal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loading, error, success } = useSelector((state) => state.newBid);
-  const { bidItems } = useSelector((state) => state.bidItems);
-  const { isAuthenticated } = useSelector((state) => state.user); // ← AUTH GUARD
+  const { loading, error, success, bid } = useSelector((state) => state.newBid);
+  const bidItems = useSelector((state) => state.bidItems?.bidItems || []);
+  const { isAuthenticated } = useSelector((state) => state.user);
 
   const [proposal, setProposal] = useState("");
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("No file chosen");
 
-  // Redirect if not logged in
+  // Load selected projects from localStorage
   useEffect(() => {
-    if (!isAuthenticated) {
+    const saved = localStorage.getItem("bidItems");
+    if (saved) {
+      try {
+        const items = JSON.parse(saved);
+        items.forEach((item) =>
+          dispatch({ type: "ADD_TO_BIDITEMS", payload: item })
+        );
+      } catch (e) {
+        localStorage.removeItem("bidItems");
+      }
+    }
+  }, [dispatch]);
+
+  // Auth guard
+  useEffect(() => {
+    if (isAuthenticated === false) {
       toast.error("Please login to submit a proposal");
       navigate("/login");
     }
@@ -32,63 +47,52 @@ const Proposal = () => {
     e.preventDefault();
 
     if (!proposal.trim()) {
-      toast.error("Proposal is required");
+      toast.error("Please write your proposal");
       return;
     }
-
     if (bidItems.length === 0) {
-      toast.error("No project selected. Go back and add a project.");
+      toast.error("No projects selected. Please go back and add projects.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("proposal", proposal);
+    formData.append("proposal", proposal.trim());
+    bidItems.forEach((item) => formData.append("bidsItems[]", item.project));
     if (file) formData.append("file", file);
-
-    // Only send project IDs
-    bidItems.forEach((item, i) => {
-      formData.append(`projectIds[${i}]`, item.project);
-    });
 
     dispatch(createBid(formData));
   };
 
+  // Handle success → redirect + clear everything
   useEffect(() => {
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
     }
-    if (success) {
+
+    if (success && bid) {
       toast.success("Bid placed successfully!");
-      navigate("/success");
+
+      localStorage.removeItem("bidItems");
+      dispatch({ type: "CLEAR_BID_ITEMS" });
+      dispatch({ type: CREATE_BID_RESET });
+
       setProposal("");
       setFile(null);
       setFileName("No file chosen");
-      localStorage.removeItem("bidItems"); // Clear after success
-      dispatch({ type: CREATE_BID_RESET });
+
+      navigate("/success", { state: { bid }, replace: true });
     }
-  }, [error, success, dispatch, navigate]);
+  }, [error, success, bid, dispatch, navigate]);
 
   if (loading) return <Loader />;
 
   return (
     <Fragment>
       <div className="proposalContainer">
-        <div className="bid-items-summary">
-          <h3>Selected Projects ({bidItems.length})</h3>
-          {bidItems.map((item) => (
-            <div key={item.project} className="bid-item">
-              <img src={item.image} alt={item.title} />
-              <div>
-                <strong>{item.title}</strong>
-                <p>₹{item.price}</p>
-              </div>
-            </div>
-          ))}
-        </div>
 
-        <form className="proposalForm" onSubmit={handleSubmit}>
-          <h2 className="formTitle">Submit Your Proposal</h2>
+        {/* Form Only */}
+        <form className="proposalForm" onSubmit={handleSubmit} encType="multipart/form-data">
 
           <div className="formGroup">
             <label className="formLabel">
@@ -98,19 +102,20 @@ const Proposal = () => {
               className="proposalTextarea"
               value={proposal}
               onChange={(e) => setProposal(e.target.value)}
-              placeholder="Explain your approach, timeline, and why you're the best fit..."
-              rows={8}
+              placeholder="Explain your approach, timeline, experience, and why you're the best fit for the project(s)..."
+              rows="12"
               required
             />
           </div>
 
           <div className="formGroup">
             <label className="formLabel">
-              Upload File (Image/Video) <span className="optional">(Optional)</span>
+              Attach File <span className="optional">(Optional)</span>
             </label>
             <div className="fileInputWrapper">
               <input
                 type="file"
+                id="file-upload"
                 className="fileInput"
                 onChange={(e) => {
                   const f = e.target.files[0];
@@ -119,15 +124,23 @@ const Proposal = () => {
                     setFileName(f.name);
                   }
                 }}
-                accept="image/*,video/*"
+                accept="image/*,video/*,.pdf,.doc,.docx"
               />
-              <label className="fileInputLabel">Choose File</label>
+              <label htmlFor="file-upload" className="fileInputLabel">
+                Choose File
+              </label>
               <span className="fileName">{fileName}</span>
             </div>
           </div>
 
-          <button type="submit" className="submitButton" disabled={loading}>
-            {loading ? "Submitting..." : "Place Bid"}
+          <button
+            type="submit"
+            className="submitButton"
+            disabled={loading || bidItems.length === 0}
+          >
+            {loading
+              ? "Submitting Bid..."
+              : `Place Bid on ${bidItems.length} Project${bidItems.length > 1 ? "s" : ""}`}
           </button>
         </form>
       </div>

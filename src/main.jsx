@@ -6,7 +6,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.PROD
   ? "https://backend-i86g.onrender.com"  // ← CHANGE TO YOUR ACTUAL BACKEND URL
-  : "http://localhost:4050";
+  : "https://backend-i86g.onrender.com";
 
 // NOW import React and others
 import { StrictMode } from "react";

@@ -1,4 +1,3 @@
-// src/actions/bidActions.js (Complete Updated: Cookie-based auth with withCredentials; port URLs; fixed axios args, error handling)
 import axios from "axios";
 import {
   CREATE_BID_REQUEST,
@@ -9,7 +8,7 @@ import {
   MY_BID_FAIL,
   BID_DETAILS_REQUEST,
   BID_DETAILS_SUCCESS,
-  BID_DETAILS_FAIL, 
+  BID_DETAILS_FAIL,
   ALL_BIDS_REQUEST,
   ALL_BIDS_SUCCESS,
   ALL_BIDS_FAIL,
@@ -20,84 +19,67 @@ import {
   DELETE_BID_SUCCESS,
   DELETE_BID_FAIL,
   ADD_TO_BIDITEMS,
-  CLEAR_ERRORS,
 } from "../constants/bidConstant";
+import { CLEAR_ERRORS } from "../constants/bidConstant";
 
-// Global axios config for cookies (set once; add to index.js if not)
-axios.defaults.withCredentials = true;  // Send cookies with every request
 
-// Create Bid (Fixed: formData as data; port URL; withCredentials)
-// src/actions/bidActions.js
-export const createBid = (bidData) => async (dispatch) => {
+// Create Bid
+export const createBid = (bid) => async (dispatch) => {
   try {
     dispatch({ type: CREATE_BID_REQUEST });
 
+    const formData = new FormData();
+    formData.append("proposal", bid.proposal);
+
+    if (bid.file) {
+      formData.append("file", bid.file);
+    }
+
     const config = {
-      headers: { "Content-Type": "multipart/form-data" },
-      withCredentials: true, // ← THIS SENDS COOKIES
+      headers: {
+        "Content-Type": bid.file ? "multipart/form-data" : "application/json",
+      },
     };
 
-    const { data } = await axios.post(
-      "https://backend-i86g.onrender.com/api/v1/bid/new",
-      bidData,
-      config
-    );
+    const { data } = await axios.post("/api/v1/bid/new", bid, formData, config);
 
-    dispatch({ type: CREATE_BID_SUCCESS, payload: data });
+    dispatch({
+      type: CREATE_BID_SUCCESS,
+      payload: data,
+    });
   } catch (error) {
-    const msg = error.response?.data?.message || "Bid failed";
-    dispatch({ type: CREATE_BID_FAIL, payload: msg });
-
-    if (error.response?.status === 401) {
-      toast.error("Session expired. Logging you out...");
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 1500);
-    }
+    dispatch({
+      type: CREATE_BID_FAIL,
+      payload: error.response.data.message,
+    });
   }
 };
 
-// My Bids (Fixed: port URL; withCredentials; enhanced error handling)
+// My Bids
 export const myBids = () => async (dispatch) => {
   try {
     dispatch({ type: MY_BID_REQUEST });
 
-    const config = { withCredentials: true };
-    const { data } = await axios.get("https://backend-i86g.onrender.com/api/v1/bids/me", config);
+    const { data } = await axios.get("/api/v1/bids/me");
     dispatch({ type: MY_BID_SUCCESS, payload: data.bids });
   } catch (error) {
-    const errorMsg = error.response ? error.response.data.message : error.message;
-    dispatch({
-      type: MY_BID_FAIL,
-      payload: errorMsg,
-    });
-    if (error.response?.status === 401) {
-      window.location.href = "/login";
-    }
+    dispatch({ type: MY_BID_FAIL, payload: error.response.data.message });
   }
 };
 
-// Get All Bids -- Admin (Fixed: port URL; withCredentials)
+// Get All Bids -- Admin
 export const getAllBids = () => async (dispatch) => {
   try {
     dispatch({ type: ALL_BIDS_REQUEST });
 
-    const config = { withCredentials: true };
-    const { data } = await axios.get("https://backend-i86g.onrender.com/api/v1/admin/bids", config);
+    const { data } = await axios.get("/api/v1/admin/bids");
     dispatch({ type: ALL_BIDS_SUCCESS, payload: data.bids });
   } catch (error) {
-    const errorMsg = error.response ? error.response.data.message : error.message;
-    dispatch({
-      type: ALL_BIDS_FAIL,
-      payload: errorMsg,
-    });
-    if (error.response?.status === 401) {
-      window.location.href = "/login";
-    }
+    dispatch({ type: ALL_BIDS_FAIL, payload: error.response.data.message });
   }
 };
 
-// Update Bid - Admin (Fixed: port URL; withCredentials)
+// Update Bid - Admin
 export const updateBid = (id, bid) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_BID_REQUEST });
@@ -106,96 +88,80 @@ export const updateBid = (id, bid) => async (dispatch) => {
       headers: {
         "Content-Type": "application/json",
       },
-      withCredentials: true,
     };
 
-    const { data } = await axios.put(`https://backend-i86g.onrender.com/api/v1/admin/bid/${id}`, bid, config);
+    const { data } = await axios.put(`/api/v1/admin/bid/${id}`, bid, config);
 
     dispatch({
       type: UPDATE_BID_SUCCESS,
       payload: data.success,
     });
   } catch (error) {
-    const errorMsg = error.response ? error.response.data.message : error.message;
     dispatch({
       type: UPDATE_BID_FAIL,
-      payload: errorMsg,
+      payload: error.response.data.message,
     });
-    if (error.response?.status === 401) {
-      window.location.href = "/login";
-    }
   }
 };
 
-// Delete Bid - Admin (Fixed: port URL; withCredentials)
+// Delete Bid - Admin
 export const deleteBid = (id) => async (dispatch) => {
   try {
     dispatch({ type: DELETE_BID_REQUEST });
 
-    const config = { withCredentials: true };
-    const { data } = await axios.delete(`https://backend-i86g.onrender.com/api/v1/admin/bid/${id}`, config);
+    const { data } = await axios.delete(`/api/v1/admin/bid/${id}`);
 
     dispatch({
       type: DELETE_BID_SUCCESS,
       payload: data.success,
     });
   } catch (error) {
-    const errorMsg = error.response ? error.response.data.message : error.message;
     dispatch({
       type: DELETE_BID_FAIL,
-      payload: errorMsg,
+      payload: error.response.data.message,
     });
-    if (error.response?.status === 401) {
-      window.location.href = "/login";
-    }
   }
 };
 
-// Bid Details (Fixed: port URL; withCredentials)
+//Bid Details
 export const getBidDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: BID_DETAILS_REQUEST });
 
-    const config = { withCredentials: true };
-    const { data } = await axios.get(`https://backend-i86g.onrender.com/api/v1/bid/${id}`, config);
+    const { data } = await axios.get(`/api/v1/bid/${id}`);
     dispatch({ type: BID_DETAILS_SUCCESS, payload: data.bid });
   } catch (error) {
-    const errorMsg = error.response ? error.response.data.message : error.message;
-    dispatch({
-      type: BID_DETAILS_FAIL,
-      payload: errorMsg,
-    });
-    if (error.response?.status === 401) {
-      window.location.href = "/login";
-    }
+    dispatch({ type: BID_DETAILS_FAIL, payload: error.response.data.message });
   }
 };
 
 export const addToBidItems = (id) => async (dispatch, getState) => {
   try {
-    const config = { withCredentials: true };
-    const { data } = await axios.get(
-      `https://backend-i86g.onrender.com/api/v1/project/${id}`,
-      config
-    );
-
+    const { data } = await axios.get(`/api/v1/project/${id}`);
     const payload = {
       project: data.project._id,
+      name: data.project.name,  
       title: data.project.title,
       price: data.project.price,
-      image: data.project.images[0]?.url || "/default.jpg",
+      category: data.project.category,
+      image: data.project.images[0].url,
     };
+    
+    // console.log("Dispatching payload: ", payload);
 
     dispatch({
       type: ADD_TO_BIDITEMS,
       payload,
     });
 
-    // Save to localStorage
-    const bidItems = [...(getState().bidItems.bidItems || []), payload];
-    localStorage.setItem("bidItems", JSON.stringify(bidItems));
+    // Log the state after dispatching the action
+    // console.log("State after dispatch: ", getState());
+
+    // const bidItems = getState().bid?.bidItems || [];
+
+    // localStorage.setItem('bidItems', JSON.stringify(bidItems));
   } catch (error) {
-    toast.error("Failed to add project. Please try again.");
+    console.error("Error fetching project data:", error);
   }
 };
 

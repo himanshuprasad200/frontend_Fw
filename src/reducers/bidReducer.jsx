@@ -1,4 +1,3 @@
-// src/reducers/bidReducer.js (Complete Updated: As per previous fixes; bidDetails initial fixed; bidItems appends)
 import {
   ADD_TO_BIDITEMS,
   ALL_BIDS_FAIL,
@@ -51,7 +50,7 @@ export const newBidReducer = (state = {}, action) => {
     case CLEAR_ERRORS:
       return {
         ...state,
-        error: null, 
+        error: null,
       };
     default:
       return state;
@@ -157,7 +156,7 @@ export const bidReducer = (state = {}, action) => {
   }
 };
 
-export const bidDetailsReducer = (state = { bid: {} }, action) => {
+export const bidDetailsReducer = (state = { bids: {} }, action) => {
   switch (action.type) {
     case BID_DETAILS_REQUEST:
       return {
@@ -186,15 +185,21 @@ export const bidDetailsReducer = (state = { bid: {} }, action) => {
 export const bidItemsReducer = (state = { bidItems: [] }, action) => {
   switch (action.type) {
     case ADD_TO_BIDITEMS:
-      const newItem = action.payload;
-      const exists = state.bidItems.find((i) => i.project === newItem.project);
-      if (exists) {
-        return state; // Prevent duplicates
-      }
+      const item = action.payload;
       return {
         ...state,
-        bidItems: [...state.bidItems, newItem],
+        bidItems: [item],
+        // ...state.bidItems,
       };
+    case "REMOVE_FROM_BIDITEMS":
+      return {
+        ...state,
+        bidItems: state.bidItems.filter(
+          (item) => item.project !== action.payload
+        ),
+      };
+    case "CLEAR_BID_ITEMS":
+      return { ...state, bidItems: [] };
     default:
       return state;
   }

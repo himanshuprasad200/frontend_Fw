@@ -1,3 +1,4 @@
+// src/components/Bid/BidDetails.jsx
 import React, { Fragment, useEffect } from "react";
 import "./BidDetails.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,94 +14,114 @@ const BidDetails = () => {
   const { id } = useParams();
 
   useEffect(() => {
+    dispatch(getBidDetails(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
     }
-    dispatch(getBidDetails(id));
-  }, [dispatch, error, id]);
+  }, [error, dispatch]);
+
+  if (loading) return <Loader />;
+  if (!bid) return <div className="not-found">Bid not found</div>;
+
+  const totalBudget = (bid.bidsItems || []).reduce((sum, p) => sum + Number(p.price || 0), 0);
 
   return (
     <Fragment>
-      {loading ? (
-        <Loader />
-      ) : (
-        <Fragment>
-          <MetaData title="Bid Details" />
+      <MetaData title={`Bid #${bid._id?.slice(-8).toUpperCase()}`} />
 
-          {/* Main Bid Info */}
-          <div className="bidDetailsPage">
-            <div className="bidDetailsContainer">
-              <h1 className="bidHeader">Bid #{bid?._id}</h1>
+      <div className="bid-details-page">
+        {/* Header */}
+        <div className="bid-header">
+          <h1>Bid Details</h1>
+          <p className="submit-date">
+            Submitted on {new Date(bid.createdAt).toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "long",
+              year: "numeric"
+            })}
+          </p>
+        </div>
 
-              <h2 className="sectionHeader">Bid Info</h2>
-              <div className="bidDetailsContainerBox">
-                <div className="bidDetail">
-                  <p className="bidDetailLabel">Name:</p>
-                  <span className="bidDetailValue">
-                    {bid?.user?.name || "N/A"}
-                  </span>
-                </div>
-                <div className="bidDetail">
-                  <p className="bidDetailLabel">Proposal:</p>
-                  <p className="bidDetailValue">{bid?.proposal || "N/A"}</p>
-                </div>
-              </div>
+        {/* Proposal Section */}
+        <div className="proposal-section">
+          <h2>Your Proposal</h2>
+          <div className="proposal-box">
+            <p>"{bid.proposal}"</p>
+          </div>
+        </div>
 
-              <h2 className="sectionHeader">Bid Response</h2>
-              <div className="bidDetailsContainerBox">
-                <div className="bidDetail">
-                  <span
-                    className={`statusLabel ${
-                      bid?.response === "Approved"
-                        ? "greenColor"
-                        : bid?.response === "Pending"
-                        ? "orangeColor"
-                        : "redColor"
-                    }`}
-                  >
-                    {bid?.response || "N/A"}
-                  </span>
-                </div>
-              </div>
-            </div>
+        {/* Stats Cards */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <p className="stat-label">Status</p>
+            <span className={`status-badge ${bid.response?.toLowerCase() || "pending"}`}>
+              {bid.response || "Pending"}
+            </span>
           </div>
 
-          {/* Bid Items */}
-          <div className="bidDetailsBidItems">
-            <h3 className="sectionTitle">Bid Items:</h3>
-            <div className="bidDetailsBidItemsContainer">
-             {bid?.bidsItems && bid.bidsItems.length > 0 ? (
-  bid.bidsItems.map((item) => (
-    <div key={item.project} className="bidItemCard">
-      <div className="bidItemImageContainer">
-        <img
-          src={item.image || "/default.jpg"}
-          alt={item.title}
-          className="bidItemImage"
-        />
-      </div>
-      <div className="bidItemContent">
-        <p className="bidItemName">
-          Client: <strong>{item.name || "N/A"}</strong>
-        </p>
-        <Link to={`/project/${item.project}`} className="bidItemTitle">
-          {item.title || "Untitled Project"}
-        </Link>
-        <p className="bidItemCategory">Category: {item.category || "N/A"}</p>
-        <p className="bidItemPrice">
-          ₹ {item.price ? item.price.toLocaleString() : "0"}
-        </p>
-      </div>
-    </div>
-  ))
-) : (
-  <p className="noItems">No bid items found.</p>
-)}
-            </div>
+          <div className="stat-card">
+            <p className="stat-label">Total Projects</p>
+            <p className="stat-value">{bid.bidsItems?.length || 0}</p>
           </div>
-        </Fragment>
-      )}
+
+          <div className="stat-card">
+            <p className="stat-label">Total Budget</p>
+            <p className="stat-price">₹{totalBudget.toLocaleString()}</p>
+          </div>
+        </div>
+
+        {/* Projects Grid */}
+        <div className="projects-section">
+          <h2>Projects Included ({bid.bidsItems?.length || 0})</h2>
+
+          {bid.bidsItems && bid.bidsItems.length > 0 ? (
+            <div className="projects-grid">
+              {bid.bidsItems.map((project) => (
+                <div key={project._id} className="project-card">
+                  <div className="project-image">
+                    {project.images?.[0]?.url ? (
+                      <img src={project.images[0].url} alt={project.title} />
+                    ) : (
+                      <div className="no-image">No Image</div>
+                    )}
+                  </div>
+
+                  <div className="project-info">
+                    <p className="client-name">
+                      Client: <strong>{project.postedBy?.name || "Unknown"}</strong>
+                    </p>
+
+                    <Link to={`/project/${project._id}`} className="project-title">
+                      {project.title || "Untitled Project"}
+                    </Link>
+
+                    <p className="project-category">
+                      {project.category || "General"}
+                    </p>
+
+                    <div className="project-footer">
+                      <span className="project-price">
+                        ₹{Number(project.price || 0).toLocaleString()}
+                      </span>
+                      <span className="project-id">
+                        ID: {project._id?.slice(-6).toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <p>No projects found in this bid.</p>
+            </div>
+          )}
+        </div>
+      </div>
     </Fragment>
   );
 };

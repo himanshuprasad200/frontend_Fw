@@ -1,33 +1,37 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+// src/component/User/LoginSignUp.jsx
+import React, { useState, useEffect } from "react";
 import "./LoginSignUp.css";
-import Loader from "../layout/Loader/Loader.jsx";
 import {
-  MdMailOutline,
-  MdLockOpen,
-  MdFace,
-  MdAccountBalance,
-  MdOutlinePayments,
-  MdOutlineWorkOutline,
+  MdEmail,
+  MdLock,
+  MdPerson,
+  MdWork,
   MdCreditCard,
+  MdAccountBalance,
+  MdPayment,
 } from "react-icons/md";
-import { FaEarthAmericas } from "react-icons/fa6";
+import { FaGlobe, FaUpload } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { clearErrors, login, register } from "../../actions/userAction.jsx";
-import toast, { Toaster } from "react-hot-toast";
+import { login, register, clearErrors } from "../../actions/userAction";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import Loader from "../layout/Loader/Loader";
 
 const LoginSignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, isAuthenticated, error } = useSelector(
+    (state) => state.user
+  );
 
-  const { error, loading, isAuthenticated } = useSelector((state) => state.user);
+  const [isLogin, setIsLogin] = useState(true);
+  const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
 
-  const loginTab = useRef(null);
-  const registerTab = useRef(null);
-  const switcherTab = useRef(null);
-
+  // Login
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+
+  // Register
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -36,36 +40,10 @@ const LoginSignUp = () => {
     country: "",
     accountNo: "",
     upiId: "",
-    pancard: "",
   });
+  const [avatar, setAvatar] = useState("");
 
-  const { name, email, password, professionalHeadline, country, accountNo, upiId, pancard } = user;
-
-  const [avatar, setAvatar] = useState();
-  const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
-
-  const loginSubmit = (e) => {
-    e.preventDefault();
-    dispatch(login(loginEmail, loginPassword));
-  };
-
-  const registerSubmit = (e) => {
-    e.preventDefault();
-
-    const myForm = new FormData();
-    myForm.set("name", name);
-    myForm.set("email", email);
-    myForm.set("password", password);
-    myForm.set("professionalHeadline", professionalHeadline);
-    myForm.set("country", country);
-    myForm.set("accountNo", accountNo);
-    myForm.set("upiId", upiId);
-    myForm.set("pancard", pancard);
-    myForm.set("avatar", avatar);
-    dispatch(register(myForm));
-  };
-
-  const registerDataChange = (e) => {
+  const handleRegisterInput = (e) => {
     if (e.target.name === "avatar") {
       const reader = new FileReader();
       reader.onload = () => {
@@ -76,200 +54,201 @@ const LoginSignUp = () => {
       };
       reader.readAsDataURL(e.target.files[0]);
     } else {
-      let value = e.target.value;
-      if (e.target.name === "pancard") {
-        value = value.toUpperCase();
-      }
-      setUser({ ...user, [e.target.name]: value });
+      setUser({ ...user, [e.target.name]: e.target.value });
     }
+  };
+
+  const loginSubmit = (e) => {
+    e.preventDefault();
+    dispatch(login(loginEmail, loginPassword));
+  };
+
+  const registerSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    Object.keys(user).forEach((key) => formData.set(key, user[key]));
+    formData.set("avatar", avatar);
+    dispatch(register(formData));
   };
 
   useEffect(() => {
     if (error) {
-      toast.error(error, { id: "login-error" });
+      toast.error(error);
       dispatch(clearErrors());
     }
     if (isAuthenticated) {
-      toast.success("Login Successful!", { id: "login-success" });
+      toast.success("Welcome back!");
       navigate("/account");
     }
-  }, [dispatch, error, navigate, isAuthenticated]);
-
-  const switchTabs = (e, tab) => {
-    if (tab === "login") {
-      switcherTab.current.classList.add("shiftToNeutral");
-      switcherTab.current.classList.remove("shiftToRight");
-
-      registerTab.current.classList.remove("shiftToNeutralForm");
-      loginTab.current.classList.remove("shiftToLeft");
-    }
-    if (tab === "register") {
-      switcherTab.current.classList.add("shiftToRight");
-      switcherTab.current.classList.remove("shiftToNeutral");
-
-      registerTab.current.classList.add("shiftToNeutralForm");
-      loginTab.current.classList.add("shiftToLeft");
-    }
-  };
+  }, [dispatch, error, isAuthenticated, navigate]);
 
   return (
-    <Fragment>
-      <Toaster position="top-center" reverseOrder={false} />
+    <>
       {loading ? (
         <Loader />
       ) : (
-        <Fragment>
-          <div className="LoginSignUpContainer">
-            <div className="LoginSignUpBox">
-              <div>
-                <div className="login_signUp_toggle">
-                  <p onClick={(e) => switchTabs(e, "login")}>LOGIN</p>
-                  <p onClick={(e) => switchTabs(e, "register")}>REGISTER</p>
-                </div>
-                <button ref={switcherTab}></button>
+        <div className="auth-fullscreen">
+          <div className="auth-wrapper">
+            <div className="auth-card-full">
+              {/* Header */}
+              <div className="auth-header">
+                <h1>{isLogin ? "Welcome Back" : "Create Account"}</h1>
+                <p>
+                  {isLogin ? "Login to continue" : "Join the platform today"}
+                </p>
               </div>
 
-              {/* LOGIN FORM */}
-              <form className="loginForm" ref={loginTab} onSubmit={loginSubmit}>
-                <div className="loginEmail">
-                  <MdMailOutline />
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    required
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                  />
-                </div>
-                <div className="loginPassword">
-                  <MdLockOpen />
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    required
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                  />
-                </div>
-                <Link to="/password/forgot">Forgot Password?</Link>
-                <input type="submit" value="Login" className="loginBtn" />
-              </form>
+              {/* Tabs */}
+              <div className="auth-tabs">
+                <button
+                  className={isLogin ? "active" : ""}
+                  onClick={() => setIsLogin(true)}
+                >
+                  Login
+                </button>
+                <button
+                  className={!isLogin ? "active" : ""}
+                  onClick={() => setIsLogin(false)}
+                >
+                  Register
+                </button>
+              </div>
 
-              {/* REGISTER FORM */}
-              <form
-                className="signUpForm"
-                ref={registerTab}
-                encType="multipart/form-data"
-                onSubmit={registerSubmit}
-              >
-                <div className="signUpName">
-                  <MdFace />
-                  <input
-                    type="text"
-                    placeholder="Name"
-                    required
-                    name="name"
-                    value={name}
-                    onChange={registerDataChange}
-                  />
-                </div>
-                <div className="signUpEmail">
-                  <MdMailOutline />
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    required
-                    name="email"
-                    value={email}
-                    onChange={registerDataChange}
-                  />
-                </div>
-                <div className="signUpPassword">
-                  <MdLockOpen />
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    required
-                    name="password"
-                    value={password}
-                    onChange={registerDataChange}
-                  />
-                </div>
-                <div className="professionalHeadline">
-                  <MdOutlineWorkOutline />
-                  <input
-                    type="text"
-                    placeholder="Your Work Profession"
-                    required
-                    name="professionalHeadline"
-                    value={professionalHeadline}
-                    onChange={registerDataChange}
-                  />
-                </div>
-                <div className="country">
-                  <FaEarthAmericas />
-                  <input
-                    type="text"
-                    placeholder="Country Name"
-                    required
-                    name="country"
-                    value={country}
-                    onChange={registerDataChange}
-                  />
-                </div>
-                <div className="accountNo">
-                  <MdAccountBalance />
-                  <input
-                    type="number"
-                    placeholder="Account No"
-                    required
-                    name="accountNo"
-                    value={accountNo}
-                    onChange={registerDataChange}
-                  />
-                </div>
-                <div className="upiId">
-                  <MdOutlinePayments />
-                  <input
-                    type="text"
-                    placeholder="Upi Id"
-                    required
-                    name="upiId"
-                    value={upiId}
-                    onChange={registerDataChange}
-                  />
-                </div>
-                <div className="pancard">
-                  <MdCreditCard />
-                  <input
-                    type="text"
-                    placeholder="PAN Card Number"
-                    required
-                    name="pancard"
-                    value={pancard}
-                    onChange={registerDataChange}
-                    maxLength="10"
-                  />
-                </div>
-                <h6 className="profilePicture">
-                  Select Profile Picture (Profile should be cropped)
-                </h6>
-                <div id="registerImage">
-                  <img src={avatarPreview} alt="Avatar Preview" />
-                  <input
-                    type="file"
-                    name="avatar"
-                    accept="image/*"
-                    onChange={registerDataChange}
-                  />
-                </div>
-                <input type="submit" value="Register" className="signUpBtn" />
-              </form>
+              <div className="auth-content">
+                {/* Login Form */}
+                <form
+                  className={`auth-form ${isLogin ? "active" : ""}`}
+                  onSubmit={loginSubmit}
+                >
+                  <div className="input-group">
+                    <MdEmail className="icon" />
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      required
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="input-group">
+                    <MdLock className="icon" />
+                    <input
+                      type="password"
+                      placeholder="Password"
+                      required
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                    />
+                  </div>
+                  <button type="submit" className="auth-btn">
+                    Login Securely
+                  </button>
+                </form>
+
+                {/* Register Form - ALL FIELDS VISIBLE */}
+                <form
+                  className={`auth-form ${!isLogin ? "active" : ""}`}
+                  onSubmit={registerSubmit}
+                  encType="multipart/form-data"
+                >
+                  <div className="grid-2">
+                    <div className="input-group">
+                      <MdPerson className="icon" />
+                      <input
+                        name="name"
+                        placeholder="Full Name"
+                        required
+                        onChange={handleRegisterInput}
+                      />
+                    </div>
+                    <div className="input-group">
+                      <MdEmail className="icon" />
+                      <input
+                        name="email"
+                        type="email"
+                        placeholder="Email"
+                        required
+                        onChange={handleRegisterInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="input-group">
+                    <MdLock className="icon" />
+                    <input
+                      name="password"
+                      type="password"
+                      placeholder="Create Password"
+                      required
+                      onChange={handleRegisterInput}
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <MdWork className="icon" />
+                    <input
+                      name="professionalHeadline"
+                      placeholder="Profession (e.g. UI Designer)"
+                      required
+                      onChange={handleRegisterInput}
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <FaGlobe className="icon" />
+                    <input
+                      name="country"
+                      placeholder="Country"
+                      required
+                      onChange={handleRegisterInput}
+                    />
+                  </div>
+
+                  <div className="grid-2">
+                    <div className="input-group">
+                      <MdAccountBalance className="icon" />
+                      <input
+                        name="accountNo"
+                        placeholder="Bank Account No"
+                        required
+                        onChange={handleRegisterInput}
+                      />
+                    </div>
+                    <div className="input-group">
+                      <MdPayment className="icon" />
+                      <input
+                        name="upiId"
+                        placeholder="UPI ID"
+                        required
+                        onChange={handleRegisterInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="avatar-upload">
+                    <img src={avatarPreview} alt="Preview" />
+                    <label>
+                      <FaUpload />
+                      <span>Upload Profile Photo</span>
+                      <input
+                        type="file"
+                        name="avatar"
+                        accept="image/*"
+                        onChange={handleRegisterInput}
+                      />
+                    </label>
+                  </div>
+
+                  <button type="submit" className="auth-btn">
+                    Create Account
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
-        </Fragment>
+        </div>
       )}
-    </Fragment>
+    </>
   );
 };
 

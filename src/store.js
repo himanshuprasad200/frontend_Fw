@@ -45,7 +45,7 @@ const rootReducers = combineReducers({
   newProject: newProjectReducer,
   project: projectReducer,
 
-  //Bids
+  //Bids 
   bidItems: bidItemsReducer,
   newBid: newBidReducer,
   myBids: myBidsReducer,

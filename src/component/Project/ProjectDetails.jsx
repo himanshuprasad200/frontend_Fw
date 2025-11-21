@@ -1,226 +1,219 @@
-import React, { Fragment, useEffect, useState } from "react";
+// src/component/Project/ProjectDetails.jsx
+import React, { useEffect, useState } from "react";
 import "./ProjectDetails.css";
 import { useSelector, useDispatch } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
   clearErrors,
   getProjectDetails,
   newReviewForProject,
 } from "../../actions/projectAction";
-import { Link, useParams } from "react-router-dom";
-import ReviewCard from "./ReviewCard.jsx";
-import Loader from "../layout/Loader/Loader.jsx";
-import MetaData from "../layout/MetaData.jsx";
-import { addToBidItems } from "../../actions/bidAction.jsx";
-import { NEW_REVIEW_RESET } from "../../constants/projectConstant.jsx";
-import toast from "react-hot-toast";
+import { addToBidItems } from "../../actions/bidAction";
+import { NEW_REVIEW_RESET } from "../../constants/projectConstant";
+import Loader from "../layout/Loader/Loader";
+import MetaData from "../layout/MetaData";
+import ReviewCard from "./ReviewCard";
+
+// Reusable Star Rating Component
+const StarRating = ({ rating = 0, onRate, interactive = false, size = "text-2xl" }) => {
+  return (
+    <div className={`flex gap-1 ${interactive ? "cursor-pointer" : ""}`}>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <i
+          key={star}
+          className={`fa-star ${
+            star <= rating ? "fas text-yellow-400" : "far text-gray-300"
+          } ${size} transition-all hover:scale-110`}
+          onClick={() => interactive && onRate(star)}
+          style={{ cursor: interactive ? "pointer" : "default" }}
+        />
+      ))}
+    </div>
+  );
+};
 
 const ProjectDetails = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  const { project, loading, error } = useSelector(
-    (state) => state.projectDetails
-  );
-  const { success, error: reviewError } = useSelector(
-    (state) => state.newProjectReview
-  );
+  const { project, loading, error } = useSelector((state) => state.projectDetails);
+  const { success, error: reviewError } = useSelector((state) => state.newProjectReview);
+  const { isAuthenticated } = useSelector((state) => state.user);
+
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [showReviewModal, setShowReviewModal] = useState(false);
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(clearErrors());
-    }
-    if (reviewError) {
-      toast.error(reviewError);
+    if (error || reviewError) {
+      toast.error(error || reviewError);
       dispatch(clearErrors());
     }
     if (success) {
-      toast.success("Review Submitted Successfully");
+      toast.success("Review submitted successfully!");
       dispatch({ type: NEW_REVIEW_RESET });
+      setShowReviewModal(false);
+      setRating(0);
+      setComment("");
     }
     dispatch(getProjectDetails(id));
-  }, [dispatch, id, error, success, reviewError]);
+  }, [dispatch, id, error, reviewError, success]);
 
-  const [open, setOpen] = useState(false);
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
-
-  const addBidItemsHandler = () => {
-    dispatch(addToBidItems(id));
-  };
-
-  const submitReviewToggle = () => {
-    setOpen(!open);
-  };
-
-  const reviewSubmitHandler = () => {
-    if (rating === 0 || comment.trim() === "") {
-      toast.error("Please add a rating and comment before submitting.");
+  const addToBidHandler = () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to place a bid");
+      navigate("/login");
       return;
     }
-
-    const myForm = new FormData();
-    myForm.set("rating", rating);
-    myForm.set("comment", comment);
-    myForm.set("projectId", id);
-
-    dispatch(newReviewForProject(myForm));
-    setOpen(false);
+    dispatch(addToBidItems(id));
+    toast.success("Project added to your proposal!");
+    navigate("/proposal");
   };
 
-  const renderStars = (value = 0) => {
-    const filled = Math.round(value);
-    return Array.from({ length: 5 }, (_, i) => (
-      <span key={i} style={{ color: i < filled ? "#facc15" : "#d1d5db" }}>
-        ★
-      </span>
-    ));
+  const submitReview = () => {
+    if (rating === 0 || !comment.trim()) {
+      toast.error("Please select a rating and write a review");
+      return;
+    }
+    const formData = new FormData();
+    formData.set("rating", rating);
+    formData.set("comment", comment);
+    formData.set("projectId", id);
+    dispatch(newReviewForProject(formData));
   };
+
+  if (loading) return <Loader />;
+  if (!project) return <div className="not-found">Project not found</div>;
 
   return (
-    <Fragment>
-      {loading ? (
-        <Loader />
-      ) : (
-        <Fragment>
-          <MetaData title={`${project?.title} -- FlexiWork`} />
-          <div className="projectDetails">
-            <div className="boxContainer">
-              <div className="left">
-                <span className="breadcrumbs">
-                  Category: {project?.category}
-                </span>
-                <h1>{project?.title}</h1>
+    <>
+      <MetaData title={`${project.title} - FlexiWork`} />
 
-                <div className="user">
-                  <img
-                    className="pp"
-                    src={project?.postedBy?.avatar?.url || "/Profile.png"}
-                    alt="Profile"
-                  />
-                  <span>{project?.postedBy?.name}</span>
-                  <div className="stars">
-                    {renderStars(project?.ratings)}
-                    <span>({project?.numOfReviews} Reviews)</span>
-                  </div>
+      <div className="project-details-container">
+        {/* Breadcrumb */}
+        <div className="breadcrumb">
+          <a href="/projects">Projects</a> › {project.category}
+        </div>
+
+        <div className="project-grid">
+          {/* Main Content */}
+          <div className="main-content">
+            {/* Title & Client */}
+            <div className="project-header">
+              <h1 className="project-title">{project.title}</h1>
+
+              <div className="client-card">
+                <img
+                  src={project.postedBy?.avatar?.url || "/Profile.png"}
+                  alt={project.postedBy?.name}
+                  className="client-avatar"
+                />
+                <div className="client-info">
+                  <h3>{project.postedBy?.name}</h3>
+                  <p>{project.postedBy?.country || "Freelancer"}</p>
                 </div>
-
-                <div className="projectImage">
-                  {project?.images && project.images.length > 0 && (
-                    <img src={project.images[0].url} alt={project.name} />
-                  )}
+                <div className="client-rating">
+                  <StarRating rating={project.ratings || 0} />
+                  <span className="review-count">({project.numOfReviews} reviews)</span>
                 </div>
-
-                <hr />
-                <h2>Project Details</h2>
-                <p>{project?.desc}</p>
-
-                <div className="item">
-                  <div className="secondUser">
-                    <img
-                      src={project?.postedBy?.avatar?.url || "/Profile.png"}
-                      alt="Profile"
-                    />
-                    <div className="info">
-                      <span>{project?.postedBy?.name}</span>
-                      <div className="country">
-                        <span>{project?.postedBy?.country}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="secondstars">
-                    {renderStars(project?.ratings)}
-                    <a href="mailto:flexiworkclient@gmail.com">
-                      <button className="contactButton">Contact Me</button>
-                    </a>
-                    <button
-                      onClick={submitReviewToggle}
-                      className="submitReview"
-                    >
-                      Submit Review
-                    </button>
-                  </div>
-
-                  <hr />
-                  <h3 className="reviewsHeading">Reviews</h3>
-
-                  {/* Simple Custom Modal instead of MUI Dialog */}
-                  {open && (
-                    <div className="customDialog">
-                      <div className="customDialogContent">
-                        <h2>Submit Review</h2>
-                        <div className="starInput">
-                          {[1, 2, 3, 4, 5].map((val) => (
-                            <span
-                              key={val}
-                              style={{
-                                cursor: "pointer",
-                                color: val <= rating ? "#facc15" : "#d1d5db",
-                                fontSize: "1.5rem",
-                              }}
-                              onClick={() => setRating(val)}
-                            >
-                              ★
-                            </span>
-                          ))}
-                        </div>
-
-                        <textarea
-                          placeholder="Write your review..."
-                          className="submitDialogTextArea"
-                          cols="30"
-                          rows="5"
-                          value={comment}
-                          onChange={(e) => setComment(e.target.value)}
-                        ></textarea>
-
-                        <div className="dialogActions">
-                          <button
-                            onClick={submitReviewToggle}
-                            className="cancelBtn"
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            onClick={reviewSubmitHandler}
-                            className="submitBtn"
-                          >
-                            Submit
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {project?.reviews && project.reviews.length > 0 ? (
-                    <div className="reviews">
-                      {project.reviews.map((review) => (
-                        <ReviewCard key={review._id} review={review} />
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="noReviews">No Reviews Yet</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="right">
-                <div className="price">
-                  <h2>{project?.title}</h2>
-                  <h3>{`₹${project?.price}`}</h3>
-                </div>
-                <span>Category: {project?.category}</span>
-                <p>{project?.desc}</p>
-                <Link to="/proposal">
-                  <button onClick={addBidItemsHandler}>Continue</button>
-                </Link>
               </div>
             </div>
+
+            {/* Project Image */}
+            {project.images?.[0] && (
+              <div className="project-image-wrapper">
+                <img src={project.images[0].url} alt={project.title} className="project-image" />
+              </div>
+            )}
+
+            {/* Description */}
+            <div className="section">
+              <h2>Description</h2>
+              <p className="project-description">{project.desc}</p>
+            </div>
+
+            {/* Reviews */}
+            <div className="section">
+              <div className="section-header">
+                <h2>Reviews</h2>
+                <button className="btn-primary" onClick={() => setShowReviewModal(true)}>
+                  Write a Review
+                </button>
+              </div>
+
+              {project.reviews?.length > 0 ? (
+                <div className="reviews-list">
+                  {project.reviews.map((review) => (
+                    <ReviewCard key={review._id} review={review} />
+                  ))}
+                </div>
+              ) : (
+                <p className="no-reviews">No reviews yet. Be the first!</p>
+              )}
+            </div>
           </div>
-        </Fragment>
+
+          {/* Sidebar */}
+          <div className="sidebar">
+            <div className="price-card">
+              <h3>Project Budget</h3>
+              <div className="price">₹{project.price?.toLocaleString()}</div>
+              <button className="bid-btn" onClick={addToBidHandler}>
+                Place Your Bid
+              </button>
+            </div>
+
+            <div className="info-card">
+              <h3>Project Info</h3>
+              <div className="info-item">
+                <span>Category</span>
+                <strong>{project.category}</strong>
+              </div>
+              <div className="info-item">
+                <span>Posted By</span>
+                <strong>{project.postedBy?.name}</strong>
+              </div>
+              <div className="info-item">
+                <span>Rating</span>
+                <StarRating rating={project.ratings || 0} size="text-lg" />
+              </div>
+            </div>
+
+            <a href="mailto:flexiworkclient@gmail.com" className="contact-btn">
+              Contact Client
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Review Modal */}
+      {showReviewModal && (
+        <div className="modal-overlay" onClick={() => setShowReviewModal(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Write Your Review</h2>
+            <div className="rating-input">
+              <p>Rate this project:</p>
+              <StarRating rating={rating} onRate={setRating} interactive size="text-5xl" />
+            </div>
+            <textarea
+              placeholder="Share your experience..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={() => setShowReviewModal(false)}>
+                Cancel
+              </button>
+              <button className="btn-primary" onClick={submitReview}>
+                Submit Review
+              </button>
+            </div>
+          </div>
+        </div>
       )}
-    </Fragment>
+    </>
   );
 };
 

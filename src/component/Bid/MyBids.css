@@ -1,0 +1,162 @@
+ /* src/components/Bid/MyBids.css */
+
+.my-bids-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #0f1115;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-family: "Inter", "Roboto", sans-serif;
+}
+
+.my-bids-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #00c2ff;
+  text-shadow: 0 0 10px rgba(0, 194, 255, 0.3);
+}
+
+/* Empty State */
+.empty-bids {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #aaa;
+}
+.empty-bids p {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+.browse-projects-btn {
+  display: inline-block;
+  background: #00c2ff;
+  color: #111;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.browse-projects-btn:hover {
+  background: #00eaff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 234, 255, 0.3);
+}
+
+/* Table Wrapper */
+.bids-table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #333;
+  background: #111;
+}
+
+.bids-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.bids-table th {
+  background: #1a1d23;
+  color: #00c2ff;
+  text-align: left;
+  padding: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.bids-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #222;
+  vertical-align: middle;
+}
+
+.bid-row:hover {
+  background: rgba(0, 194, 255, 0.08);
+  transition: background 0.2s ease;
+}
+
+/* Status Badge */
+.status-badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.status-badge.approved {
+  background: #0f5132;
+  color: #75b798;
+}
+.status-badge.pending {
+  background: #664d03;
+  color: #ffd89b;
+}
+.status-badge.rejected {
+  background: #58151c;
+  color: #f8a5a5;
+}
+
+/* Action Link */
+.view-bid-link {
+  color: #00c2ff;
+  font-size: 1.2rem;
+  transition: color 0.2s ease;
+}
+.view-bid-link:hover {
+  color: #00eaff;
+}
+
+/* Responsive Table (Mobile) */
+@media (max-width: 768px) {
+  .bids-table,
+  .bids-table thead,
+  .bids-table tbody,
+  .bids-table th,
+  .bids-table td,
+  .bids-table tr {
+    display: block;
+  }
+
+  .bids-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .bid-row {
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #1a1a1a;
+  }
+
+  .bids-table td {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+    text-align: right;
+  }
+
+  .bids-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 1rem;
+    width: 45%;
+    font-weight: 600;
+    color: #00c2ff;
+    text-align: left;
+  }
+
+  .bid-actions {
+    text-align: right;
+    padding-left: 1rem !important;
+  }
+}

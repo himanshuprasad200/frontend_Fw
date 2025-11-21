@@ -70,34 +70,33 @@ const BidDetails = () => {
           <div className="bidDetailsBidItems">
             <h3 className="sectionTitle">Bid Items:</h3>
             <div className="bidDetailsBidItemsContainer">
-              {bid?.bidsItems && bid.bidsItems.length > 0 ? (
-                bid.bidsItems.map((item) => (
-                  <div key={item.project} className="bidItemCard">
-                    <div className="bidItemImageContainer">
-                      <img
-                        src={item.image}
-                        alt="Project"
-                        className="bidItemImage"
-                      />
-                    </div>
-                    <div className="bidItemContent">
-                      <p className="bidItemName">
-                        Client: <strong>{item.name}</strong>
-                      </p>
-                      <Link
-                        to={`/project/${item.project}`}
-                        className="bidItemTitle"
-                      >
-                        {item.title}
-                      </Link>
-                      <p className="bidItemCategory">Category: {item.category}</p>
-                      <p className="bidItemPrice">₹ {item.price.toLocaleString()}</p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="noItems">No bid items found.</p>
-              )}
+             {bid?.bidsItems && bid.bidsItems.length > 0 ? (
+  bid.bidsItems.map((item) => (
+    <div key={item.project} className="bidItemCard">
+      <div className="bidItemImageContainer">
+        <img
+          src={item.image || "/default.jpg"}
+          alt={item.title}
+          className="bidItemImage"
+        />
+      </div>
+      <div className="bidItemContent">
+        <p className="bidItemName">
+          Client: <strong>{item.name || "N/A"}</strong>
+        </p>
+        <Link to={`/project/${item.project}`} className="bidItemTitle">
+          {item.title || "Untitled Project"}
+        </Link>
+        <p className="bidItemCategory">Category: {item.category || "N/A"}</p>
+        <p className="bidItemPrice">
+          ₹ {item.price ? item.price.toLocaleString() : "0"}
+        </p>
+      </div>
+    </div>
+  ))
+) : (
+  <p className="noItems">No bid items found.</p>
+)}
             </div>
           </div>
         </Fragment>

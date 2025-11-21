@@ -123,6 +123,48 @@
   cursor: not-allowed;
   transform: none;
 }
+/* src/component/Project/Proposal.css */
+.bid-items-summary {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #1a1d23;
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+.bid-items-summary h3 {
+  margin: 0 0 1rem;
+  color: #00c2ff;
+  font-size: 1.1rem;
+}
+
+.bid-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #111;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.bid-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.bid-item strong {
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.bid-item p {
+  margin: 0;
+  color: #00c2ff;
+  font-weight: 600;
+}
 
 /* Responsive */
 @media (max-width: 768px) {

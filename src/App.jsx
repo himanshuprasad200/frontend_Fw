@@ -1,8 +1,7 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+// src/App.jsx
+import React, { useEffect } from "react";
 import "./App.css";
-import { Route, Router, Routes } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./component/layout/Header/Header";
 import Home from "./component/Home/Home";
@@ -14,23 +13,121 @@ import BidDetails from "./component/Bid/BidDetails";
 import Proposal from "./component/Project/Proposal";
 import Footer from "./component/layout/Footer/Footer";
 import BidSuccess from "./component/Project/BidSuccess";
+import MyBids from "./component/Bid/MyBids";
+import { useSelector, useDispatch } from "react-redux";
+import { loadUser } from "./actions/userAction";
+import axios from "axios";
+import Loader from "./component/layout/Loader/Loader"; // Optional: create a small spinner
+
+// Set Axios to send cookies with every request (Critical for session auth)
+axios.defaults.withCredentials = true;
+
+// Protected Route with proper loading handling
+const ProtectedRoute = ({ children }) => {
+  const { loading, isAuthenticated } = useSelector((state) => state.user);
+
+  // While checking authentication on app load
+  if (loading) {
+    return (
+      <div className="pageLoader">
+        <Loader />
+      </div>
+    );
+  }
+
+  // If not authenticated → redirect to login
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
 
 function App() {
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.user);
+
+  // Load user on every app mount (including page refresh)
+  useEffect(() => {
+    dispatch(loadUser());
+  }, [dispatch]);
+
   return (
     <>
-      <Navbar />
-      <Toaster position="top-right" />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginSignUp />} />
-        <Route path="/account" element={<Profile />} />
-        <Route path="/project/:id" element={<ProjectDetails />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/projects/:keyword" element={<Projects />} />
-        <Route path="/bid/:id" element={<BidDetails />} />
-        <Route path="/proposal" element={<Proposal />} />
-          <Route path="/success" element={<BidSuccess />} />
-      </Routes>
+      {/* Header */}
+      <header className="app-header">
+        <Navbar />
+      </header>
+
+      {/* Toast Notifications */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: "#1a1d23",
+            color: "#fff",
+            border: "1px solid #333",
+          },
+        }}
+      />
+
+      {/* Optional: Full-page loader while initial auth check */}
+      {loading ? (
+        <div className="initialLoader">
+          <Loader />
+        </div>
+      ) : (
+        <main className="app-main">
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<LoginSignUp />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:keyword" element={<Projects />} />
+            <Route path="/project/:id" element={<ProjectDetails />} />
+            <Route path="/bid/:id" element={<BidDetails />} />
+
+            {/* Protected Routes */}
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/proposal"
+              element={
+                <ProtectedRoute>
+                  <Proposal />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/success"
+              element={
+                <ProtectedRoute>
+                  <BidSuccess />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/bids"
+              element={
+                <ProtectedRoute>
+                  <MyBids />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Catch-all redirect */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+      )}
+
       <Footer />
     </>
   );

@@ -27,39 +27,32 @@ import {
 axios.defaults.withCredentials = true;  // Send cookies with every request
 
 // Create Bid (Fixed: formData as data; port URL; withCredentials)
-export const createBid = (bid) => async (dispatch) => {
+// src/actions/bidActions.js
+export const createBid = (bidData) => async (dispatch) => {
   try {
     dispatch({ type: CREATE_BID_REQUEST });
 
-    const formData = new FormData();
-    formData.append("proposal", bid.proposal);
-
-    if (bid.file) {
-      formData.append("file", bid.file);
-    }
-
     const config = {
-      headers: {
-        "Content-Type": bid.file ? "multipart/form-data" : "application/json",
-      },
-      withCredentials: true,  // Ensure cookies sent
+      headers: { "Content-Type": "multipart/form-data" },
+      withCredentials: true, // ← THIS SENDS COOKIES
     };
 
-    const { data } = await axios.post("https://backend-i86g.onrender.com/api/v1/bid/new", formData, config);
+    const { data } = await axios.post(
+      "https://backend-i86g.onrender.com/api/v1/bid/new",
+      bidData,
+      config
+    );
 
-    dispatch({
-      type: CREATE_BID_SUCCESS,
-      payload: data,
-    });
+    dispatch({ type: CREATE_BID_SUCCESS, payload: data });
   } catch (error) {
-    const errorMsg = error.response ? error.response.data.message : error.message;
-    dispatch({
-      type: CREATE_BID_FAIL,
-      payload: errorMsg,
-    });
-    // Handle 401: Redirect to login
+    const msg = error.response?.data?.message || "Bid failed";
+    dispatch({ type: CREATE_BID_FAIL, payload: msg });
+
     if (error.response?.status === 401) {
-      window.location.href = "/login";
+      toast.error("Session expired. Logging you out...");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1500);
     }
   }
 };
@@ -181,25 +174,28 @@ export const getBidDetails = (id) => async (dispatch) => {
 export const addToBidItems = (id) => async (dispatch, getState) => {
   try {
     const config = { withCredentials: true };
-    const { data } = await axios.get(`https://backend-i86g.onrender.com/api/v1/project/${id}`, config);
+    const { data } = await axios.get(
+      `https://backend-i86g.onrender.com/api/v1/project/${id}`,
+      config
+    );
+
     const payload = {
       project: data.project._id,
-      name: data.project.name,  
       title: data.project.title,
       price: data.project.price,
-      category: data.project.category,
-      image: data.project.images[0].url,
+      image: data.project.images[0]?.url || "/default.jpg",
     };
-    
+
     dispatch({
       type: ADD_TO_BIDITEMS,
       payload,
     });
 
-    const bidItems = getState().bidItems?.bidItems || [];
-    localStorage.setItem('bidItems', JSON.stringify(bidItems));
+    // Save to localStorage
+    const bidItems = [...(getState().bidItems.bidItems || []), payload];
+    localStorage.setItem("bidItems", JSON.stringify(bidItems));
   } catch (error) {
-    console.error("Error fetching project data:", error);
+    toast.error("Failed to add project. Please try again.");
   }
 };
 

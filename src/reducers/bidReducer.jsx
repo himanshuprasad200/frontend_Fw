@@ -186,12 +186,14 @@ export const bidDetailsReducer = (state = { bid: {} }, action) => {
 export const bidItemsReducer = (state = { bidItems: [] }, action) => {
   switch (action.type) {
     case ADD_TO_BIDITEMS:
-      const item = action.payload;
-      const existingItems = state.bidItems || [];
-      const newItems = [...existingItems, item];
+      const newItem = action.payload;
+      const exists = state.bidItems.find((i) => i.project === newItem.project);
+      if (exists) {
+        return state; // Prevent duplicates
+      }
       return {
         ...state,
-        bidItems: newItems,
+        bidItems: [...state.bidItems, newItem],
       };
     default:
       return state;

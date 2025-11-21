@@ -1,5 +1,6 @@
 import React from "react";
 import profilePng from "../../images/Profile.png";
+import "./ProjectDetails.css";
 
 const ReviewCard = ({ review }) => {
   const renderStars = (rating = 0) => {

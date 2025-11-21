@@ -214,6 +214,37 @@
   box-shadow: 0 15px 40px rgba(0, 212, 255, 0.6);
 }
 
+/* Password Eye Toggle */
+.password-group {
+  position: relative;
+}
+
+.toggle-pass {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #00d4ff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  z-index: 10;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.toggle-pass:hover {
+  background: rgba(0, 212, 255, 0.2);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Improve input padding when eye icon is present */
+.password-group input {
+  padding-right: 60px !important;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .grid-2 {

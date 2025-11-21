@@ -9,6 +9,8 @@ import {
   MdCreditCard,
   MdAccountBalance,
   MdPayment,
+  MdVisibility,
+  MdVisibilityOff,
 } from "react-icons/md";
 import { FaGlobe, FaUpload } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,18 +22,21 @@ import Loader from "../layout/Loader/Loader";
 const LoginSignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, isAuthenticated, error } = useSelector(
-    (state) => state.user
-  );
+  const { loading, isAuthenticated, error } = useSelector((state) => state.user);
 
   const [isLogin, setIsLogin] = useState(true);
+
+  // Password Visibility
+  const [showLoginPass, setShowLoginPass] = useState(false);
+  const [showRegPass, setShowRegPass] = useState(false);
+
   const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
 
-  // Login
+  // Login State
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
-  // Register
+  // Register State
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -40,6 +45,7 @@ const LoginSignUp = () => {
     country: "",
     accountNo: "",
     upiId: "",
+    pancard: "",
   });
   const [avatar, setAvatar] = useState("");
 
@@ -54,7 +60,9 @@ const LoginSignUp = () => {
       };
       reader.readAsDataURL(e.target.files[0]);
     } else {
-      setUser({ ...user, [e.target.name]: e.target.value });
+      let value = e.target.value;
+      if (e.target.name === "pancard") value = value.toUpperCase();
+      setUser({ ...user, [e.target.name]: value });
     }
   };
 
@@ -71,13 +79,37 @@ const LoginSignUp = () => {
     dispatch(register(formData));
   };
 
+  // Enhanced Error Handling
   useEffect(() => {
     if (error) {
-      toast.error(error);
+      let message = error;
+
+      if (error.includes("Incorrect password") || error.includes("Password")) {
+        message = "Incorrect password. Please try again.";
+      } else if (error.includes("User not found") || error.includes("email")) {
+        message = "No account found with this email.";
+      } else if (error.includes("already exists")) {
+        message = "This email is already registered.";
+      } else if (error.includes("validation")) {
+        message = "Please fill all required fields correctly.";
+      }
+
+      toast.error(message, {
+        duration: 5000,
+        style: {
+          background: "#ff4444",
+          color: "#fff",
+          fontWeight: "bold",
+        },
+      });
       dispatch(clearErrors());
     }
+
     if (isAuthenticated) {
-      toast.success("Welcome back!");
+      toast.success("Welcome back!", {
+        icon: "Success",
+        style: { background: "#00d4ff", color: "#000" },
+      });
       navigate("/account");
     }
   }, [dispatch, error, isAuthenticated, navigate]);
@@ -92,9 +124,11 @@ const LoginSignUp = () => {
             <div className="auth-card-full">
               {/* Header */}
               <div className="auth-header">
-                <h1>{isLogin ? "Welcome Back" : "Create Account"}</h1>
+                <h1>{isLogin ? "Welcome Back" : "Join Freelanzo"}</h1>
                 <p>
-                  {isLogin ? "Login to continue" : "Join the platform today"}
+                  {isLogin
+                    ? "Log in to your account"
+                    : "Create your freelancer profile"}
                 </p>
               </div>
 
@@ -124,28 +158,37 @@ const LoginSignUp = () => {
                     <MdEmail className="icon" />
                     <input
                       type="email"
-                      placeholder="Email"
+                      placeholder="Email Address"
                       required
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
                     />
                   </div>
-                  <div className="input-group">
+
+                  <div className="input-group password-group">
                     <MdLock className="icon" />
                     <input
-                      type="password"
+                      type={showLoginPass ? "text" : "password"}
                       placeholder="Password"
                       required
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                     />
+                    <button
+                      type="button"
+                      className="toggle-pass"
+                      onClick={() => setShowLoginPass(!showLoginPass)}
+                    >
+                      {showLoginPass ? <MdVisibilityOff /> : <MdVisibility />}
+                    </button>
                   </div>
+
                   <button type="submit" className="auth-btn">
-                    Login Securely
+                    {loading ? "Logging in..." : "Login Securely"}
                   </button>
                 </form>
 
-                {/* Register Form - ALL FIELDS VISIBLE */}
+                {/* Register Form */}
                 <form
                   className={`auth-form ${!isLogin ? "active" : ""}`}
                   onSubmit={registerSubmit}
@@ -166,39 +209,36 @@ const LoginSignUp = () => {
                       <input
                         name="email"
                         type="email"
-                        placeholder="Email"
+                        placeholder="Email Address"
                         required
                         onChange={handleRegisterInput}
                       />
                     </div>
                   </div>
 
-                  <div className="input-group">
+                  <div className="input-group password-group">
                     <MdLock className="icon" />
                     <input
                       name="password"
-                      type="password"
-                      placeholder="Create Password"
+                      type={showRegPass ? "text" : "password"}
+                      placeholder="Create Strong Password"
                       required
                       onChange={handleRegisterInput}
                     />
+                    <button
+                      type="button"
+                      className="toggle-pass"
+                      onClick={() => setShowRegPass(!showRegPass)}
+                    >
+                      {showRegPass ? <MdVisibilityOff /> : <MdVisibility />}
+                    </button>
                   </div>
 
                   <div className="input-group">
                     <MdWork className="icon" />
                     <input
                       name="professionalHeadline"
-                      placeholder="Profession (e.g. UI Designer)"
-                      required
-                      onChange={handleRegisterInput}
-                    />
-                  </div>
-
-                  <div className="input-group">
-                    <FaGlobe className="icon" />
-                    <input
-                      name="country"
-                      placeholder="Country"
+                      placeholder="Your Profession (e.g. Full Stack Developer)"
                       required
                       onChange={handleRegisterInput}
                     />
@@ -206,10 +246,32 @@ const LoginSignUp = () => {
 
                   <div className="grid-2">
                     <div className="input-group">
+                      <FaGlobe className="icon" />
+                      <input
+                        name="country"
+                        placeholder="Country"
+                        required
+                        onChange={handleRegisterInput}
+                      />
+                    </div>
+                    <div className="input-group">
+                      <MdCreditCard className="icon" />
+                      <input
+                        name="pancard"
+                        placeholder="PAN Card (ABCPD1234E)"
+                        maxLength="10"
+                        required
+                        onChange={handleRegisterInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid-2">
+                    <div className="input-group">
                       <MdAccountBalance className="icon" />
                       <input
                         name="accountNo"
-                        placeholder="Bank Account No"
+                        placeholder="Bank Account Number"
                         required
                         onChange={handleRegisterInput}
                       />
@@ -218,15 +280,14 @@ const LoginSignUp = () => {
                       <MdPayment className="icon" />
                       <input
                         name="upiId"
-                        placeholder="UPI ID"
-                        required
+                        placeholder="UPI ID (optional)"
                         onChange={handleRegisterInput}
                       />
                     </div>
                   </div>
 
                   <div className="avatar-upload">
-                    <img src={avatarPreview} alt="Preview" />
+                    <img src={avatarPreview} alt="Avatar Preview" />
                     <label>
                       <FaUpload />
                       <span>Upload Profile Photo</span>
@@ -240,7 +301,7 @@ const LoginSignUp = () => {
                   </div>
 
                   <button type="submit" className="auth-btn">
-                    Create Account
+                    {loading ? "Creating Account..." : "Create Account"}
                   </button>
                 </form>
               </div>

@@ -244,8 +244,7 @@ const LoginSignUp = () => {
                     />
                   </div>
 
-                  <div className="grid-2">
-                    <div className="input-group">
+                  <div className="input-group">
                       <FaGlobe className="icon" />
                       <input
                         name="country"
@@ -254,17 +253,6 @@ const LoginSignUp = () => {
                         onChange={handleRegisterInput}
                       />
                     </div>
-                    <div className="input-group">
-                      <MdCreditCard className="icon" />
-                      <input
-                        name="pancard"
-                        placeholder="PAN Card (ABCPD1234E)"
-                        maxLength="10"
-                        required
-                        onChange={handleRegisterInput}
-                      />
-                    </div>
-                  </div>
 
                   <div className="grid-2">
                     <div className="input-group">

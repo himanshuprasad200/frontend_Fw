@@ -1,14 +1,15 @@
 // src/main.jsx
 import axios from "axios";
 
-// THIS MUST BE AT THE TOP
+// CRITICAL: Use proxy → baseURL must be EMPTY
+axios.defaults.baseURL = "";  // ← EMPTY STRING
 axios.defaults.withCredentials = true;
 
-// CORRECT BASE URL — ONLY backend
-axios.defaults.baseURL = "https://backend-i86g.onrender.com";
-
-// DO NOT set baseURL differently in dev/prod for cookies to work
-// Just use the backend URL directly
+// Force credentials on every request
+axios.interceptors.request.use((config) => {
+  config.withCredentials = true;
+  return config;
+});
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";

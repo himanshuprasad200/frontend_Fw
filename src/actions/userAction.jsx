@@ -48,16 +48,21 @@ export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: LOGIN_REQUEST });
 
-    const config = { 
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true
-    };
-
-    const { data } = await axios.post(`/api/v1/login`, { email, password }, config);
+    const { data } = await axios.post(
+      "/api/v1/login",
+      { email, password },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
 
     dispatch({ type: LOGIN_SUCCESS, payload: data.user });
   } catch (error) {
-    dispatch({ type: LOGIN_FAIL, payload: error.response?.data?.message || "Login failed" });
+    dispatch({
+      type: LOGIN_FAIL,
+      payload: error.response?.data?.message || "Login failed",
+    });
   }
 };
 
@@ -81,18 +86,14 @@ export const loadUser = () => async (dispatch) => {
   try {
     dispatch({ type: LOAD_USER_REQUEST });
 
-    const token = localStorage.getItem("token");
-    const config = {
-      withCredentials: true,
-      headers: token ? { Authorization: `Bearer ${token}` } : {}
-    };
-
-    const { data } = await axios.get(`/api/v1/me`, config);
+    const { data } = await axios.get("/api/v1/me", {
+      withCredentials: true,  // This forces cookie to be sent
+    });
 
     dispatch({ type: LOAD_USER_SUCCESS, payload: data.user });
   } catch (error) {
     dispatch({ type: LOAD_USER_FAIL });
-    localStorage.removeItem("token");
+    // Do NOT clear localStorage — we don't use it
   }
 };
 

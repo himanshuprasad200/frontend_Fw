@@ -76,13 +76,22 @@ export const register = (userData) => async (dispatch) => {
 };
 
 export const loadUser = () => async (dispatch) => {
+  if (!localStorage.getItem("token")) {
+    dispatch({ type: LOAD_USER_FAIL });
+    return;
+  }
+
   try {
     dispatch({ type: LOAD_USER_REQUEST });
 
     const { data } = await axios.get("/api/v1/me");
+
     dispatch({ type: LOAD_USER_SUCCESS, payload: data.user });
   } catch (error) {
-    localStorage.removeItem("token"); // Clear invalid token
+    // Only clear token if backend says "unauthorized"
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+    }
     dispatch({ type: LOAD_USER_FAIL });
   }
 };
@@ -90,9 +99,10 @@ export const loadUser = () => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   try {
     await axios.get("/api/v1/logout");
-    localStorage.removeItem("token");
+    localStorage.removeItem("token"); // Only here!
     dispatch({ type: LOGOUT_SUCCESS });
   } catch (error) {
+    localStorage.removeItem("token"); // Safe here too
     dispatch({ type: LOGOUT_FAIL });
   }
 };

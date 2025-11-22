@@ -1,14 +1,15 @@
-// src/main.jsx  ← REPLACE YOUR CURRENT FILE WITH THIS
-
+// src/main.jsx
 import axios from "axios";
 
-// THIS MUST BE AT THE VERY TOP — BEFORE ANY OTHER IMPORTS
+// THIS MUST BE AT THE TOP
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = import.meta.env.PROD
-  ? "https://backend-i86g.onrender.com"  // ← CHANGE TO YOUR ACTUAL BACKEND URL
-  : "https://backend-i86g.onrender.com";
 
-// NOW import React and others
+// CORRECT BASE URL — ONLY backend
+axios.defaults.baseURL = "https://backend-i86g.onrender.com";
+
+// DO NOT set baseURL differently in dev/prod for cookies to work
+// Just use the backend URL directly
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";

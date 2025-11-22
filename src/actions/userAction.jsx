@@ -47,15 +47,17 @@ const API_URL = 'https://backend-i86g.onrender.com';
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: LOGIN_REQUEST });
-    const config = { headers: { "Content-Type": "application/json" } };
-    const { data } = await axios.post(
-      `${API_URL}/api/v1/login`,
-      { email, password },
-      config
-    );
+
+    const config = { 
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true
+    };
+
+    const { data } = await axios.post(`/api/v1/login`, { email, password }, config);
+
     dispatch({ type: LOGIN_SUCCESS, payload: data.user });
   } catch (error) {
-    dispatch({ type: LOGIN_FAIL, payload: error.response ? error.response.data.message : error.message });
+    dispatch({ type: LOGIN_FAIL, payload: error.response?.data?.message || "Login failed" });
   }
 };
 
@@ -78,10 +80,19 @@ export const register = (userData) => async (dispatch) => {
 export const loadUser = () => async (dispatch) => {
   try {
     dispatch({ type: LOAD_USER_REQUEST });
-    const { data } = await axios.get(`${API_URL}/api/v1/me`);
+
+    const token = localStorage.getItem("token");
+    const config = {
+      withCredentials: true,
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    };
+
+    const { data } = await axios.get(`/api/v1/me`, config);
+
     dispatch({ type: LOAD_USER_SUCCESS, payload: data.user });
   } catch (error) {
-    dispatch({ type: LOAD_USER_FAIL, payload: error.response ? error.response.data.message : error.message });
+    dispatch({ type: LOAD_USER_FAIL });
+    localStorage.removeItem("token");
   }
 };
 

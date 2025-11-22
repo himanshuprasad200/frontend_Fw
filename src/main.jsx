@@ -1,13 +1,15 @@
 // src/main.jsx
 import axios from "axios";
 
-// CRITICAL: Use proxy → baseURL must be EMPTY
-axios.defaults.baseURL = "";  // ← EMPTY STRING
+axios.defaults.baseURL = "https://backend-i86g.onrender.com";
 axios.defaults.withCredentials = true;
 
-// Force credentials on every request
+// ADD TOKEN TO EVERY REQUEST
 axios.interceptors.request.use((config) => {
-  config.withCredentials = true;
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 

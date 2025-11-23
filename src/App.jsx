@@ -18,6 +18,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { loadUser } from "./actions/userAction";
 import axios from "axios";
 import Loader from "./component/layout/Loader/Loader"; // Optional: create a small spinner
+import UpdateProfile from "./component/User/UpdateProfile";
 
 // Set Axios to send cookies with every request (Critical for session auth)
 axios.defaults.withCredentials = true;
@@ -86,7 +87,6 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:keyword" element={<Projects />} />
             <Route path="/project/:id" element={<ProjectDetails />} />
-            <Route path="/bid/:id" element={<BidDetails />} />
 
             {/* Protected Routes */}
             <Route
@@ -98,6 +98,14 @@ function App() {
               }
             />
             <Route
+              path="/me/update"
+              element={
+                <ProtectedRoute>
+                  <UpdateProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/proposal"
               element={
                 <ProtectedRoute>
@@ -105,6 +113,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/bid/:id" element={<BidDetails />} />
             <Route
               path="/success"
               element={

@@ -1,185 +1,366 @@
-.profileContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin: 100px auto;
-    padding: 20px;
-    max-width: 800px;
-    background-color: #f9f9f9;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-  }
-  
-  .profileContainer h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .profileContainer img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-  }
-  
-  .profileContainer a {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 5px;
-    text-decoration: none;
-  }
-  
-  .profileContainer a:hover {
-    background-color: #0056b3;
-  }
-  
-  .profileContainer > div {
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .profileContainer > div > div {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 0;
-    gap: 10px;
-  }
-  
-  .profileContainer h4 {
-    font-size: 1rem;
-    color: #555;
-  }
-  
-  .profileContainer p {
-    font-size: 1rem;
-    color: #777;
-  }
-  
-  .profileContainer .profileLinks {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 20px;
-  }
-  
-  .profileContainer .profileLinks a {
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 5px;
-    text-decoration: none;
-    text-align: center;
-  }
-  
-  .profileContainer .profileLinks a:hover {
-    background-color: #0056b3;
-  }
-
-  .userReviewsHeading {
-    color: #000000be;
-    font: 500 1.4vmax "Roboto";
-    text-align: center;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.226);
-    padding: 1vmax;
-    width: 20vmax;
-    margin: auto;
-    margin-bottom: 2vmax;
-  }
-
-  .reviews {
-    justify-content: center;
-    display: grid;
-    overflow-y: auto;
-    padding: 10px;
-    max-height: 500px;
-  }
-
-  .userReviewCard {
-    flex: none;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.226);
-    border: 1px solid rgba(56, 56, 56, 0.116);
-    background-color: white;
-    width: 30vmax;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 1vmax;
-    padding: 3vmax;
-  }
-  
-  .userReviewCard > img {
-    border-radius: 100%;
-    margin: 10px;
-    width: 50px;
-    height: 50px;
-  }
-  
-  .userReviewCard > p {
-    color: rgba(0, 0, 0, 0.836);
-    font: 600 1.2vmax "Roboto";
-  } 
-  
-  .userReviewCardComment {
-    color: rgba(0, 0, 0, 0.445);
-    font: 300 1.3vmax "Gill Sans";
-  }
-  
-  .noReviewss {
-    font: 400 1.3vmax "Gill Sans";
-    text-align: center;
-    color: #555;
-    padding: 10px;
-  }
-
-  .rating {
-  display: inline-flex;
-  gap: 2px;
-  font-size: 1.5rem;
+/* src/component/User/Profile.css */
+.profile-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.rating .star {
-  color: #e0e0e0;
-}
-
-.rating .star.filled {
-  color: #ffc107;
-}
-
-.rating .star.half {
+/* HERO */
+.profile-hero {
   position: relative;
-  color: #e0e0e0;
-}
-
-.rating .star.half::before {
-  content: '★';
-  position: absolute;
-  left: 0;
-  color: #ffc107;
-  width: 50%;
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  color: white;
+  padding: 140px 20px 80px;
+  text-align: center;
   overflow: hidden;
 }
-  
-  @media screen and (max-width: 600px) {
 
-    .profileContainer {
-      margin-top: 10vmax
-    }
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.2), transparent);
+}
 
-    .userReviewCard > p {
-      font: 600 2vmax "Roboto";
-    } 
+.hero-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
 
-    .userReviewCardComment {
-      font: 500 1.9vmax "Gill Sans";
-    }
+.avatar-box {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
 
-  }
+.profile-avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 8px solid rgba(255,255,255,0.3);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+
+.online-dot {
+  position: absolute;
+  bottom: 15px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  background: #22c55e;
+  border: 5px solid white;
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(34,197,94,0.5);
+}
+
+.profile-name {
+  font-size: 44px;
+  font-weight: 800;
+  margin: 0 0 12px;
+}
+
+.tagline {
+  font-size: 22px;
+  opacity: 0.95;
+  margin: 0 0 16px;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 18px;
+  margin: 20px 0;
+  color: #fbbf24;
+}
+
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: rgba(255,255,255,0.15);
+  padding: 16px 28px;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  min-width: 110px;
+}
+
+.stat.highlight {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.stat strong {
+  display: block;
+  font-size: 36px;
+  font-weight: 800;
+}
+
+.stat span {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.edit-btn {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  padding: 14px 36px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s;
+}
+
+.edit-btn:hover {
+  background: white;
+  color: #0ea5e9;
+  transform: translateY(-4px);
+}
+
+/* CONTENT */
+.profile-content {
+  max-width: 1200px;
+  margin: -70px auto 60px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 460px;
+  gap: 32px;
+}
+
+.info-card, .reviews-card {
+  margin-bottom: 20px;
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 12px 40px rgba(14,165,233,0.15);
+  border: 1px solid #e0f2fe;
+}
+
+.info-card h3, .reviews-card h3 {
+  font-size: 24px;
+  color: #0c4a6e;
+  margin: 0 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f9ff;
+}
+
+.info-item:last-child { border: none; }
+
+.info-item i {
+  font-size: 26px;
+  color: #0ea5e9;
+  width: 50px;
+  text-align: center;
+}
+
+.info-item strong {
+  display: block;
+  color: #0c4a6e;
+  font-size: 15px;
+}
+
+.info-item p {
+  margin: 4px 0 0;
+  color: #475569;
+  font-weight: 500;
+}
+
+.mono {
+  font-family: 'Courier New', monospace;
+  color: #1e40af;
+  letter-spacing: 1px;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.action-card {
+  padding: 24px;
+  border-radius: 18px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s;
+  box-shadow: 0 8px 25px rgba(14,165,233,0.1);
+  border: 1px solid #e0f2fe;
+}
+
+.action-card.primary {
+  background: linear-gradient(135deg, #0ea5e9, #0369a1);
+  color: white;
+}
+
+.action-card.secondary {
+  background: #f8fafc;
+  color: #475569;
+}
+
+.action-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(14,165,233,0.2);
+}
+
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.review-count {
+  background: #0ea5e9;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+}
+
+.no-reviews i {
+  color: #cbd5e1;
+  margin-bottom: 16px;
+}
+
+/* REVIEW CARD STYLING */
+.modern-review-card {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #e0f2fe;
+  transition: all 0.3s;
+}
+
+.modern-review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(14,165,233,0.12);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.review-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e0f2fe;
+}
+
+.reviewer-name {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.review-stars {
+  display: flex;
+  gap: 4px;
+}
+
+.review-stars i {
+  font-size: 18px;
+  color: #e2e8f0;
+}
+
+.review-stars .filled {
+  color: #fbbf24;
+}
+
+.review-comment {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: #475569;
+  word-wrap: break-word;
+}
+
+.reviewCard {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s 
+ease;
+    border: 1px solid #f1f5f9;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .content-grid { grid-template-columns: 1fr; }
+  .action-review-section { order: -1; }
+}
+
+@media (max-width: 768px) {
+  .profile-name { font-size: 36px; }
+  .profile-avatar { width: 140px; height: 140px; }
+  .action-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .profile-hero { padding: 120px 16px 60px; }
+  .info-card, .reviews-card { padding: 24px; }
+}

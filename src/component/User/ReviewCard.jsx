@@ -5,7 +5,7 @@ import profilePng from "../../images/Profile.png";
 const ReviewCard = ({ review }) => {
   useEffect(() => {
     if (!review || typeof review.rating !== "number") {
-      toast.error("Invalid review data");
+      toast.error("Invalid review data"); 
     }
   }, [review]);
 

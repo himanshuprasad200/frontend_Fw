@@ -19,6 +19,7 @@ import { loadUser } from "./actions/userAction";
 import axios from "axios";
 import Loader from "./component/layout/Loader/Loader"; // Optional: create a small spinner
 import UpdateProfile from "./component/User/UpdateProfile";
+import AccountAnalytics from "./component/User/AccountAnalytics";
 
 // Set Axios to send cookies with every request (Critical for session auth)
 axios.defaults.withCredentials = true;
@@ -127,6 +128,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <MyBids />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/earning"
+              element={
+                <ProtectedRoute>
+                  <AccountAnalytics />
                 </ProtectedRoute>
               }
             />

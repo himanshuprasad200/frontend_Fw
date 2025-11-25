@@ -28,6 +28,7 @@ import {
   newBidReducer,
 } from "./reducers/bidReducer";
 import { bidItemsReducer } from "./reducers/bidReducer";
+import { allEarningReducer, makeEarningReducer, userEarningsReducer } from "./reducers/earningReducer";
 
 const rootReducers = combineReducers({
   //Users
@@ -52,6 +53,11 @@ const rootReducers = combineReducers({
   bidDetails: bidDetailsReducer,
   allBids: allBidsReducer,
   bid: bidReducer,
+
+  //User Earnings
+  makeEarning: makeEarningReducer,
+  allEarning: allEarningReducer,
+  userEarnings: userEarningsReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -1,0 +1,199 @@
+.admin-master {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.admin-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 40px 30px;
+  transition: all 0.3s ease;
+}
+
+.bidListHeading {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: transparent;
+  background: linear-gradient(90deg, #0ea5e9, #0284c7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.bidsCount {
+  text-align: center;
+  color: #64748b;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.bidListTableWrapper {
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 15px 45px rgba(14, 165, 233, 0.18);
+  border: 1px solid #e0f2fe;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 1.4fr 3.2fr 1fr 1fr 1.4fr;
+  background: linear-gradient(90deg, #0ea5e9, #0284c7);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+}
+
+.headerCell {
+  padding: 1.6rem 1.5rem;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1.4fr 3.2fr 1fr 1fr 1.4fr;
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.tableRow:hover {
+  background: #f8faff;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(14, 165, 233, 0.12);
+}
+
+.tableCell {
+  padding: 1.8rem 1.5rem;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.tableCell.id {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: #0ea5e9;
+}
+
+.proposalText {
+  color: #475569;
+  margin: 0;
+}
+
+.statusBadge {
+  padding: 0.6rem 1.3rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.statusBadge.approved   { background: #d4edda; color: #155724; }
+.statusBadge.pending    { background: #fff3cd; color: #856404; }
+.statusBadge.rejected   { background: #f8d7da; color: #721c24; }
+
+.actionButtons {
+  display: flex;
+  gap: 14px;
+}
+
+.actionBtn {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  background: #f8fafc;
+}
+
+.actionBtn svg { width: 22px; height: 22px; fill: currentColor; }
+
+.editBtn   { color: #5b21b6; background: #f3e8ff; }
+.editBtn:hover   { background: #5b21b6; color: white; transform: scale(1.12); }
+
+.deleteBtn { color: #dc2626; background: #fee2e2; }
+.deleteBtn:hover { background: #dc2626; color: white; transform: scale(1.12); }
+
+.viewBtn   { color: #16a34a; background: #dcfce7; }
+.viewBtn:hover   { background: #16a34a; color: white; transform: scale(1.12); }
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 2rem 1rem;
+  background: #f8faff;
+  border-top: 1px solid #e0f2fe;
+}
+
+.pageBtn {
+  padding: 10px 18px;
+  border: none;
+  background: white;
+  color: #0c4a6e;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.1);
+}
+
+.pageBtn:hover {
+  background: #0ea5e9;
+  color: white;
+  transform: translateY(-3px);
+}
+
+.pageBtn.active {
+  background: linear-gradient(90deg, #0ea5e9, #0284c7);
+  color: white;
+  transform: scale(1.1);
+}
+
+.prevBtn, .nextBtn {
+  font-size: 0.95rem;
+  padding: 10px 20px;
+}
+
+.prevBtn:disabled, .nextBtn:disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 100px 20px;
+  color: #64748b;
+  font-size: 1.4rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .admin-content { margin-left: 80px; }
+}
+
+@media (max-width: 768px) {
+  .admin-content { margin-left: 0; padding: 20px 15px; }
+  .tableHeader { display: none; }
+  .tableRow { grid-template-columns: 1fr; padding: 20px; margin-bottom: 16px; border-radius: 16px; box-shadow: 0 8px 25px rgba(14,165,233,0.15); }
+  .tableCell { display: block; text-align: right; padding: 10px 0; }
+  .mobileLabel { float: left; font-weight: 600; color: #0c4a6e; }
+  .mobileLabel::after { content: ":"; margin-right: 10px; }
+  .actionButtons { justify-content: flex-end; margin-top: 20px; }
+  .pagination { flex-wrap: wrap; }
+}

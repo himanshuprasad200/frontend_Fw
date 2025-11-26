@@ -20,6 +20,8 @@ import axios from "axios";
 import Loader from "./component/layout/Loader/Loader"; // Optional: create a small spinner
 import UpdateProfile from "./component/User/UpdateProfile";
 import AccountAnalytics from "./component/User/AccountAnalytics";
+import JoinAsClient from "./component/Admin/JoinAsClient";
+import BidList from "./component/Admin/BidList";
 
 // Set Axios to send cookies with every request (Critical for session auth)
 axios.defaults.withCredentials = true;
@@ -136,6 +138,24 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AccountAnalytics />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Protected and Admin routes */}
+            <Route
+              path="/admin/joinasclient"
+              element={
+                <ProtectedRoute isAdmin={true}>
+                  <JoinAsClient />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/bids"
+              element={
+                <ProtectedRoute isAdmin={true}>
+                  <BidList />
                 </ProtectedRoute>
               }
             />

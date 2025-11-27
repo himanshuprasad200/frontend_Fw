@@ -1,35 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { Outlet, Navigate } from "react-router-dom";
+// src/component/route/ProtectedRoute.jsx
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Loader from "../layout/Loader/Loader";
 
-const ProtectedRoute = ({ isAdminRoute }) => {
-  const { isAuthenticated, loading, user } = useSelector((state) => state.user);
-  const [authChecked, setAuthChecked] = useState(false);
+const ProtectedRoute = ({ children, isAdmin = false }) => {
+  const { loading, isAuthenticated, user } = useSelector((state) => state.user);
+  const location = useLocation();
 
-  useEffect(() => {
-    const storedAuthState = localStorage.getItem("isAuthenticated") === "true";
-    if (!isAuthenticated && storedAuthState) {
-      // Simulate a successful authentication check
-      setAuthChecked(true);
-    } else {
-      setAuthChecked(true);
-    }
-  }, [isAuthenticated]);
-
-  if (loading || !authChecked) {
-    // Optionally, you can render a loading spinner or a placeholder
-    return <div>Loading...</div>;
+  // Show loader while checking auth (loadUser is running)
+  if (loading) {
+    return (
+      <div className="pageLoader">
+        <Loader />
+      </div>
+    );
   }
 
-  if (!isAuthenticated && localStorage.getItem("isAuthenticated") !== "true") {
-    return <Navigate to="/login" />;
+  // Not logged in → go to login (preserve intended path)
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (isAdminRoute && user?.role !== "admin") {
-    return <Navigate to="/unauthorized" />;
+  // Admin route but not admin → go to restricted page
+  if (isAdmin && user?.role !== "admin") {
+    return <Navigate to="/unauthorized" replace />;
   }
 
-  return <Outlet />;
+  // All good → render the page
+  return children;
 };
 
 export default ProtectedRoute;

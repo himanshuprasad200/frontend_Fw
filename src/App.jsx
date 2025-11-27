@@ -17,23 +17,30 @@ import MyBids from "./component/Bid/MyBids";
 import { useSelector, useDispatch } from "react-redux";
 import { loadUser } from "./actions/userAction";
 import axios from "axios";
-import Loader from "./component/layout/Loader/Loader"; // Optional: create a small spinner
+import Loader from "./component/layout/Loader/Loader";
 import UpdateProfile from "./component/User/UpdateProfile";
 import AccountAnalytics from "./component/User/AccountAnalytics";
+
+// Admin Components
 import JoinAsClient from "./component/Admin/JoinAsClient";
 import BidList from "./component/Admin/BidList";
 import ProcessResponse from "./component/Admin/ProcessResponse";
 import UsersList from "./component/Admin/UsersList";
 import Payment from "./component/Admin/Payment";
 
-// Set Axios to send cookies with every request (Critical for session auth)
+// Layout & Auth
+import RestrictedAccess from "./component/layout/Restricted/RestrictedAccess";
+
+// Set Axios to send cookies
 axios.defaults.withCredentials = true;
 
-// Protected Route with proper loading handling
-const ProtectedRoute = ({ children }) => {
-  const { loading, isAuthenticated } = useSelector((state) => state.user);
+// ──────────────────────────────────────────────────────────────
+// SECURE PROTECTED ROUTE – Handles Auth + Admin Role
+// ──────────────────────────────────────────────────────────────
+const ProtectedRoute = ({ children, isAdmin = false }) => {
+  const { loading, isAuthenticated, user } = useSelector((state) => state.user);
 
-  // While checking authentication on app load
+  // Show loader while checking auth
   if (loading) {
     return (
       <div className="pageLoader">
@@ -42,11 +49,17 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // If not authenticated → redirect to login
+  // Not logged in → go to login
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
+  // Admin route but not admin → go to unauthorized page
+  if (isAdmin && user?.role !== "admin") {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  // All good → render page
   return children;
 };
 
@@ -54,7 +67,7 @@ function App() {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.user);
 
-  // Load user on every app mount (including page refresh)
+  // Load user on every mount (critical for refresh)
   useEffect(() => {
     dispatch(loadUser());
   }, [dispatch]);
@@ -75,11 +88,12 @@ function App() {
             background: "#1a1d23",
             color: "#fff",
             border: "1px solid #333",
+            borderRadius: "12px",
           },
         }}
       />
 
-      {/* Optional: Full-page loader while initial auth check */}
+      {/* Full-page loader during initial auth check */}
       {loading ? (
         <div className="initialLoader">
           <Loader />
@@ -94,7 +108,7 @@ function App() {
             <Route path="/projects/:keyword" element={<Projects />} />
             <Route path="/project/:id" element={<ProjectDetails />} />
 
-            {/* Protected Routes */}
+            {/* Protected User Routes */}
             <Route
               path="/account"
               element={
@@ -145,7 +159,7 @@ function App() {
               }
             />
 
-            {/* Protected and Admin routes */}
+            {/* ADMIN ROUTES – Only for role: "admin" */}
             <Route
               path="/admin/joinasclient"
               element={
@@ -187,7 +201,10 @@ function App() {
               }
             />
 
-            {/* Catch-all redirect */}
+            {/* Restricted Access Page */}
+            <Route path="/unauthorized" element={<RestrictedAccess />} />
+
+            {/* Catch-all */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

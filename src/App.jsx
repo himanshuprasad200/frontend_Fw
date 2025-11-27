@@ -161,7 +161,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/bid  /:id"
+              path="/admin/bid/:id"
               element={
                 <ProtectedRoute isAdmin={true}>
                   <ProcessResponse />

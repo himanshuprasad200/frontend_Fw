@@ -1,0 +1,310 @@
+/* ========================================
+   PAYMENT + SUCCESS SCREEN – FULLY FIXED
+   ======================================== */
+
+.admin-master {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.admin-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 40px 30px;
+  transition: margin-left 0.4s ease;
+}
+
+.admin-sidebar.collapsed ~ .admin-content {
+  margin-left: 80px;
+}
+
+/* FORM STYLES */
+.payment-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.payment-card {
+  background: white;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 25px 70px rgba(14, 165, 233, 0.25);
+  border: 1px solid #bae6fd;
+}
+
+.payment-header {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  color: white;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.payment-header h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin: 0 0 12px;
+}
+
+.payment-header p {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.95;
+}
+
+.payment-form {
+  padding: 40px 30px 30px;
+}
+
+.amount-group {
+  margin-bottom: 32px;
+}
+
+.amount-input-wrapper {
+  position: relative;
+}
+
+.currency-symbol {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0c4a6e;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.amount-input {
+  width: 100%;
+  padding: 20px 20px 20px 60px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #0c4a6e;
+  background: #f8faff;
+  border: 2px solid #e0f2fe;
+  border-radius: 18px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.amount-input:focus {
+  border-color: #0ea5e9;
+  background: white;
+  box-shadow: 0 12px 35px rgba(14, 165, 233, 0.2);
+}
+
+.input-hint {
+  margin: 12px 0 0;
+  color: #64748b;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.submit-payment-btn {
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(90deg, #16a34a, #15803d);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 12px 35px rgba(22, 163, 74, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.submit-payment-btn:hover:not(.disabled) {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 45px rgba(22, 163, 74, 0.4);
+}
+
+.submit-payment-btn.disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.payment-info {
+  background: #f0fdf4;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #bbf7d0;
+  margin-top: 20px;
+}
+
+.payment-info p {
+  margin: 10px 0;
+  color: #166534;
+}
+
+.security-note {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+.payment-loader {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+/* SUCCESS SCREEN */
+.payment-success-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.success-card {
+  background: white;
+  border-radius: 32px;
+  padding: 60px 40px;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(34, 197, 94, 0.25);
+  border: 2px solid #bbf7d0;
+  position: relative;
+  overflow: hidden;
+}
+
+.success-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(34,197,94,0.05), rgba(187,247,208,0.1));
+  pointer-events: none;
+}
+
+.success-animation {
+  margin-bottom: 30px;
+}
+
+.checkmark {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  stroke-width: 4;
+  stroke: #16a34a;
+  stroke-miterlimit: 10;
+  margin: 0 auto 30px;
+  box-shadow: inset 0 0 0 #16a34a;
+  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+}
+
+.checkmark-circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 4;
+  stroke: #16a34a;
+  fill: none;
+  animation: stroke .6s cubic-bezier(.65,0,.45,1) forwards;
+}
+
+.checkmark-check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke .3s cubic-bezier(.65,0,.45,1) .8s forwards;
+}
+
+@keyframes stroke { 100% { stroke-dashoffset: 0; } }
+@keyframes scale  { 0%,100% { transform:none; } 50% { transform:scale3d(1.1,1.1,1); } }
+@keyframes fill   { 100% { box-shadow:inset 0 0 0 60px #16a34a; } }
+
+.success-card h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(90deg,#16a34a,#15803d);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 20px 0 16px;
+}
+
+.success-amount {
+  font-size: 3.6rem;
+  font-weight: 900;
+  color: #166534;
+  margin: 20px 0;
+  letter-spacing: -1px;
+}
+
+.success-message {
+  font-size: 1.3rem;
+  color: #166534;
+  margin: 16px 0 32px;
+  font-weight: 500;
+}
+
+.success-details {
+  background: #f0fdf4;
+  padding: 24px;
+  border-radius: 20px;
+  margin: 30px 0;
+  border: 1px solid #bbf7d0;
+}
+
+.success-details p {
+  margin: 12px 0;
+  font-size: 1.1rem;
+  color: #166534;
+}
+
+.success-details strong { color: #0c4a6e; }
+
+.status-paid {
+  background: #16a34a;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.back-to-users-btn {
+  background: linear-gradient(90deg, #0ea5e9, #0284c7);
+  color: white;
+  border: none;
+  padding: 18px 40px;
+  border-radius: 18px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 30px;
+  transition: all 0.4s ease;
+  box-shadow: 0 12px 35px rgba(14,165,233,0.3);
+}
+
+.back-to-users-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(14,165,233,0.4);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .admin-content { margin-left: 0 !important; padding: 20px 15px; }
+  .payment-header, .success-card { padding: 40px 20px; }
+  .success-card h1 { font-size: 2.4rem; }
+  .success-amount { font-size: 3rem; }
+  .checkmark { width: 100px; height: 100px; }
+}

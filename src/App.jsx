@@ -23,6 +23,8 @@ import AccountAnalytics from "./component/User/AccountAnalytics";
 import JoinAsClient from "./component/Admin/JoinAsClient";
 import BidList from "./component/Admin/BidList";
 import ProcessResponse from "./component/Admin/ProcessResponse";
+import UsersList from "./component/Admin/UsersList";
+import Payment from "./component/Admin/Payment";
 
 // Set Axios to send cookies with every request (Critical for session auth)
 axios.defaults.withCredentials = true;
@@ -165,6 +167,22 @@ function App() {
               element={
                 <ProtectedRoute isAdmin={true}>
                   <ProcessResponse />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute isAdmin={true}>
+                  <UsersList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/user/payment/:id"
+              element={
+                <ProtectedRoute isAdmin={true}>
+                  <Payment />
                 </ProtectedRoute>
               }
             />

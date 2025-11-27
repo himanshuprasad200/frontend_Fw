@@ -4,6 +4,7 @@ import {
   ALL_EARNING_SUCCESS,
   CREATE_EARNING_FAILURE,
   CREATE_EARNING_REQUEST,
+  CREATE_EARNING_RESET,
   CREATE_EARNING_SUCCESS,
   USER_EARNINGS_FAIL,
   // USER_EARNINGS_REQUEST,
@@ -82,6 +83,13 @@ export const userEarningsReducer = (state = { earnings: []}, action) => {
         loading: false,
         earnings: action.payload || [], // Ensure it defaults to an empty array if payload is undefined
       };
+      case CREATE_EARNING_RESET:
+  return {
+    ...state,
+    success: false,
+    loading: false,
+    error: null,
+  };
     case USER_EARNINGS_FAIL:
       return {
         ...state,

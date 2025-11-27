@@ -31,20 +31,41 @@ const BidDetails = () => {
 
   return (
     <Fragment>
-      <MetaData title={`Bid #${bid._id?.slice(-8).toUpperCase()}`} />
+      <MetaData title={`Bid #${bid._id?.slice(-8).toUpperCase()} - Details`} />
 
       <div className="bid-details-page">
-        {/* Header */}
+
+          {/* Header */}
         <div className="bid-header">
           <h1>Bid Details</h1>
           <p className="submit-date">
-            Submitted on {new Date(bid.createdAt).toLocaleDateString("en-IN", {
+            Submitted on{" "}
+            {new Date(bid.createdAt).toLocaleDateString("en-IN", {
               day: "numeric",
               month: "long",
-              year: "numeric"
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
             })}
           </p>
         </div>
+
+        {/* Freelancer Who Applied */}
+        {bid.user && (
+          <div className="freelancer-applied-card">
+            <div className="freelancer-avatar">
+              <img
+                src={bid.user.avatar?.url || "/default-avatar.png"}
+                alt={bid.user.name}
+              />
+            </div>
+            <div className="freelancer-details">
+              <h3>{bid.user.name}</h3>
+              <p className="freelancer-email">{bid.user.email}</p>
+              <span className="applied-label">Applied on this bid</span>
+            </div>
+          </div>
+        )}
 
         {/* Proposal Section */}
         <div className="proposal-section">
@@ -70,7 +91,7 @@ const BidDetails = () => {
 
           <div className="stat-card">
             <p className="stat-label">Total Budget</p>
-            <p className="stat-price">₹{totalBudget.toLocaleString()}</p>
+            <p className="stat-price">₹{totalBudget.toLocaleString("en-IN")}</p>
           </div>
         </div>
 
@@ -105,7 +126,7 @@ const BidDetails = () => {
 
                     <div className="project-footer">
                       <span className="project-price">
-                        ₹{Number(project.price || 0).toLocaleString()}
+                        ₹{Number(project.price || 0).toLocaleString("en-IN")}
                       </span>
                       <span className="project-id">
                         ID: {project._id?.slice(-6).toUpperCase()}

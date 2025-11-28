@@ -131,7 +131,7 @@ const Profile = () => {
                     <i className="fas fa-id-card"></i>
                     <div>
                       <strong>PAN Card</strong>
-                      <p className="mono">{user.pancard || "Not added"}</p>
+                      <p className="mono">{user.pancard || "Pan card owns the actual owner of this account"}</p>
                     </div>
                   </div>
                 </div>

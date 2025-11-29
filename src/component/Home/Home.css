@@ -295,6 +295,288 @@
   gap: 40px;
 }
 
+/* HOW IT WORKS SECTION – Clean & Professional */
+.how-it-works-section {
+  padding: 160px 0;
+  background: linear-gradient(to bottom, transparent, #0f0728);
+  position: relative;
+  z-index: 2;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 60px;
+  margin-top: 80px;
+}
+
+.step-card {
+  text-align: center;
+  padding: 40px 20px;
+  border-radius: 24px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.5s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-20px);
+  background: rgba(139, 92, 246, 0.15);
+  box-shadow: 0 30px 80px rgba(139, 92, 246, 0.25);
+}
+
+.step-number {
+  font-size: 4.5rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 20px;
+  opacity: 0.2;
+}
+
+.step-card h3 {
+  font-size: 2rem;
+  margin: 20px 0 16px;
+  color: #e0d4ff;
+}
+
+.step-card p {
+  font-size: 1.2rem;
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+/* TRUST & STATS SECTION – Premium Fiverr Style */
+.trust-stats-section {
+  padding: 180px 0 70px;
+  background: #0a0e1a;
+  position: relative;
+  z-index: 2;
+}
+
+.trust-content {
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.trust-content h2 {
+  font-size: 4rem;
+  background: linear-gradient(90deg, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 20px;
+}
+
+.trust-subtitle {
+  font-size: 1.6rem;
+  color: #c4b5fd;
+  margin-bottom: 80px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 50px;
+  margin: 100px 0;
+}
+
+.stat-item h3 {
+  font-size: 4rem;
+  font-weight: 900;
+  color: #8b5cf6;
+  margin-bottom: 10px;
+}
+
+.stat-item p {
+  font-size: 1.3rem;
+  color: #e2e8f0;
+}
+
+.brand-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 60px;
+  margin-top: 100px;
+  filter: grayscale(100%) opacity(0.6);
+  transition: all 0.4s ease;
+}
+
+.brand-logos img {
+  height: 80px;
+  object-fit: contain;
+  transition: all 0.4s ease;
+}
+
+.brand-logos img:hover {
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.15);
+}
+
+/* FIX: Brand logos now visible - white fill + proper size */
+.brand-logo {
+  height: 48px;
+  width: auto;
+  filter: brightness(0) invert(1); /* Makes black SVG icons white */
+  opacity: 0.7;
+  transition: all 0.4s ease;
+}
+
+.brand-logo:hover {
+  opacity: 1;
+  transform: scale(1.2);
+  filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(139, 92, 246, 0.6));
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .how-it-works-section,
+  .trust-stats-section {
+    padding: 100px 0;
+  }
+
+  .steps-grid,
+  .stats-grid {
+    gap: 40px;
+  }
+
+  .trust-content h2 {
+    font-size: 2.8rem;
+  }
+
+  .brand-logos {
+    gap: 30px;
+  }
+
+  .brand-logos img {
+    height: 30px;
+  }
+}
+
+/* CATEGORIES SECTION */
+.categories-section {
+  padding: 160px 0;
+  background: rgba(10, 14, 26, 0.9);
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 60px;
+}
+
+.category-card {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  transition: all 0.5s ease;
+  backdrop-filter: blur(10px);
+}
+
+.category-card:hover {
+  transform: translateY(-15px);
+  background: rgba(139, 92, 246, 0.2);
+  box-shadow: 0 20px 50px rgba(139, 92, 246, 0.3);
+}
+
+.cat-icon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+.category-card h4 {
+  font-size: 1.5rem;
+  margin: 15px 0;
+  color: #e0d4ff;
+}
+
+.category-card span {
+  color: #a78bfa;
+  font-weight: 600;
+}
+
+/* TESTIMONIALS */
+.testimonials-section {
+  padding: 180px 0;
+  text-align: center;
+  background: linear-gradient(135deg, #0f0728, #1a0b3d);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 50px;
+  margin-top: 80px;
+}
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 50px 40px;
+  border-radius: 24px;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  backdrop-filter: blur(12px);
+}
+
+.testimonial-card p {
+  font-size: 1.4rem;
+  font-style: italic;
+  color: #e2e8f0;
+  margin-bottom: 30px;
+  line-height: 1.8;
+}
+
+.author strong {
+  display: block;
+  font-size: 1.3rem;
+  color: #a78bfa;
+}
+
+.author span {
+  color: #94a3b8;
+}
+
+/* FINAL CTA */
+.final-cta-section {
+  padding: 200px 0 160px;
+  text-align: center;
+  background: linear-gradient(135deg, #4c1d95, #7c3aed);
+}
+
+.final-cta-section h2 {
+  font-size: 4.5rem;
+  background: linear-gradient(90deg, #fff, #ddd);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 20px;
+}
+
+.final-cta-section p {
+  font-size: 1.8rem;
+  color: #e0d4ff;
+  margin-bottom: 50px;
+}
+
+.premium-cta.large {
+  padding: 28px 90px;
+  font-size: 2rem;
+  border-radius: 80px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+}
+
+.premium-cta.large:hover {
+  transform: translateY(-20px) scale(1.1);
+}
+
+
+
 /* ANIMATIONS */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(60px); }

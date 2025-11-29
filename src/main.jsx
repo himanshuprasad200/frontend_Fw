@@ -1,10 +1,23 @@
 // src/main.jsx
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { StrictMode } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { HelmetProvider } from "react-helmet-async";
 import axios from "axios";
 
+import "./index.css";
+import App from "./App.jsx";
+import store from "./store.js";
+
+// ===============================================
+// 1. AXIOS GLOBAL CONFIG (Backend + Auth Token)
+// ===============================================
 axios.defaults.baseURL = "https://backend-i86g.onrender.com";
 axios.defaults.withCredentials = true;
 
-// ADD TOKEN TO EVERY REQUEST
+// Automatically attach JWT token to every request
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -13,15 +26,25 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.jsx";
-import { BrowserRouter } from "react-router-dom";
-import store from "./store.js";
-import { Provider } from "react-redux";
-import { HelmetProvider } from "react-helmet-async";
+// ===============================================
+// 2. GSAP + SCROLLTRIGGER SETUP (FOR HOME PAGE ANIMATIONS)
+// ===============================================
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+// Register the plugin
+gsap.registerPlugin(ScrollTrigger);
+
+// Make gsap globally available so Home.jsx can useEffect can access it safely
+window.gsap = gsap;
+window.ScrollTrigger = ScrollTrigger;
+
+// Optional: You can also expose ScrollTrigger globally if needed
+// window.ScrollTrigger = ScrollTrigger;
+
+// ===============================================
+// 3. RENDER APP
+// ===============================================
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>

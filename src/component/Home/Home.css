@@ -1,174 +1,352 @@
-.banner {
-  background-image: url("../../images/cover.jfif");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  height: 100vmin;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center; 
+/* src/component/Home/Home.css */
+/* FULLY UPDATED 2025 PREMIUM VERSION — CTA VISIBILITY FIXED */
+
+.homepage-master {
+  position: relative;
+  min-height: 100vh;
+  background: #0a0e1a;
+  overflow: hidden;
   color: white;
 }
 
-.banner > h1 {
-  margin: 5vmax;
-  font: 600 2.5vmax "Roboto";
-}
-
-.banner > p {
-  font: 300 2.4vmax "Lucida Sans";
-}
-
-.banner > a > button {
-  margin-bottom: 5vmax;
-  cursor: pointer;
-  background-color: white;
-  border: 1px solid white;
-  border-radius: 0;
-  padding: 1vmax;
-  transition: all 0.5s;
-  width: 9vmax;
-  font: 500 1vmax "Roboto";
-}
-.banner > a > button:hover {
-  background-color: rgba(255, 255, 255, 0);
-  color: white;
-}
-
-.banner::after {
-  content: "";
-  width: 100vw;
-  height: 101vmin;
-  background-color: #ffffff;
+/* INFINITE WAVY LIQUID BACKGROUND */
+.wavy-bg {
   position: absolute;
-  top: 0%;
-  left: 0;
-  clip-path: polygon(0 85%, 100% 61%, 100% 100%, 0% 100%);
-  max-width: 100%;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
 }
 
-.homeHeading {
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 400px;
+  background: linear-gradient(to top, rgba(139, 92, 246, 0.3), transparent);
+  border-radius: 50%;
+  animation: waveAnimation 15s linear infinite;
+}
+
+.wave1 {
+  animation-duration: 18s;
+  opacity: 0.5;
+  background: linear-gradient(to top, #8b5cf6, transparent);
+}
+.wave2 {
+  animation-duration: 22s;
+  animation-direction: reverse;
+  opacity: 0.4;
+  background: linear-gradient(to top, #ec4899, transparent);
+}
+.wave3 {
+  animation-duration: 25s;
+  opacity: 0.3;
+  background: linear-gradient(to top, #fbbf24, transparent);
+}
+
+@keyframes waveAnimation {
+  0% { transform: translateX(0) translateY(0) rotate(0deg); }
+  50% { transform: translateX(-25%) translateY(-40px) rotate(5deg); }
+  100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+}
+
+/* ────────────────────────────── */
+/* HERO SECTION — WIDE, CINEMATIC, CURSIVE & PREMIUM */
+/* ────────────────────────────── */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  font-family: Roboto;
-  font-size: 1.4vmax;
-  border-bottom: 1px solid rgba(21, 21, 21, 0.5);
-  width: 20vmax;
-  padding: 1vmax;
-  margin: 5vmax auto;
-  color: rgb(0, 0, 0, 0.7);
+  z-index: 2;
+  padding: 0 5vw;
+  background: linear-gradient(135deg, #0f0728 0%, #1a0b3d 30%, #4c1d95 70%, #7c3aed 100%);
+  overflow: hidden;
+}
+
+.heros-content {
+  max-width: 1000px;
+  animation: fadeUp 1s ease-out;
+  position: relative;
+  z-index: 2;
+  margin-top: 7rem;
+}
+
+/* New Stylish Cursive Hero Title */
+.stylish-cursive {
+  font-size: clamp(4.8rem, 11vw, 10rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -3px;
+  font-family: 'Playfair Display', Georgia, serif;
+  margin: 0 0 32px;
+}
+
+.stylish-cursive .line {
+  display: block;
+  opacity: 0;
+  transform: translateY(120px);
+  animation: slideUp 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.stylish-cursive .line:nth-child(1) { animation-delay: 0.3s; }
+.stylish-cursive .line:nth-child(2) { animation-delay: 0.6s; }
+.stylish-cursive .line:nth-child(3) { animation-delay: 0.9s; }
+.stylish-cursive .line:nth-child(4) { animation-delay: 1.2s; }
+
+/* Cursive & Glowing Highlight on "Freelancers" */
+.cursive-highlight {
+  font-family: 'Dancing Script', 'Great Vibes', 'Sacramento', cursive;
+  font-size: 1.5em;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ffd700, #ff6b6b, #c084fc, #8b5cf6, #22d3ee);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientFlow 10s ease infinite, glowPulse 4s ease-in-out infinite alternate;
+  display: inline-block;
+  transform: translateY(-10px);
+}
+
+/* Enhanced Subtitle */
+.hero-subtitle {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 400;
+  color: #e0d4ff;
+  max-width: 900px;
+  margin: 2.5rem auto 4rem;
+  line-height: 1.7;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 1.6s forwards;
+}
+
+.hero-subtitle strong {
+  color: #d8b4fe;
+  font-weight: 600;
+}
+
+/* PREMIUM CTA — FIXED VISIBILITY */
+/* PREMIUM CTA — 100% VISIBLE FROM THE START (FIXED) */
+.premium-cta {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 18px;
+  background: linear-gradient(45deg, #ffffff, #f5f0ff);
+  color: #4c1d95;
+  padding: 24px 70px;
+  border-radius: 70px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 25px 70px rgba(124, 58, 237, 0.4);
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* THIS IS THE ONLY FIX – button is visible instantly */
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: floatButton 6s ease-in-out infinite;   /* keep the floating effect */
+}
+
+/* Keep the beautiful hover exactly as before */
+.premium-cta:hover {
+  transform: translateY(-14px) scale(1.08);
+  box-shadow: 0 50px 100px rgba(139, 92, 246, 0.6);
+  background: white;
+}
+
+.mouse-icon {
+  font-size: 2rem;
+  animation: bounce 2.5s infinite;
+}
+
+/* Trust Line */
+.trust-line {
+  margin: 4.5rem;
+  font-size: 1.2rem;
+  color: #c4b5fd;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 2.3s forwards;
+}
+
+/* Keep your old h1/p/cta styles (for backward compatibility) */
+.heros-content h1 {
+  font-size: 5.5rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 0 0 24px;
+  background: linear-gradient(90deg, #60a5fa, #a78bfa, #e879f9, #f472b6, #fb7185, #fbbf24);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.heros-content h1 span {
+  display: block;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.heros-content p {
+  font-size: 1.7rem;
+  margin: 0 auto 48px;
+  max-width: 700px;
+  opacity: 0.95;
+  font-weight: 400;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  background: white;
+  color: #6366f1;
+  padding: 20px 50px;
+  border-radius: 60px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: pulse 4s infinite;
+}
+
+.cta-button:hover {
+  transform: translateY(-15px) scale(1.1);
+  box-shadow: 0 40px 90px rgba(0,0,0,0.6);
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 25px 60px rgba(0,0,0,0.5); }
+  50% { box-shadow: 0 35px 80px rgba(99, 102, 241, 0.6); }
+}
+
+/* Floating Blobs — Enhanced */
+.hero-graphic {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.floating-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.35;
+  animation: float 30s infinite linear;
+}
+
+.s1 { width: 900px; height: 900px; background: #8b5cf6; top: -30%; left: -20%; }
+.s2 { width: 700px; height: 700px; background: #ec4899; bottom: -20%; right: -15%; animation-delay: 10s; }
+.s3 { width: 800px; height: 800px; background: #fbbf24; top: 10%; right: -25%; animation-delay: 18s; }
+.s4 { width: 750px; height: 750px; background: #22d3ee; bottom: 15%; left: -10%; animation-delay: 14s; }
+
+@keyframes float {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(180px, -180px) rotate(360deg); }
+}
+
+/* PROJECTS SECTION */
+.projects-showcase {
+  position: relative;
+  padding: 160px 0 120px;
+  z-index: 2;
 }
 
 .container {
-  display: flex;
-  margin: 2vmax auto;
-  width: 80vw;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 30px;
 }
 
-/* .projectCard {
-  width: 14vmax;
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  color: rgb(48, 48, 48);
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  margin: 2vmax;
-  transition: all 0.5s;
-  padding-bottom: 0.5vmax;
+.section-header {
+  text-align: center;
+  margin-bottom: 100px;
 }
 
-.projectCard > img {
-  width: 14vmax;
-  padding-bottom: 5px;
+.section-header h2 {
+  font-size: 4rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 20px;
 }
 
-.projectCard > div {
-  margin: 5px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 7px;
+.section-header p {
+  font-size: 1.5rem;
+  color: #cbd5e1;
 }
 
-.projectCardSpan {
-  margin: 0.5vmax;
-  font: 300 0.7vmax "Roboto";
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 40px;
 }
 
-.headings {
-  display: flex;
-  margin: 5px;
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(60px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.projectCard > p {
-  font-family: "Roboto";
-  font-size: 1.2vmax;
-  margin: 5px;
+@keyframes slideUp {
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.projectCard > span {
-  margin: 5px;
-  color: tomato;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  font-size: 1vmax;
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.projectCard:hover {
-  box-shadow: 0 0 5px rgba(15, 15, 15, 0.26);
+@keyframes gradientFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
 
-  transform: translateY(-1vmax);
-} */
+@keyframes glowPulse {
+  from { text-shadow: 0 0 20px rgba(167, 139, 250, 0.6); }
+  to { text-shadow: 0 0 50px rgba(139, 92, 246, 0.9); }
+}
 
-@media screen and (max-width: 600px) {
-  .banner {
-    background-image: url("../../images/cover.jfif");
-    background-repeat: no-repeat;
-    background-position: center;
-    height: 125vmin;
-  }
+@keyframes floatButton {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
 
-  .homeHeading {
-    margin-top: 70px;
-  }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+}
 
-  .banner::after {
-    height: 140vmin;
-  }
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .stylish-cursive { font-size: 7rem; }
+  .heros-content h1 { font-size: 4.2rem; }
+  .projects-grid { grid-template-columns: 1fr 1fr; }
+}
 
-  .container {
-    display: flex;
-  }
+@media (max-width: 768px) {
+  .stylish-cursive { font-size: 4.8rem; letter-spacing: -1.5px; }
+  .heros-content h1 { font-size: 3.2rem; }
+  .heros-content p, .hero-subtitle { font-size: 1.3rem; }
+  .cta-button, .premium-cta { padding: 18px 40px; font-size: 1.4rem; }
+  .section-header h2 { font-size: 2.8rem; }
+  .projects-grid { grid-template-columns: 1fr; }
+}
 
-  /* .projectCard > p {
-    font-size: 1.7vmax;
-  }
-
-  .projectCard > .headings > h4 {
-    padding-bottom: 4px;
-  }
-
-  .projectCard > .headings {
-    margin: 5px;
-    gap: 6px;
-  }
-
-  .projectCard > div {
-    margin: 0vmax;
-    display: block;
-  }
-
-  .projectCard > span {
-    font-size: 1.5vmax;
-  }
-
-  .projectCard > div > span {
-    margin: 0 0.5vmax;
-    font: 300 1vmax "Roboto";
-  } */
+@media (max-width: 480px) {
+  .stylish-cursive { font-size: 3.8rem; }
+  .premium-cta { padding: 16px 32px; font-size: 1.3rem; }
 }

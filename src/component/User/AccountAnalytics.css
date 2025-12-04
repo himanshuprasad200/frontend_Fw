@@ -153,6 +153,81 @@
 .growth.positive { color: #10b981; }
 .growth.negative { color: #ef4444; }
 
+/* Chart Skeleton Loader */
+.chart-skeleton {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.skeleton-loader {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  animation: shimmer 2s infinite;
+}
+
+.skeleton-lines {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  transform: translateY(-50%);
+}
+
+.skeleton-lines div {
+  height: 12px;
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 6px;
+  margin: 20px 0;
+  animation: pulse 1.5s ease-in-out infinite alternate;
+}
+
+/* Add to AccountAnalytics.css */
+.chart-overlay-loader {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 16px;
+}
+
+.skeleton-lines div:nth-child(1) { width: 80%; }
+.skeleton-lines div:nth-child(2) { width: 60%; }
+.skeleton-lines div:nth-child(3) { width: 90%; }
+.skeleton-lines div:nth-child(4) { width: 70%; }
+.skeleton-lines div:nth-child(5) { width: 50%; }
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes pulse {
+  from { opacity: 0.4; }
+  to { opacity: 0.8; }
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 380px;
+  padding: 20px 0;
+}
+
+.chart-wrapper.doughnut {
+  height: 320px;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .charts-row { grid-template-columns: 1fr; }

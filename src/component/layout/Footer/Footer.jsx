@@ -88,7 +88,7 @@ const Footer = () => {
         <div className="footerSection">
           <h3 className="footerTitle">Support</h3>
           <ul className="footerLinks">
-            <li><Link to="/help">Help Center</Link></li>
+            <li><Link to="/help-center">Help Center</Link></li>
             <li><Link to="/faq">FAQs</Link></li>
             <li><Link to="/safety">Safety Tips</Link></li>
             <li><Link to="/report">Report Issue</Link></li>

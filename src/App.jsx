@@ -31,6 +31,7 @@ import Payment from "./component/Admin/Payment";
 // Layout & Auth
 import RestrictedAccess from "./component/layout/Restricted/RestrictedAccess";
 import Contact from "./component/layout/Contact/Contact";
+import HelpCenter from "./component/layout/HelpCentre/HelpCentre";
 
 // Set Axios to send cookies
 axios.defaults.withCredentials = true;
@@ -109,6 +110,7 @@ function App() {
             <Route path="/projects/:keyword" element={<Projects />} />
             <Route path="/project/:id" element={<ProjectDetails />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/help-center" element={<HelpCenter />} />
 
             {/* Protected User Routes */}
             <Route

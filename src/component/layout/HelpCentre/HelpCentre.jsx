@@ -75,37 +75,37 @@ const HelpCenter = () => {
       <div className="help-content">
         {/* Popular Categories - Added new ones */}
         <div className="categories-grid">
-          <div className="category-card">
+          <div className="category-cardd">
             <FaQuestionCircle />
             <h3>Getting Started</h3>
             <p>Account setup, posting jobs, finding work</p>
             <a href="#getting-started">Explore →</a>
           </div>
-          <div className="category-card">
+          <div className="category-cardd">
             <FaDollarSign />
             <h3>Payments</h3>
             <p>Earnings, withdrawals, fees & invoices</p>
             <a href="#payments">Explore →</a>
           </div>
-          <div className="category-card">
+          <div className="category-cardd">
             <FaExclamationTriangle />
             <h3>Disputes & Issues</h3>
             <p>Late responses, approvals, disputes</p>
             <a href="#disputes-late-responses">Explore →</a>
           </div>
-          <div className="category-card">
+          <div className="category-cardd">
             <FaTools />
             <h3>Troubleshooting</h3>
             <p>Website down, errors, technical help</p>
             <a href="#troubleshooting-technical-issues">Explore →</a>
           </div>
-          <div className="category-card">
+          <div className="category-cardd">
             <FaUser />
             <h3>Profile & Skills</h3>
             <p>Building your profile, verification</p>
             <a href="#account-security">Explore →</a>
           </div>
-          <div className="category-card">
+          <div className="category-cardd">
             <FaShieldAlt />
             <h3>Safety & Security</h3>
             <p>Trust, disputes, best practices</p>

@@ -33,6 +33,8 @@ import RestrictedAccess from "./component/layout/Restricted/RestrictedAccess";
 import Contact from "./component/layout/Contact/Contact";
 import HelpCenter from "./component/layout/HelpCentre/HelpCentre";
 
+import ScrollToTop from "./utils/ScrollToTop";
+
 // Set Axios to send cookies
 axios.defaults.withCredentials = true;
 
@@ -76,6 +78,7 @@ function App() {
 
   return (
     <>
+      <ScrollToTop />
       {/* Header */}
       <header className="app-header">
         <Navbar />

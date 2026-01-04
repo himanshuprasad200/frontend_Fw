@@ -1,8 +1,3 @@
-/* src/component/layout/Header/Header.css */
-
-/* =================================================
-   GLOBAL RESET
-   ================================================= */
 *,
 *::before,
 *::after {
@@ -11,9 +6,6 @@
   padding: 0;
 }
 
-/* =================================================
-   HEADER – Fixed, Top Z-Index
-   ================================================= */
 .app-header {
   position: fixed;
   top: 0;
@@ -32,9 +24,6 @@
   border-bottom: 1px solid rgba(0, 194, 255, 0.2);
 }
 
-/* =================================================
-   NAVBAR
-   ================================================= */
 .navbar {
   display: flex;
   align-items: center;
@@ -43,22 +32,22 @@
   position: relative;
 }
 
-/* Logo */
 .navbar-logo a > img {
   height: 50px;
   object-fit: contain;
   transition: transform 0.3s ease;
 }
+
 .navbar-logo a:hover > img {
   transform: scale(1.08) rotate(2deg);
 }
 
-/* Desktop Links */
 .navbar-links {
   display: flex;
   list-style: none;
   gap: 2.5rem;
 }
+
 .navbar-links a {
   color: #e0e0e0;
   text-decoration: none;
@@ -68,6 +57,7 @@
   position: relative;
   transition: color 0.3s ease;
 }
+
 .navbar-links a::after {
   content: '';
   position: absolute;
@@ -78,31 +68,33 @@
   background: #00c2ff;
   transition: width 0.3s ease;
 }
+
 .navbar-links a:hover {
   color: #00c2ff;
 }
+
 .navbar-links a:hover::after {
   width: 100%;
 }
 
-/* Right Side: Search + Avatar */
-.navbar-right {
+.navbar-right-wrapper {
   display: flex;
   align-items: center;
   gap: 1.8rem;
 }
-.search-icon {
+
+.search-icon-desktop {
   color: #aaa;
   font-size: 1.5rem;
-  cursor: pointer;
   transition: all 0.3s ease;
+  display: block;
 }
-.search-icon:hover {
+
+.search-icon-desktop:hover {
   color: #00c2ff;
   transform: scale(1.15);
 }
 
-/* Mobile Menu Icon */
 .mobile-menu-icon {
   display: none;
   font-size: 1.9rem;
@@ -111,11 +103,11 @@
   z-index: 10000;
   transition: transform 0.3s ease;
 }
+
 .mobile-menu-icon:hover {
   transform: rotate(90deg);
 }
 
-/* Mobile Menu */
 .navbar-links-mobile {
   position: absolute;
   top: 70px;
@@ -133,11 +125,13 @@
   visibility: hidden;
   transition: all 0.4s ease;
 }
+
 .navbar-links-mobile.open {
   transform: translateY(0);
   opacity: 1;
   visibility: visible;
 }
+
 .navbar-links-mobile a {
   color: #fff;
   font-size: 1.15rem;
@@ -149,22 +143,26 @@
   margin: 0.4rem 0;
   transition: all 0.3s ease;
 }
+
 .navbar-links-mobile a:hover {
   background: #00c2ff22;
   color: #00c2ff;
   transform: translateY(-2px);
 }
 
-/* =================================================
-   USER OPTIONS – Avatar + Hover Dropdown (NO FLICKER!)
-   ================================================= */
+.mobile-search-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  padding: 1rem 2rem !important;
+}
 
 .user-options-container {
   position: relative;
   display: inline-block;
 }
 
-/* Avatar */
 .avatar-trigger {
   width: 48px;
   height: 48px;
@@ -177,10 +175,12 @@
   transition: all 0.3s ease;
   box-shadow: 0 0 15px rgba(0, 194, 255, 0.4);
 }
+
 .avatar-trigger:hover {
   transform: scale(1.12);
   box-shadow: 0 0 25px rgba(0, 194, 255, 0.7);
 }
+
 .avatar-img {
   width: 100%;
   height: 100%;
@@ -188,10 +188,9 @@
   display: block;
 }
 
-/* Dropdown – appears immediately below avatar (no gap) */
 .user-dropdown {
   position: absolute;
-  top: 58px;           /* 48px avatar + 10px gap → adjust if needed */
+  top: 58px;
   right: 0;
   background: #1a1d23;
   border: 1px solid rgba(0, 194, 255, 0.3);
@@ -203,7 +202,6 @@
   backdrop-filter: blur(12px);
 }
 
-/* Optional: tiny arrow on top of dropdown */
 .user-dropdown::before {
   content: "";
   position: absolute;
@@ -230,13 +228,22 @@
   cursor: pointer;
   transition: all 0.25s ease;
 }
+
 .dropdown-item:hover {
   background: rgba(0, 194, 255, 0.18);
   color: #fff;
   padding-left: 24px;
 }
-.dropdown-item:first-child { border-top-left-radius: 14px; border-top-right-radius: 14px; }
-.dropdown-item:last-child  { border-bottom-left-radius: 14px; border-bottom-right-radius: 14px; }
+
+.dropdown-item:first-child {
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+}
+
+.dropdown-item:last-child {
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
 
 .dropdown-icon {
   font-size: 1.3rem;
@@ -244,32 +251,16 @@
 }
 
 @keyframes dropdownFade {
-  from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-/* Optional: Backdrop (uncomment if you want dim effect) */
-/*
-.header-backdrop {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 9997;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: all 0.3s ease;
-}
-.header-backdrop.active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-*/
-
-/* Guest Avatar */
 .profile-placeholder {
   width: 46px;
   height: 46px;
@@ -283,24 +274,10 @@
   border: 2px dashed #555;
 }
 
-/* =================================================
-   ANIMATIONS
-   ================================================= */
-@keyframes dropdownFade {
-  from {
-    opacity: 0;
-    transform: translateY(-12px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* =================================================
-   RESPONSIVE
-   ================================================= */
 @media (max-width: 992px) {
+  .navbar-right-wrapper {
+    gap: 1.4rem;
+  }
   .navbar-links {
     gap: 1.5rem;
   }
@@ -316,30 +293,39 @@
   .navbar-links {
     display: none;
   }
+  .search-icon-desktop {
+    display: none;
+  }
   .mobile-menu-icon {
     display: block;
   }
-  .navbar-right {
+  .navbar-right-wrapper {
     gap: 1rem;
   }
-  .search-icon {
-    font-size: 1.4rem;
+  .navbar-logo a > img {
+    height: 45px;
   }
 }
 
 @media (max-width: 480px) {
+  .app-header {
+    padding: 0.8rem 1rem;
+  }
   .navbar-logo a > img {
-    height: 42px;
+    height: 40px;
+  }
+  .navbar-right-wrapper {
+    gap: 0.8rem;
   }
   .avatar-trigger {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
   }
 }
 
-/* Hide old legacy components */
 .speedDial,
 .speedDialIcon,
-.avatar-btn {
+.avatar-btn,
+.navbar-right {
   display: none !important;
 }

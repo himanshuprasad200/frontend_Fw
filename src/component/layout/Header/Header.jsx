@@ -16,30 +16,29 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      {/* Logo */}
+      {/* Logo - Always Left */}
       <div className="navbar-logo">
         <Link to="/">
           <img src={logo} alt="FlexiWork" />
         </Link>
       </div>
 
-      {/* Desktop Links */}
+      {/* Desktop Navigation Links */}
       <ul className="navbar-links">
         <li><Link to="/">Home</Link></li>
         <li><Link to="/projects">Projects</Link></li>
         <li><Link to="/admin/joinasclient">Join as Client</Link></li>
-        {!isAuthenticated && (
-          <li><Link to="/login">Join</Link></li>
-        )}
+        {!isAuthenticated && <li><Link to="/login">Join</Link></li>}
       </ul>
 
-      {/* Right Side: Search + User Avatar */}
-      <div className="navbar-right">
-        <Link to="/search" className="search-icon">
+      {/* Right Section: Search + Avatar + Mobile Toggle */}
+      <div className="navbar-right-wrapper">
+        {/* Search Icon */}
+        <Link to="/search" className="search-icon-desktop">
           <FaSearch />
         </Link>
 
-        {/* User Avatar (with hover dropdown) */}
+        {/* User Avatar or Guest */}
         {isAuthenticated ? (
           <UserOptions user={user} />
         ) : (
@@ -47,14 +46,14 @@ const Navbar = () => {
             <img src="/Profile.png" alt="Guest" className="profile-img" />
           </div>
         )}
+
+        {/* Mobile Menu Toggle */}
+        <div className="mobile-menu-icon" onClick={handleToggle}>
+          {isMobile ? <FaTimes /> : <FaBars />}
+        </div>
       </div>
 
-      {/* Mobile Menu Toggle */}
-      <div className="mobile-menu-icon" onClick={handleToggle}>
-        {isMobile ? <FaTimes /> : <FaBars />}
-      </div>
-
-      {/* Mobile Menu */}
+      {/* Mobile Menu Dropdown */}
       <ul className={`navbar-links-mobile ${isMobile ? "open" : ""}`}>
         <li><Link to="/" onClick={handleCloseMenu}>Home</Link></li>
         <li><Link to="/projects" onClick={handleCloseMenu}>Projects</Link></li>
@@ -62,6 +61,11 @@ const Navbar = () => {
         {!isAuthenticated && (
           <li><Link to="/login" onClick={handleCloseMenu}>Join</Link></li>
         )}
+        <li>
+          <Link to="/search" onClick={handleCloseMenu} className="mobile-search-link">
+            <FaSearch /> Search Projects
+          </Link>
+        </li>
       </ul>
     </nav>
   );

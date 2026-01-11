@@ -34,6 +34,7 @@ import Contact from "./component/layout/Contact/Contact";
 import HelpCenter from "./component/layout/HelpCentre/HelpCentre";
 
 import ScrollToTop from "./utils/ScrollToTop";
+import NewProject from "./component/Admin/NewProject";
 
 // Set Axios to send cookies
 axios.defaults.withCredentials = true;
@@ -204,6 +205,14 @@ function App() {
               element={
                 <ProtectedRoute isAdmin={true}>
                   <Payment />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/new-project"
+              element={
+                <ProtectedRoute isAdmin={true}>
+                  <NewProject />
                 </ProtectedRoute>
               }
             />

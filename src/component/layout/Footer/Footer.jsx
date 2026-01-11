@@ -63,7 +63,7 @@ const Footer = () => {
         <div className="footerSection">
           <h3 className="footerTitle">For Clients</h3>
           <ul className="footerLinks">
-            <li><Link to="/client/post-project">Post a Project</Link></li>
+            <li><Link to="/admin/new-project">Post a Project</Link></li>
             <li><Link to="/client/find-talent">Find Talent</Link></li>
             <li><Link to="/client/enterprise">Enterprise</Link></li>
             <li><Link to="/client/case-studies">Case Studies</Link></li>

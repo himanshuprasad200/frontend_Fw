@@ -14,7 +14,7 @@ import store from "./store.js";
 // ===============================================
 // 1. AXIOS GLOBAL CONFIG (Backend + Auth Token)
 // ===============================================
-axios.defaults.baseURL = "https://backend-i86g.onrender.com";
+axios.defaults.baseURL = "https://backend-1-mp9a.onrender.com";
 axios.defaults.withCredentials = true;
 
 // Automatically attach JWT token to every request

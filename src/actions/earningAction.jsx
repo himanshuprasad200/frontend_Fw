@@ -28,7 +28,7 @@ export const createEarning = (amount, userId) => async (dispatch) => {
     };
 
     const { data } = await axios.post(
-      "https://backend-i86g.onrender.com/api/v1/earnings",
+      "https://backend-1-mp9a.onrender.com/api/v1/earnings",
       { amount, userId },
       config
     );
@@ -55,7 +55,7 @@ export const getAllEarnings = () => async (dispatch) => {
     dispatch({ type: ALL_EARNING_REQUEST });  // Fixed: Was ALL_BIDS_REQUEST (typo)
 
     const config = { withCredentials: true };
-    const { data } = await axios.get("https://backend-i86g.onrender.com/api/v1/admin/earning", config);
+    const { data } = await axios.get("https://backend-1-mp9a.onrender.com/api/v1/admin/earning", config);
 
     dispatch({
       type: ALL_EARNING_SUCCESS,
@@ -79,7 +79,7 @@ export const fetchEarnings = () => async (dispatch) => {
 
   try {
     const config = { withCredentials: true };
-    const response = await axios.get(`https://backend-i86g.onrender.com/api/v1/user/earning`, config);
+    const response = await axios.get(`https://backend-1-mp9a.onrender.com/api/v1/user/earning`, config);
 
     dispatch({
       type: USER_EARNINGS_SUCCESS,

@@ -10,7 +10,6 @@ const Search = () => {
   const searchSubmitHandler = (e) => {
     e.preventDefault();
     if (keyword.trim()) {
-      // Directs the user to the refined projects page with their filtered keyword
       navigate(`/projects/${keyword}`);
     } else {
       navigate("/projects");
@@ -26,7 +25,7 @@ const Search = () => {
              <h2>Find Work & Talent</h2>
              <p>Search over thousands of projects, skills, and professional services</p>
           </div>
-          <div className="input-group">
+          <div className="search-field-wrapper">
             <input
               type="text"
               placeholder="Search (e.g. Graphic Designer, Resume, Python Developer)..."
@@ -34,7 +33,7 @@ const Search = () => {
               autoFocus
               autoComplete="off"
             />
-            <button type="submit">
+            <button type="submit" className="search-submit-btn">
               <i className="fas fa-search"></i> Search
             </button>
           </div>

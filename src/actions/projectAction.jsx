@@ -24,7 +24,7 @@ import {
   UPDATE_PROJECT_SUCCESS,
 } from "../constants/projectConstant";
 
-const API_URL = 'https://backend-1-mp9a.onrender.com';
+const API_URL = 'http://localhost:4050';
 
 export const getProject =
   (keyword = "", currentPage = 1, price = [0, 90000], category, ratings = 0) =>

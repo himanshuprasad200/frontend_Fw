@@ -89,7 +89,10 @@ const AccountAnalytics = () => {
     };
   }, [bids]);
 
-  const totalEarnings = useMemo(() => earnings.reduce((s, e) => s + e.amount, 0), [earnings]);
+  const totalEarnings = useMemo(() => {
+    if (!Array.isArray(earnings)) return 0;
+    return earnings.reduce((s, e) => s + e.amount, 0);
+  }, [earnings]);
 
   // Monthly Earnings Chart
   const monthlyEarnings = useMemo(() => {
@@ -99,12 +102,14 @@ const AccountAnalytics = () => {
 
     for (let i = 5; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const amount = earnings
-        .filter(e => {
-          const ed = new Date(e.recievedAt);
-          return ed.getMonth() === d.getMonth() && ed.getFullYear() === d.getFullYear();
-        })
-        .reduce((s, e) => s + e.amount, 0);
+      const amount = Array.isArray(earnings) 
+        ? earnings
+            .filter(e => {
+              const ed = new Date(e.recievedAt);
+              return ed.getMonth() === d.getMonth() && ed.getFullYear() === d.getFullYear();
+            })
+            .reduce((s, e) => s + e.amount, 0)
+        : 0;
 
       data.push({ label: months[d.getMonth()], amount });
     }

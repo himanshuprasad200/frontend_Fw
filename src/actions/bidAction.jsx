@@ -41,7 +41,11 @@ export const createBid = (bid) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.post("/api/v1/bid/new", bid, formData, config);
+    const { data } = await axios.post(
+      "/api/v1/bid/new",
+      bid.file ? formData : bid,
+      config
+    );
 
     dispatch({
       type: CREATE_BID_SUCCESS,

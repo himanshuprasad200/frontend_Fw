@@ -15,7 +15,7 @@ import {
 // Global axios config for cookies (add to index.js if not already)
 axios.defaults.withCredentials = true;  // Send cookies with every request
 
-// Create Payment (Fixed: port URL; withCredentials; enhanced error handling)
+// Create Payment 
 export const createEarning = (amount, userId) => async (dispatch) => {
   try {
     dispatch({ type: CREATE_EARNING_REQUEST });
@@ -28,7 +28,7 @@ export const createEarning = (amount, userId) => async (dispatch) => {
     };
 
     const { data } = await axios.post(
-      "https://backend-i86g.onrender.com/api/v1/earnings",
+      "/api/v1/earnings",
       { amount, userId },
       config
     );
@@ -49,13 +49,13 @@ export const createEarning = (amount, userId) => async (dispatch) => {
   }
 };
 
-// Get All Earnings - Admin (Fixed: port URL; correct dispatch type; withCredentials)
+// Get All Earnings - Admin
 export const getAllEarnings = () => async (dispatch) => {
   try {
-    dispatch({ type: ALL_EARNING_REQUEST });  // Fixed: Was ALL_BIDS_REQUEST (typo)
+    dispatch({ type: ALL_EARNING_REQUEST });
 
     const config = { withCredentials: true };
-    const { data } = await axios.get("https://backend-i86g.onrender.com/api/v1/admin/earning", config);
+    const { data } = await axios.get("/api/v1/admin/earning", config);
 
     dispatch({
       type: ALL_EARNING_SUCCESS,
@@ -73,13 +73,13 @@ export const getAllEarnings = () => async (dispatch) => {
   }
 };
 
-// Account Analytics (Fixed: port URL; withCredentials; consistent error handling)
+// Account Analytics 
 export const fetchEarnings = () => async (dispatch) => {
   dispatch({ type: USER_EARNINGS_REQUEST });
 
   try {
     const config = { withCredentials: true };
-    const response = await axios.get(`https://backend-i86g.onrender.com/api/v1/user/earning`, config);
+    const response = await axios.get(`/api/v1/user/earning`, config);
 
     dispatch({
       type: USER_EARNINGS_SUCCESS,

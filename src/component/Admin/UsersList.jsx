@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllUsers, clearErrors, deleteUser } from "../../actions/userAction";
 import { DELETE_USER_RESET } from "../../constants/userConstant";
-import { FaSearch, FaTimes, FaEdit, FaTrash, FaCreditCard, FaStar } from "react-icons/fa";
+import { FaSearch, FaTimes, FaEdit, FaTrash, FaCreditCard, FaStar, FaComments } from "react-icons/fa";
 
 const UsersList = () => {
   const dispatch = useDispatch();
@@ -156,6 +156,15 @@ const UsersList = () => {
                         </div>
                         <div className="tableCell actions">
                           <div className="actionButtons">
+                            <Link
+                              to={`/chat/${user._id}`}
+                              className="actionBtn review"
+                              title="Chat with User"
+                              style={{ backgroundColor: "#0ea5e9", color: "#fff" }}
+                            >
+                              <FaComments />
+                            </Link>
+
                             <Link
                               to={`/admin/users/${user._id}`}
                               className="actionBtn edit"

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { FiExternalLink } from "react-icons/fi";
+import { FaComments } from "react-icons/fa";
 
 const MyBids = () => {
   const dispatch = useDispatch();
@@ -70,47 +71,74 @@ const MyBids = () => {
             <table className="bids-table">
               <thead>
                 <tr>
-                  <th>Bid ID</th>
+                  <th>Project</th>
                   <th>Proposal</th>
+                  <th>Budget</th>
                   <th>Status</th>
                   <th>Created</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {bidList.map((bid) => (
-                  <tr key={bid._id} className="bid-row">
-                    <td data-label="Bid ID" className="bid-id">
-                      {bid._id}
-                    </td>
-                    <td data-label="Proposal" className="bid-proposal">
-                      {bid.proposal?.length > 50
-                        ? `${bid.proposal.substring(0, 50)}...`
-                        : bid.proposal || "—"}
-                    </td>
-                    <td data-label="Status">
-                      <span
-                        className={`status-badge ${
-                          bid.response === "Approved"
-                            ? "approved"
-                            : bid.response === "Pending"
-                            ? "pending"
-                            : "rejected"
-                        }`}
-                      >
-                        {bid.response || "Pending"}
-                      </span>
-                    </td>
-                    <td data-label="Created" className="bid-date">
-                      {formatDate(bid.createdAt)}
-                    </td>
+                {bidList.map((bid) => {
+                  const totalBudget = (bid.bidsItems || []).reduce((sum, p) => sum + Number(p.price || 0), 0);
+                  const firstProject = bid.bidsItems?.[0] || {};
+                  
+                  return (
+                    <tr key={bid._id} className="bid-row">
+                      <td data-label="Project" className="bid-project-meta">
+                        <div className="project-thumb-cell">
+                          <img src={firstProject.images?.[0]?.url || "/Profile.png"} alt="thumb" />
+                          <div className="project-name-cell">
+                            <strong>{firstProject.title || "Unknown"}</strong>
+                            <span>#{bid._id.slice(-6).toUpperCase()}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td data-label="Proposal" className="bid-proposal">
+                        {bid.proposal?.length > 50
+                          ? `${bid.proposal.substring(0, 50)}...`
+                          : bid.proposal || "—"}
+                      </td>
+                      <td data-label="Budget" className="bid-price">
+                        ₹{totalBudget.toLocaleString("en-IN")}
+                      </td>
+                      <td data-label="Status">
+                        <span
+                          className={`status-badge ${
+                            bid.response === "Approved"
+                              ? "approved"
+                              : bid.response === "Pending"
+                              ? "pending"
+                              : "rejected"
+                          }`}
+                        >
+                          {bid.response || "Pending"}
+                        </span>
+                      </td>
+                      <td data-label="Created" className="bid-date">
+                        {formatDate(bid.createdAt)}
+                      </td>
                     <td data-label="Actions" className="bid-actions">
-                      <Link to={`/bid/${bid._id}`} className="view-bid-link">
-                        <FiExternalLink />
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
+                      <div className="action-btns-group">
+                        <Link to={`/bid/${bid._id}`} className="view-bid-link" title="View Details">
+                          <FiExternalLink />
+                        </Link>
+                        
+                        {(bid.response === "Pending" || bid.response === "Approved") && bid.bidsItems?.[0]?.postedBy?._id && (
+                          <button 
+                            className="chat-table-btn" 
+                            title="Chat with Client"
+                            onClick={() => navigate(`/chat/${bid.bidsItems[0].postedBy._id}`)}
+                          >
+                            <FaComments />
+                          </button>
+                        )}
+                      </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

@@ -130,7 +130,7 @@ export const getProjectDetails = (id) => async (dispatch) => {
     const { data } = await axios.get(`/api/v1/project/${id}`);
     dispatch({
       type: PROJECT_DETAILS_SUCCESS,
-      payload: data.project,
+      payload: data,
     });
   } catch (error) {
     dispatch({

@@ -14,6 +14,7 @@ import { NEW_REVIEW_RESET } from "../../constants/projectConstant";
 import Loader from "../layout/Loader/Loader";
 import MetaData from "../layout/MetaData";
 import ReviewCard from "./ReviewCard";
+import { FaComments, FaRegClock, FaTag, FaUserCircle, FaGlobeAmericas } from "react-icons/fa";
 
 // Reusable Star Rating Component
 const StarRating = ({ rating = 0, onRate, interactive = false, size = "text-2xl" }) => {
@@ -37,9 +38,17 @@ const ProjectDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { project, loading, error } = useSelector((state) => state.projectDetails);
+  const { project, loading, error, hasApplied } = useSelector((state) => state.projectDetails);
   const { success, error: reviewError } = useSelector((state) => state.newProjectReview);
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+
+  // Check if user should see chat (Freelancer must have applied, or be Admin/Owner)
+  const canChat = isAuthenticated && (
+    hasApplied || 
+    user?.role === "admin" || 
+    user?.role === "superadmin" ||
+    project?.postedBy?._id === user?._id
+  );
 
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -104,18 +113,37 @@ const ProjectDetails = () => {
               <h1 className="project-title">{project.title}</h1>
 
               <div className="client-card">
-                <img
-                  src={project.postedBy?.avatar?.url || "/Profile.png"}
-                  alt={project.postedBy?.name}
-                  className="client-avatar"
-                />
-                <div className="client-info">
-                  <h3>{project.postedBy?.name}</h3>
-                  <p>{project.postedBy?.country || "Freelancer"}</p>
+                <div className="client-main">
+                  <img
+                    src={project.postedBy?.avatar?.url || "/Profile.png"}
+                    alt={project.postedBy?.name}
+                    className="client-avatar"
+                  />
+                  <div className="client-info">
+                    <h3>{project.postedBy?.name}</h3>
+                    <p><FaGlobeAmericas /> {project.postedBy?.country || "Freelancer"}</p>
+                  </div>
                 </div>
-                <div className="client-rating">
-                  <StarRating rating={project.ratings || 0} />
-                  <span className="review-count">({project.numOfReviews} reviews)</span>
+
+                <div className="client-actions">
+                  <div className="client-rating">
+                    <StarRating rating={project.ratings || 0} />
+                    <span className="review-count">({project.numOfReviews} reviews)</span>
+                  </div>
+                  {canChat ? (
+                    project.postedBy?._id && (
+                      <button 
+                        className="chat-primary-btn" 
+                        onClick={() => navigate(`/chat/${project.postedBy._id}`)}
+                      >
+                        <FaComments /> Chat with Client
+                      </button>
+                    )
+                  ) : (
+                    <p className="chat-lock-note">
+                      Apply to bid to unlock chat
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -164,25 +192,34 @@ const ProjectDetails = () => {
               </button>
             </div>
 
-            <div className="info-card">
-              <h3>Project Info</h3>
-              <div className="info-item">
-                <span>Category</span>
-                <strong>{project.category}</strong>
+            <div className="details-table-card">
+              <h3><FaRegClock /> Project Meta</h3>
+              <div className="details-table">
+                <div className="table-row">
+                  <div className="table-label"><FaTag /> Category</div>
+                  <div className="table-value">{project.category}</div>
+                </div>
+                <div className="table-row">
+                  <div className="table-label"><FaUserCircle /> Posted By</div>
+                  <div className="table-value">{project.postedBy?.name}</div>
+                </div>
+                <div className="table-row">
+                  <div className="table-label">ID</div>
+                  <div className="table-value">#{id.slice(-6).toUpperCase()}</div>
+                </div>
               </div>
-              <div className="info-item">
-                <span>Posted By</span>
-                <strong>{project.postedBy?.name}</strong>
-              </div>
-              <div className="info-item">
-                <span>Rating</span>
-                <StarRating rating={project.ratings || 0} size="text-lg" />
-              </div>
+              
+              {canChat && project.postedBy?._id && (
+                <div className="table-action">
+                   <button 
+                     className="table-chat-btn"
+                     onClick={() => navigate(`/chat/${project.postedBy._id}`)}
+                   >
+                     <FaComments /> Send Message
+                   </button>
+                </div>
+              )}
             </div>
-
-            <a href="mailto:flexiworkclient@gmail.com" className="contact-btn">
-              Contact Client
-            </a>
           </div>
         </div>
       </div>

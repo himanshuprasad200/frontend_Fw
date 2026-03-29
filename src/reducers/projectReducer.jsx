@@ -154,7 +154,8 @@ export const projectDetailsReducer = (state = { project: {} }, action) => {
     case PROJECT_DETAILS_SUCCESS:
       return {
         loading: false,
-        project: action.payload,
+        project: action.payload.project,
+        hasApplied: action.payload.hasApplied,
       };
     case PROJECT_DETAILS_FAIL:
       return {

@@ -21,6 +21,7 @@ import axios from "axios";
 import Loader from "./component/layout/Loader/Loader";
 import UpdateProfile from "./component/User/UpdateProfile";
 import AccountAnalytics from "./component/User/AccountAnalytics";
+import Chat from "./component/Chat/Chat";
 
 // Admin Components
 import JoinAsClient from "./component/Admin/JoinAsClient";
@@ -42,6 +43,11 @@ import UpdateProject from "./component/Admin/UpdateProject";
 
 // Set Axios to send cookies
 axios.defaults.withCredentials = true;
+
+import toast from "react-hot-toast";
+import io from "socket.io-client";
+import { FaComments } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 // ──────────────────────────────────────────────────────────────
 // SECURE PROTECTED ROUTE – Handles Auth + Admin Role
@@ -74,7 +80,62 @@ const ProtectedRoute = ({ children, isAdmin = false }) => {
 
 function App() {
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const { loading, isAuthenticated, user } = useSelector((state) => state.user);
+  
+  // Real-time notification socket
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const socketUrl = window.location.hostname === "localhost"
+        ? "http://localhost:4050"
+        : axios.defaults.baseURL || window.location.origin;
+
+      const socket = io(socketUrl, { withCredentials: true });
+
+      socket.emit("add_user", user._id);
+
+      socket.on("new_notification", (data) => {
+        // Dispatch to update header bell icon
+        window.dispatchEvent(new CustomEvent("new_notification", { detail: data }));
+
+        // Prevent showing notification if already in the chat room
+        if (window.location.pathname.includes(data.sender)) return;
+
+        toast((t) => (
+          <div 
+            onClick={() => {
+              navigate(`/chat/${data.sender}`);
+              toast.dismiss(t.id);
+            }}
+            style={{ 
+              cursor: "pointer", 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "10px", 
+              padding: "5px" 
+            }}
+          >
+            <div style={{ backgroundColor: "#00a884", borderRadius: "50%", padding: "8px", color: "white", display: "flex" }}>
+               <FaComments />
+            </div>
+            <div>
+              <strong style={{ display: "block", color: "#f7bc0b" }}>{data.senderName}</strong>
+              <span style={{ fontSize: "12px", color: "#ccc" }}>{data.text.slice(0, 30)}...</span>
+            </div>
+          </div>
+        ), {
+            duration: 6000,
+            style: {
+                background: "#2a2f32",
+                color: "#fff",
+                borderLeft: "5px solid #00a884"
+            }
+        });
+      });
+
+      return () => socket.disconnect();
+    }
+  }, [isAuthenticated, user, navigate]);
 
   // Load user on every mount (critical for refresh)
   useEffect(() => {
@@ -160,6 +221,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <MyBids />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/chat/:id"
+              element={
+                <ProtectedRoute>
+                  <Chat />
                 </ProtectedRoute>
               }
             />

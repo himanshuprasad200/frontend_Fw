@@ -10,6 +10,11 @@
   flex: 1;
   padding: 40px;
   margin-left: 280px;
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-sidebar.collapsed ~ .admin-content {
+  margin-left: 85px; /* Matching the collapsed width in Sidebar.css */
 }
 
 .admin-header {

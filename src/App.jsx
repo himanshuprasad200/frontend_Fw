@@ -9,6 +9,7 @@ import LoginSignUp from "./component/User/LoginSignUp";
 import Profile from "./component/User/Profile";
 import ProjectDetails from "./component/Project/ProjectDetails";
 import Projects from "./component/Project/Projects";
+import Search from "./component/Project/Search";
 import BidDetails from "./component/Bid/BidDetails";
 import Proposal from "./component/Project/Proposal";
 import Footer from "./component/layout/Footer/Footer";
@@ -35,6 +36,7 @@ import HelpCenter from "./component/layout/HelpCentre/HelpCentre";
 
 import ScrollToTop from "./utils/ScrollToTop";
 import NewProject from "./component/Admin/NewProject";
+import ProjectList from "./component/Admin/ProjectList";
 
 // Set Axios to send cookies
 axios.defaults.withCredentials = true;
@@ -113,6 +115,7 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:keyword" element={<Projects />} />
             <Route path="/project/:id" element={<ProjectDetails />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/help-center" element={<HelpCenter />} />
 
@@ -213,6 +216,14 @@ function App() {
               element={
                 <ProtectedRoute isAdmin={true}>
                   <NewProject />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/projects"
+              element={
+                <ProtectedRoute isAdmin={true}>
+                  <ProjectList />
                 </ProtectedRoute>
               }
             />

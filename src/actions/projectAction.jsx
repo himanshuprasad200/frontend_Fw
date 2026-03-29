@@ -20,7 +20,7 @@ import {
   PROJECT_DETAILS_REQUEST,
   PROJECT_DETAILS_SUCCESS,
   UPDATE_PROJECT_FAIL,
-  UPDATE_PROJECT_REQUEST, 
+  UPDATE_PROJECT_REQUEST,
   UPDATE_PROJECT_SUCCESS,
 } from "../constants/projectConstant";
 
@@ -28,28 +28,28 @@ const API_URL = 'https://backend-i86g.onrender.com';
 
 export const getProject =
   (keyword = "", currentPage = 1, price = [0, 90000], category, ratings = 0) =>
-  async (dispatch) => {
-    try {
-      dispatch({ type: ALL_PROJECT_REQUEST });
+    async (dispatch) => {
+      try {
+        dispatch({ type: ALL_PROJECT_REQUEST });
 
-      let link = `${API_URL}/api/v1/projects?page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${ratings}`;
+        let link = `${API_URL}/api/v1/projects?page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${ratings}`;
 
-      if (category) {
-        link = `${API_URL}/api/v1/projects?page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}&ratings[gte]=${ratings}`;
+        if (category) {
+          link = `${API_URL}/api/v1/projects?page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}&ratings[gte]=${ratings}`;
+        }
+
+        const { data } = await axios.get(link);
+        dispatch({
+          type: ALL_PROJECT_SUCCESS,
+          payload: data,
+        });
+      } catch (error) {
+        dispatch({
+          type: ALL_PROJECT_FAIL,
+          payload: error.response.data.message,
+        });
       }
-
-      const { data } = await axios.get(link);
-      dispatch({
-        type: ALL_PROJECT_SUCCESS,
-        payload: data,
-      });
-    } catch (error) {
-      dispatch({
-        type: ALL_PROJECT_FAIL,
-        payload: error.response.data.message,
-      });
-    }
-  };
+    };
 
 //Get all projects for Admin
 export const getAdminProject = () => async (dispatch) => {
@@ -124,7 +124,7 @@ export const deleteProject = (id) => async (dispatch) => {
     });
   }
 };
- 
+
 //Get Project Details
 export const getProjectDetails = (id) => async (dispatch) => {
   try {
@@ -135,7 +135,7 @@ export const getProjectDetails = (id) => async (dispatch) => {
       payload: data.project,
     });
   } catch (error) {
-    dispatch({ 
+    dispatch({
       type: PROJECT_DETAILS_FAIL,
       payload: error.response.data.message,
     });

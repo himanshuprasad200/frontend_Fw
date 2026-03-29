@@ -1,10 +1,9 @@
-// src/component/Home/ProjectCard.jsx
 import React from "react";
 import ReactStars from "react-rating-stars-component";
 import { Link } from "react-router-dom";
 import "./ProjectCard.css";
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project, isHome = false }) => {
   const options = {
     value: project.ratings || 4.5,
     edit: false,
@@ -13,12 +12,13 @@ const ProjectCard = ({ project }) => {
     activeColor: "#ffd700",
   };
 
+  const cardClass = isHome ? "modern-project-card home-card" : "modern-project-card";
+
   return (
-    <Link className="modern-project-card" to={`/project/${project._id}`}>
+    <Link className={cardClass} to={`/project/${project._id}`}>
       <div className="card-image">
         <img src={project.images[0]?.url || "/placeholder.jpg"} alt={project.name} />
         <div className="card-overlay"></div>
-    
       </div>
 
       <div className="card-content">

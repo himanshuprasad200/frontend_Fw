@@ -1,5 +1,5 @@
 import React from "react";
-import profilePng from "../../images/Profile.png";
+import { DEFAULT_AVATAR } from "../../constants/imageConstant";
 import "./ProjectDetails.css";
 
 const ReviewCard = ({ review }) => {
@@ -15,7 +15,7 @@ const ReviewCard = ({ review }) => {
   return (
     <div className="reviewCard">
       <img
-        src={review?.avatar || profilePng}
+        src={review?.avatar || DEFAULT_AVATAR}
         alt="User"
         className="review-avatar"
       />

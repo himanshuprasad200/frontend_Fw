@@ -40,7 +40,6 @@
 }
 
 .auth-card-full {
-  margin-top: 90px;
   background: rgba(15, 15, 35, 0.92);
   backdrop-filter: blur(24px);
   border-radius: 28px;

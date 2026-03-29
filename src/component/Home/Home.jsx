@@ -33,7 +33,7 @@ const Home = () => {
     dispatch(getProject());
   }, [dispatch, error]);
 
-  // GSAP Scroll Animations - Now works without error
+  // GSAP Scroll Animations
   useEffect(() => {
     // Animate sections on scroll
     sectionRefs.current.forEach((section) => {
@@ -52,7 +52,6 @@ const Home = () => {
             trigger: section,
             start: "top 80%",
             toggleActions: "play none none reverse",
-            // debug: true, // remove in production
           },
         }
       );
@@ -61,7 +60,7 @@ const Home = () => {
     // Animate Project Cards
     if (projects && projects.length > 0) {
       gsap.fromTo(
-        ".modern-project-card",
+        ".modern-project-card.home-card",
         { opacity: 0, y: 80, scale: 0.95 },
         {
           opacity: 1,
@@ -147,7 +146,7 @@ const Home = () => {
                 <div className="projects-grid">
                   {projects && projects.length > 0 ? (
                     projects.map((project) => (
-                      <ProjectCard key={project._id} project={project} />
+                      <ProjectCard key={project._id} project={project} isHome={true} />
                     ))
                   ) : (
                     <p className="no-data">No services available yet.</p>
@@ -183,7 +182,7 @@ const Home = () => {
               </div>
             </section>
 
-            {/* 3. TRUSTED BY - LOGOS NOW VISIBLE */}
+            {/* 3. TRUSTED BY */}
             <section className="trust-stats-section" ref={(el) => (sectionRefs.current[2] = el)}>
               <div className="container">
                 <div className="trust-content">

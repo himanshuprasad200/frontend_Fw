@@ -13,11 +13,11 @@
   flex: 1;
   margin-left: 280px;
   padding: 40px 30px;
-  transition: margin-left 0.4s ease;
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .admin-sidebar.collapsed ~ .admin-content {
-  margin-left: 80px;
+  margin-left: 85px;
 }
 
 .bids-container {
@@ -120,6 +120,7 @@
   line-height: 1.7;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;

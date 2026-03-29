@@ -22,9 +22,8 @@ const StarRating = ({ rating = 0, onRate, interactive = false, size = "text-2xl"
       {[1, 2, 3, 4, 5].map((star) => (
         <i
           key={star}
-          className={`fa-star ${
-            star <= rating ? "fas text-yellow-400" : "far text-gray-300"
-          } ${size} transition-all hover:scale-110`}
+          className={`fa-star ${star <= rating ? "fas text-yellow-400" : "far text-gray-300"
+            } ${size} transition-all hover:scale-110`}
           onClick={() => interactive && onRate(star)}
           style={{ cursor: interactive ? "pointer" : "default" }}
         />

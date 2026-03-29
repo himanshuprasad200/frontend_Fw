@@ -8,7 +8,7 @@ import Sidebar from "./Sidebar";
 import Loader from "../layout/Loader/Loader";
 import { createEarning, clearErrors } from "../../actions/earningAction";
 import { CREATE_EARNING_RESET } from "../../constants/earningConstant";
-import "./Payment.css";
+import "./Payment.css"; 
 
 const Payment = () => {
   const [amount, setAmount] = useState("");

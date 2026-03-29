@@ -1,13 +1,13 @@
-// src/component/Admin/NewProject.jsx
+// src/component/Admin/UpdateProject.jsx
 import React, { Fragment, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { clearErrors, createProject } from "../../actions/projectAction";
-import { NEW_PROJECT_RESET } from "../../constants/projectConstant";
+import { clearErrors, getProjectDetails, updateProject } from "../../actions/projectAction";
+import { UPDATE_PROJECT_RESET } from "../../constants/projectConstant";
 import MetaData from "../layout/MetaData";
 import Sidebar from "./Sidebar";
-import "./NewProject.css";
+import "./NewProject.css"; // Reuse NewProject.css classes for UI consistency
 
 import { 
   FaUser, 
@@ -16,14 +16,18 @@ import {
   FaRupeeSign, 
   FaFolderOpen, 
   FaUpload, 
-  FaSpinner 
+  FaSpinner, 
+  FaArrowLeft,
+  FaImage
 } from "react-icons/fa";
 
-const NewProject = () => {
+const UpdateProject = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { id: projectId } = useParams();
 
-  const { loading, error, success } = useSelector((state) => state.newProject);
+  const { loading, error: updateError, isUpdated } = useSelector((state) => state.project);
+  const { project, error } = useSelector((state) => state.projectDetails);
 
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
@@ -31,6 +35,7 @@ const NewProject = () => {
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [images, setImages] = useState([]);
+  const [oldImages, setOldImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
 
   const categories = [
@@ -41,19 +46,35 @@ const NewProject = () => {
   ];
 
   useEffect(() => {
+    if (!project || project._id !== projectId) {
+      dispatch(getProjectDetails(projectId));
+    } else {
+      setName(project.name || "");
+      setTitle(project.title || "");
+      setDesc(project.desc || "");
+      setCategory(project.category || "");
+      setPrice(project.price || "");
+      setOldImages(project.images || []);
+    }
+
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
     }
 
-    if (success) {
-      toast.success("Project created successfully!");
-      navigate("/admin/joinasclient");
-      dispatch({ type: NEW_PROJECT_RESET });
+    if (updateError) {
+      toast.error(updateError);
+      dispatch(clearErrors());
     }
-  }, [dispatch, error, success, navigate]);
 
-  const createProjectSubmitHandler = (e) => {
+    if (isUpdated) {
+      toast.success("Project updated successfully!");
+      navigate("/admin/projects");
+      dispatch({ type: UPDATE_PROJECT_RESET });
+    }
+  }, [dispatch, error, updateError, isUpdated, navigate, projectId, project]);
+
+  const updateProjectSubmitHandler = (e) => {
     e.preventDefault();
 
     const projectData = {
@@ -62,10 +83,13 @@ const NewProject = () => {
       desc,
       category,
       price,
-      images, // these are now base64 strings
     };
 
-    dispatch(createProject(projectData));
+    if (images.length > 0) {
+      projectData.images = images;
+    }
+
+    dispatch(updateProject(projectId, projectData));
   };
 
   // Helper to compress image
@@ -78,8 +102,8 @@ const NewProject = () => {
         img.src = event.target.result;
         img.onload = () => {
           const canvas = document.createElement("canvas");
-          const maxWidth = 1200;
-          const maxHeight = 1200;
+          const maxWidth = 1200; // Limit width
+          const maxHeight = 1200; // Limit height
           let width = img.width;
           let height = img.height;
 
@@ -99,27 +123,33 @@ const NewProject = () => {
           canvas.height = height;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, width, height);
-          const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+          
+          // Export as high-quality compressed JPEG
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.7); // 70% quality
           resolve(dataUrl);
         };
       };
     });
   };
 
-  const createProjectImagesChange = async (e) => {
+  const updateProjectImagesChange = async (e) => {
     const files = Array.from(e.target.files);
 
     if (files.length === 0) return;
 
     setImages([]);
     setImagesPreview([]);
+    setOldImages([]);
 
     const compressedImages = [];
+    
+    // Process files one by one with toast feedback if needed
     for (const file of files) {
-      if (file.size > 10 * 1024 * 1024) {
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit per original file for sanity
         toast.error(`${file.name} is too large (>10MB).`);
         continue;
       }
+      
       const compressed = await compressImage(file);
       compressedImages.push(compressed);
     }
@@ -130,7 +160,7 @@ const NewProject = () => {
 
   return (
     <Fragment>
-      <MetaData title="Create New Project" />
+      <MetaData title="Modify Project - Admin" />
 
       <div className="dashboard">
         <Sidebar />
@@ -140,13 +170,13 @@ const NewProject = () => {
             {/* Header Section */}
             <div className="page-header">
               <div>
-                <h1 className="page-title">Create New Project</h1>
-                <p className="page-subtitle">Fill in the details below to post your project to the marketplace.</p>
+                <h1 className="page-title">Modify Project</h1>
+                <p className="page-subtitle">Update the core details, budget, or media assets for project #{projectId?.slice(-8).toUpperCase()}</p>
               </div>
-              <div className="header-badge">Admin Mode</div>
+              <div className="header-badge">Edit Mode</div>
             </div>
 
-            <form className="project-form-v2" onSubmit={createProjectSubmitHandler}>
+            <form className="project-form-v2" onSubmit={updateProjectSubmitHandler}>
               
               {/* SECTION 1: BASIC INFO */}
               <div className="form-section">
@@ -250,7 +280,7 @@ const NewProject = () => {
               <div className="form-section">
                 <div className="section-header">
                   <div className="section-number">03</div>
-                  <h3>Media Assets</h3>
+                  <h3>Project Media Assets</h3>
                 </div>
 
                 <div className="media-upload-container">
@@ -260,31 +290,54 @@ const NewProject = () => {
                       name="images"
                       accept="image/*"
                       multiple
-                      onChange={createProjectImagesChange}
+                      onChange={updateProjectImagesChange}
                       id="file-upload"
                     />
                     <label htmlFor="file-upload" className="upload-label">
                       <div className="upload-icon-circle">
                         <FaUpload />
                       </div>
-                      <h4>Click or Drag images to upload</h4>
-                      <p>Supports: JPG, PNG, WEBP (Max 5MB each)</p>
-                      <span className="selected-count">{images.length} files selected</span>
+                      <h4>Update project images</h4>
+                      <p>Selecting new images will replace existing ones on save</p>
+                      <span className="selected-count">{images.length} new files selected</span>
                     </label>
                   </div>
 
-                  {imagesPreview.length > 0 && (
+                  {/* PREVIEW CONTAINER */}
+                  <div className="images-preview-section">
+                    {oldImages.length > 0 && imagesPreview.length === 0 && (
+                      <div className="preview-status-badge">
+                        <FaImage /> Current Project Images
+                      </div>
+                    )}
+                    {imagesPreview.length > 0 && (
+                      <div className="preview-status-badge success">
+                        <FaUpload /> New Selection (Pending Save)
+                      </div>
+                    )}
+
                     <div className="preview-grid">
-                      {imagesPreview.map((img, index) => (
+                      {/* Show current images if no new ones are selected */}
+                      {imagesPreview.length === 0 && oldImages.map((img, index) => (
                         <div key={index} className="preview-card">
-                          <img src={img} alt={`Preview ${index + 1}`} />
+                          <img src={img.url} alt={`Current ${index + 1}`} />
                           <div className="preview-overlay">
-                            <span>Image {index + 1}</span>
+                            <span>Current {index + 1}</span>
+                          </div>
+                        </div>
+                      ))}
+
+                      {/* Show new selection */}
+                      {imagesPreview.map((img, index) => (
+                        <div key={index} className="preview-card highlight">
+                          <img src={img} alt={`New Preview ${index + 1}`} />
+                          <div className="preview-overlay">
+                            <span>New {index + 1}</span>
                           </div>
                         </div>
                       ))}
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
 
@@ -293,9 +346,9 @@ const NewProject = () => {
                 <button
                   type="button"
                   className="cancel-btn"
-                  onClick={() => navigate("/admin/joinasclient")}
+                  onClick={() => navigate("/admin/projects")}
                 >
-                  Discard
+                  <FaArrowLeft style={{ marginRight: "8px" }} /> Discard Changes
                 </button>
                 <button
                   type="submit"
@@ -304,10 +357,10 @@ const NewProject = () => {
                 >
                   {loading ? (
                     <>
-                      <FaSpinner className="spin" /> Publishing...
+                      <FaSpinner className="spin" /> Updating...
                     </>
                   ) : (
-                    "Publish Project"
+                    "Apply Changes"
                   )}
                 </button>
               </div>
@@ -319,4 +372,4 @@ const NewProject = () => {
   );
 };
 
-export default NewProject;
+export default UpdateProject;

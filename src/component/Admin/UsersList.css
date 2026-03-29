@@ -24,22 +24,92 @@
   border: 1px solid #e0f2fe;
 }
 
+.usersListHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
 .usersListHeading {
-  font-size: 2.6rem;
+  font-size: 2.2rem;
   font-weight: 800;
-  text-align: center;
   background: linear-gradient(90deg, #0ea5e9, #0284c7);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 }
 
 .usersCount {
-  text-align: center;
   color: #64748b;
-  font-size: 1.1rem;
-  margin-bottom: 30px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.adminSearchBox {
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  width: 100%;
+  max-width: 400px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.adminSearchBox:focus-within {
+  border-color: #0ea5e9;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.adminSearchBox input {
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 4px 10px;
+  width: 100%;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.searchIcon {
+  color: #94a3b8;
+  font-size: 1rem;
+}
+
+.clearSearch {
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 4px;
+}
+
+.clearSearch:hover {
+  color: #ef4444;
+}
+
+.resetSearchBtn {
+  margin-top: 16px;
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.resetSearchBtn:hover {
+  background: #0284c7;
+  transform: translateY(-2px);
 }
 
 .usersTableWrapper {

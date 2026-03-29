@@ -37,6 +37,8 @@ import HelpCenter from "./component/layout/HelpCentre/HelpCentre";
 import ScrollToTop from "./utils/ScrollToTop";
 import NewProject from "./component/Admin/NewProject";
 import ProjectList from "./component/Admin/ProjectList";
+import UpdateUser from "./component/Admin/UpdateUser";
+import UpdateProject from "./component/Admin/UpdateProject";
 
 // Set Axios to send cookies
 axios.defaults.withCredentials = true;
@@ -61,8 +63,8 @@ const ProtectedRoute = ({ children, isAdmin = false }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // Admin route but not admin → go to unauthorized page
-  if (isAdmin && user?.role !== "admin") {
+  // Admin route but not admin or superadmin → go to unauthorized page
+  if (isAdmin && user?.role !== "admin" && user?.role !== "superadmin") {
     return <Navigate to="/unauthorized" replace />;
   }
 
@@ -204,6 +206,14 @@ function App() {
               }
             />
             <Route
+              path="/admin/users/:id"
+              element={
+                <ProtectedRoute isAdmin={true}>
+                  <UpdateUser />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/admin/user/payment/:id"
               element={
                 <ProtectedRoute isAdmin={true}>
@@ -216,6 +226,14 @@ function App() {
               element={
                 <ProtectedRoute isAdmin={true}>
                   <NewProject />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/project/:id"
+              element={
+                <ProtectedRoute isAdmin={true}>
+                  <UpdateProject />
                 </ProtectedRoute>
               }
             />

@@ -40,7 +40,7 @@ const UserOptions = ({ user }) => {
     },
   ];
 
-  if (user.role === "admin") {
+  if (user.role === "admin" || user.role === "superadmin") {
     options.unshift({
       icon: <MdDashboard />,
       name: "Post a Project",

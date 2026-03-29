@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllUsers, clearErrors, deleteUser } from "../../actions/userAction";
 import { DELETE_USER_RESET } from "../../constants/userConstant";
+import { FaSearch, FaTimes, FaEdit, FaTrash, FaCreditCard, FaStar } from "react-icons/fa";
 
 const UsersList = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const UsersList = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
+  const [searchTerm, setSearchTerm] = useState("");
 
   const deleteUserHandler = (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
@@ -37,16 +39,31 @@ const UsersList = () => {
     if (isDeleted) {
       toast.success(message || "User deleted successfully");
       dispatch({ type: DELETE_USER_RESET });
-      setCurrentPage(1); // Reset to first page
+      setCurrentPage(1); 
     }
     dispatch(getAllUsers());
   }, [dispatch, error, deleteError, isDeleted, message]);
 
-  // Pagination Logic
+  // Filter Logic
+  const filteredUsers = users?.filter((user) => {
+    const search = searchTerm.toLowerCase();
+    return (
+      user.name?.toLowerCase().includes(search) ||
+      user.email?.toLowerCase().includes(search) ||
+      user.role?.toLowerCase().includes(search) ||
+      user._id?.toLowerCase().includes(search)
+    );
+  }) || [];
+
+  // Reset page when searching
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users ? users.slice(indexOfFirstUser, indexOfLastUser) : [];
-  const totalPages = users ? Math.ceil(users.length / usersPerPage) : 1;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage) || 1;
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -59,12 +76,36 @@ const UsersList = () => {
 
         <div className="admin-content">
           <div className="usersListContainer">
-            <h1 className="usersListHeading">All Users</h1>
-            <p className="usersCount">Total: {users?.length || 0} users</p>
+            <div className="usersListHeaderContainer">
+              <div>
+                <h1 className="usersListHeading">All Users</h1>
+                <p className="usersCount">Total: {filteredUsers.length} users</p>
+              </div>
 
-            {users && users.length === 0 ? (
+              {/* Enhanced Search Box */}
+              <div className="adminSearchBox">
+                <FaSearch className="searchIcon" />
+                <input
+                  type="text"
+                  placeholder="Search by name, email, or role..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                {searchTerm && (
+                  <FaTimes 
+                    className="clearSearch" 
+                    onClick={() => setSearchTerm("")} 
+                  />
+                )}
+              </div>
+            </div>
+
+            {filteredUsers.length === 0 ? (
               <div className="emptyState">
-                <p>No users found.</p>
+                <p>{searchTerm ? `No users found matching "${searchTerm}"` : "No users found."}</p>
+                {searchTerm && (
+                   <button className="resetSearchBtn" onClick={() => setSearchTerm("")}>Clear Filters</button>
+                )}
               </div>
             ) : (
               <>
@@ -116,13 +157,11 @@ const UsersList = () => {
                         <div className="tableCell actions">
                           <div className="actionButtons">
                             <Link
-                              to={`/admin/user/${user._id}`}
+                              to={`/admin/users/${user._id}`}
                               className="actionBtn edit"
                               title="Edit User"
                             >
-                              <svg viewBox="0 0 24 24">
-                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                              </svg>
+                              <FaEdit />
                             </Link>
 
                             <button
@@ -130,9 +169,7 @@ const UsersList = () => {
                               className="actionBtn delete"
                               title="Delete User"
                             >
-                              <svg viewBox="0 0 24 24">
-                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
-                              </svg>
+                              <FaTrash />
                             </button>
 
                             <Link
@@ -140,9 +177,7 @@ const UsersList = () => {
                               className="actionBtn payment"
                               title="Make Payment"
                             >
-                              <svg viewBox="0 0 24 24">
-                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
-                              </svg>
+                              <FaCreditCard />
                             </Link>
 
                             <Link
@@ -150,9 +185,7 @@ const UsersList = () => {
                               className="actionBtn review"
                               title="Submit Review"
                             >
-                              <svg viewBox="0 0 24 24">
-                                <path d="M22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24z" />
-                              </svg>
+                              <FaStar />
                             </Link>
                           </div>
                         </div>

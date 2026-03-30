@@ -20,6 +20,7 @@ const Chat = () => {
   const [isOnline, setIsOnline] = useState(false);
   const scrollRef = useRef();
   const socketRef = useRef();
+  const textareaRef = useRef();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -97,6 +98,9 @@ const Chat = () => {
 
     socketRef.current.emit("send_message", messageData);
     setNewMessage("");
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'inherit';
+    }
   };
 
   if (loading) return <div className="chatLoader"><Loader /></div>;
@@ -156,11 +160,22 @@ const Chat = () => {
         <div className="chatInputWrapper">
           <form className="chatForm" onSubmit={handleSubmit}>
             <div className="inputGroup">
-              <input
-                type="text"
+              <textarea
+                ref={textareaRef}
                 placeholder="Type a message"
                 value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
+                rows="1"
+                onChange={(e) => {
+                  setNewMessage(e.target.value);
+                  e.target.style.height = 'inherit';
+                  e.target.style.height = `${e.target.scrollHeight}px`;
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit(e);
+                  }
+                }}
               />
             </div>
             <button type="submit" className="sendBtn" disabled={!newMessage.trim()}>

@@ -197,16 +197,25 @@
   flex: 1;
   background-color: #ffffff;
   border-radius: 8px;
-  padding: 9px 12px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: flex-end;
 }
 
-.chatForm input {
+.chatForm textarea {
   width: 100%;
   border: none;
   font-size: 0.95rem;
   outline: none;
   background: transparent;
   color: #111b21;
+  font-family: inherit;
+  resize: none;
+  line-height: 1.4;
+  padding: 0;
+  margin: 0;
+  max-height: 120px;
+  overflow-y: auto;
 }
 
 .sendBtn {

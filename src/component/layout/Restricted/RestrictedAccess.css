@@ -73,6 +73,12 @@
   text-decoration: none;
   transition: all 0.4s ease;
   font-size: 1.1rem;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
 }
 
 .btn-primary {
@@ -90,6 +96,10 @@
   background: white;
   color: #0c4a6e;
   border: 2px solid #0ea5e9;
+}
+
+.btn-primary {
+  border: none;
 }
 
 .btn-secondary:hover {

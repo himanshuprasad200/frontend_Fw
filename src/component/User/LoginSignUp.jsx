@@ -15,9 +15,10 @@ import {
 import { FaGlobe, FaUpload } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { login, register, clearErrors } from "../../actions/userAction";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import Loader from "../layout/Loader/Loader";
+import logo from "../../images/logo.png";
 
 const LoginSignUp = () => {
   const dispatch = useDispatch();
@@ -119,33 +120,38 @@ const LoginSignUp = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className="auth-fullscreen">
-          <div className="auth-wrapper">
-            <div className="auth-card-full">
-              {/* Header */}
-              <div className="auth-header">
-                <h1>{isLogin ? "Welcome Back" : "Join FlexiWork"}</h1>
-                <p>
-                  {isLogin
-                    ? "Log in to your account"
-                    : "Create your freelancer profile"}
-                </p>
+        <div className="auth-split-fullscreen">
+          {/* Visual Side */}
+          <div className="auth-visual-side">
+            <div className="visual-content">
+              <img src={logo} alt="FlexiWork Logo" className="auth-logo-large" />
+              <div className="quote-container">
+                <h2 className="auth-quote">"Unleash Your Potential with FlexiWork."</h2>
+                <p className="auth-subquote">Where World-Class Talent Meets Limitless Opportunity.</p>
               </div>
+              <div className="visual-dots"></div>
+            </div>
+          </div>
 
-              {/* Tabs */}
-              <div className="auth-tabs">
-                <button
-                  className={isLogin ? "active" : ""}
-                  onClick={() => setIsLogin(true)}
-                >
-                  Login
-                </button>
-                <button
-                  className={!isLogin ? "active" : ""}
-                  onClick={() => setIsLogin(false)}
-                >
-                  Register
-                </button>
+          {/* Form Side */}
+          <div className="auth-form-side">
+            <div className="auth-wrapper-split">
+              <div className="auth-header-split">
+                <h1>{isLogin ? "Welcome Back" : "Join the Elite"}</h1>
+                <div className="auth-tabs-split">
+                  <button
+                    className={isLogin ? "active" : ""}
+                    onClick={() => setIsLogin(true)}
+                  >
+                    Login
+                  </button>
+                  <button
+                    className={!isLogin ? "active" : ""}
+                    onClick={() => setIsLogin(false)}
+                  >
+                    Register
+                  </button>
+                </div>
               </div>
 
               <div className="auth-content">
@@ -182,6 +188,10 @@ const LoginSignUp = () => {
                       {showLoginPass ? <MdVisibilityOff /> : <MdVisibility />}
                     </button>
                   </div>
+
+                  <Link to="/password/forgot" className="forgot-password-link">
+                    Forgot Password ?
+                  </Link>
 
                   <button type="submit" className="auth-btn">
                     {loading ? "Logging in..." : "Login Securely"}

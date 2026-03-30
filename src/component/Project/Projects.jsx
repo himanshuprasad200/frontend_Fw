@@ -6,6 +6,7 @@ import ProjectCard from "../Home/ProjectCard";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import MetaData from "../layout/MetaData";
+import Loader from "../layout/Loader/Loader";
 
 const categories = [
   "Article", "Creative Writing", "Translations", "Speech Writing",
@@ -13,21 +14,6 @@ const categories = [
   "Logo Design", "Photo Editing", "Song Writing", "Audio Making",
   "Fashion Design", "Game Design", "Digital Marketing",
 ];
-
-const ProjectsSkeleton = () => (
-  <div className="projects-grid">
-    {[...Array(6)].map((_, i) => (
-      <div key={i} className="project-skeleton-card">
-        <div className="skel-img skel-shimmer"></div>
-        <div className="skel-content">
-          <div className="skel-title skel-shimmer"></div>
-          <div className="skel-desc skel-shimmer"></div>
-          <div className="skel-meta skel-shimmer"></div>
-        </div>
-      </div>
-    ))}
-  </div>
-);
 
 const Projects = () => {
   const dispatch = useDispatch();
@@ -194,7 +180,7 @@ const Projects = () => {
             </div>
 
             {loading ? (
-              <ProjectsSkeleton />
+              <Loader />
             ) : projects && projects.length > 0 ? (
               <div className="projects-grid animated-fade-in-up">
                 {projects.map((project) => (

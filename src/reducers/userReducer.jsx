@@ -45,7 +45,7 @@ import {
   USER_REVIEW_SUCCESS,
 } from "../constants/userConstant";
 
-export const userReducer = (state = { user: {} }, action) => {
+export const userReducer = (state = { user: {}, loading: true }, action) => {
   switch (action.type) {
     case LOGIN_REQUEST:
     case REGISTER_USER_REQUEST:
@@ -190,6 +190,8 @@ export const forgotPasswordReducer = (state = {}, action) => {
       return {
         ...state,
         error: null,
+        message: null,
+        success: null,
       };
     default:
       return state;

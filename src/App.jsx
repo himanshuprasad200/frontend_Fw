@@ -40,6 +40,8 @@ import NewProject from "./component/Admin/NewProject";
 import ProjectList from "./component/Admin/ProjectList";
 import UpdateUser from "./component/Admin/UpdateUser";
 import UpdateProject from "./component/Admin/UpdateProject";
+import ForgotPassword from "./component/User/ForgotPassword";
+import ResetPassword from "./component/User/ResetPassword";
 
 // Set Axios to send cookies
 axios.defaults.withCredentials = true;
@@ -175,6 +177,8 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginSignUp />} />
+            <Route path="/password/forgot" element={<ForgotPassword />} />
+            <Route path="/password/reset" element={<ResetPassword />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:keyword" element={<Projects />} />
             <Route path="/project/:id" element={<ProjectDetails />} />

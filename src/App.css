@@ -43,7 +43,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0f1115;
+  background-color: transparent;
 }
 
 @media (max-width: 768px) {

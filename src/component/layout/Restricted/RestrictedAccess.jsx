@@ -1,9 +1,24 @@
 // src/component/layout/RestrictedAccess.jsx
 import React from "react";
-import { Link } from "react-router-dom";
-import "./RestrictedAccess.css"; // We'll create this
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import "./RestrictedAccess.css";
 
 const RestrictedAccess = () => {
+  const navigate = useNavigate();
+
+  const handleContactSupport = async () => {
+    try {
+      const { data } = await axios.get("/api/v1/support/id");
+      if (data.supportId) {
+        navigate(`/chat/${data.supportId}`);
+      }
+    } catch (error) {
+      toast.error("Could not reach support. Please try again later.");
+    }
+  };
+
   return (
     <div className="restricted-container">
       <div className="restricted-card">
@@ -26,9 +41,9 @@ const RestrictedAccess = () => {
           <Link to="/" className="btn-primary">
             Go to Homepage
           </Link>
-          <Link to="/contact" className="btn-secondary">
+          <button onClick={handleContactSupport} className="btn-secondary">
             Contact Support
-          </Link>
+          </button>
         </div>
 
         <div className="footer-note">

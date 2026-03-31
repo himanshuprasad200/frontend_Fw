@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllUsers, clearErrors, deleteUser } from "../../actions/userAction";
 import { DELETE_USER_RESET } from "../../constants/userConstant";
-import { FaSearch, FaTimes, FaEdit, FaTrash, FaCreditCard, FaStar, FaComments } from "react-icons/fa";
+import { FaSearch, FaTimes, FaEdit, FaTrash, FaCreditCard, FaStar, FaComments, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const UsersList = () => {
   const dispatch = useDispatch();
@@ -87,7 +87,7 @@ const UsersList = () => {
                 <FaSearch className="searchIcon" />
                 <input
                   type="text"
-                  placeholder="Search by name, email, or role..."
+                  placeholder="Search name, email, or role..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -108,134 +108,113 @@ const UsersList = () => {
                 )}
               </div>
             ) : (
-              <>
-                <div className="usersTableWrapper">
-                  <div className="usersTable">
-                    {/* Table Header */}
-                    <div className="tableHeader">
-                      <div className="headerCell">Avatar</div>
-                      <div className="headerCell">Name</div>
-                      <div className="headerCell">Email</div>
-                      <div className="headerCell">Role</div>
-                      <div className="headerCell">Account</div>
-                      <div className="headerCell">UPI</div>
-                      <div className="headerCell">Actions</div>
-                    </div>
+              <div className="usersTableWrapper">
+                <div className="usersTableScroll">
+                  <table className="usersTable">
+                    <thead>
+                      <tr>
+                        <th>Avatar</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Account</th>
+                        <th>UPI</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentUsers.map((user) => (
+                        <tr key={user._id}>
+                          <td className="tableCell avatar">
+                            <img
+                              src={user.avatar?.url || "/default-avatar.png"}
+                              alt={user.name}
+                              className="userAvatar"
+                            />
+                          </td>
+                          <td className="tableCell name">{user.name}</td>
+                          <td className="tableCell email">{user.email}</td>
+                          <td className="tableCell role">
+                            <span className={`roleBadge ${user.role}`}>
+                              {user.role}
+                            </span>
+                          </td>
+                          <td className="tableCell account">{user.accountNo || "-"}</td>
+                          <td className="tableCell upi">{user.upiId || "-"}</td>
+                          <td className="tableCell actions">
+                            <div className="actionButtons">
+                              <Link
+                                to={`/chat/${user._id}`}
+                                className="actionBtn chat"
+                                title="Chat with User"
+                              >
+                                <FaComments />
+                              </Link>
 
-                    {/* Table Rows */}
-                    {currentUsers.map((user) => (
-                      <div key={user._id} className="tableRow">
-                        <div className="tableCell avatar">
-                          <img
-                            src={user.avatar?.url || "/default-avatar.png"}
-                            alt={user.name}
-                            className="userAvatar"
-                          />
-                        </div>
-                        <div className="tableCell name">
-                          <span className="mobileLabel">Name:</span>
-                          {user.name}
-                        </div>
-                        <div className="tableCell email">
-                          <span className="mobileLabel">Email:</span>
-                          {user.email}
-                        </div>
-                        <div className="tableCell role">
-                          <span className="mobileLabel">Role:</span>
-                          <span className={`roleBadge ${user.role}`}>
-                            {user.role}
-                          </span>
-                        </div>
-                        <div className="tableCell account">
-                          <span className="mobileLabel">Account:</span>
-                          {user.accountNo || "-"}
-                        </div>
-                        <div className="tableCell upi">
-                          <span className="mobileLabel">UPI:</span>
-                          {user.upiId || "-"}
-                        </div>
-                        <div className="tableCell actions">
-                          <div className="actionButtons">
-                            <Link
-                              to={`/chat/${user._id}`}
-                              className="actionBtn review"
-                              title="Chat with User"
-                              style={{ backgroundColor: "#0ea5e9", color: "#fff" }}
-                            >
-                              <FaComments />
-                            </Link>
+                              <Link
+                                to={`/admin/users/${user._id}`}
+                                className="actionBtn edit"
+                                title="Edit User"
+                              >
+                                <FaEdit />
+                              </Link>
 
-                            <Link
-                              to={`/admin/users/${user._id}`}
-                              className="actionBtn edit"
-                              title="Edit User"
-                            >
-                              <FaEdit />
-                            </Link>
+                              <Link
+                                to={`/admin/user/review/${user._id}`}
+                                className="actionBtn review"
+                                title="Submit Review"
+                              >
+                                <FaStar />
+                              </Link>
 
-                            <button
-                              onClick={() => deleteUserHandler(user._id)}
-                              className="actionBtn delete"
-                              title="Delete User"
-                            >
-                              <FaTrash />
-                            </button>
-
-                            <Link
-                              to={`/admin/user/payment/${user._id}`}
-                              className="actionBtn payment"
-                              title="Make Payment"
-                            >
-                              <FaCreditCard />
-                            </Link>
-
-                            <Link
-                              to={`/admin/user/review/${user._id}`}
-                              className="actionBtn review"
-                              title="Submit Review"
-                            >
-                              <FaStar />
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Pagination */}
-                  {totalPages > 1 && (
-                    <div className="pagination">
-                      <button
-                        onClick={() => paginate(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="pageBtn prev"
-                      >
-                        Previous
-                      </button>
-
-                      <div className="pageNumbers">
-                        {[...Array(totalPages)].map((_, i) => (
-                          <button
-                            key={i + 1}
-                            onClick={() => paginate(i + 1)}
-                            className={`pageBtn ${currentPage === i + 1 ? "active" : ""}`}
-                          >
-                            {i + 1}
-                          </button>
-                        ))}
-                      </div>
-
-                      <button
-                        onClick={() => paginate(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="pageBtn next"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  )}
+                              <button
+                                onClick={() => deleteUserHandler(user._id)}
+                                className="actionBtn delete"
+                                title="Delete User"
+                              >
+                                <FaTrash />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              </>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="pagination">
+                    <button
+                      onClick={() => paginate(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="pageBtn prev"
+                    >
+                      <FaChevronLeft /> Previous
+                    </button>
+
+                    <div className="pageNumbers">
+                      {[...Array(totalPages)].map((_, i) => (
+                        <button
+                          key={i + 1}
+                          onClick={() => paginate(i + 1)}
+                          className={`pageBtn number ${currentPage === i + 1 ? "active" : ""}`}
+                        >
+                          {i + 1}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => paginate(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="pageBtn next"
+                    >
+                      Next <FaChevronRight />
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -245,3 +224,4 @@ const UsersList = () => {
 };
 
 export default UsersList;
+

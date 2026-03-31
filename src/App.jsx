@@ -21,6 +21,7 @@ import axios from "axios";
 import Loader from "./component/layout/Loader/Loader";
 import UpdateProfile from "./component/User/UpdateProfile";
 import AccountAnalytics from "./component/User/AccountAnalytics";
+import PublicEarning from "./component/User/PublicEarning";
 import Chat from "./component/Chat/Chat";
 
 // Admin Components
@@ -244,6 +245,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/public/earning/:token" element={<PublicEarning />} />
 
             {/* ADMIN ROUTES – Only for role: "admin" */}
             <Route

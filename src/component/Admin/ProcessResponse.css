@@ -1,185 +1,460 @@
 .admin-master {
   display: flex;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  font-family: 'Segoe UI', sans-serif;
+  background: #f8fafc;
+  font-family: 'Inter', -apple-system, sans-serif;
 }
 
 .admin-content {
   flex: 1;
   margin-left: 280px;
-  padding: 40px 30px;
-  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.admin-sidebar.collapsed ~ .admin-content {
-  margin-left: 85px;
+  padding: 40px;
+  transition: margin-left 0.4s ease;
 }
 
 .processResponseContainer {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-.processResponseCard {
+/* Header Section */
+.process-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header-left h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.header-left p {
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.status-pill.pending { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+.status-pill.approved { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.status-pill.rejected { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* Grid Layout */
+.process-grid {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Applicant Card */
+.applicant-card-premium {
   background: white;
   border-radius: 24px;
-  padding: 40px;
-  box-shadow: 0 15px 45px rgba(14, 165, 233, 0.18);
-  border: 1px solid #e0f2fe;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 32px;
+  position: relative;
+  border: 1px solid #f1f5f9;
 }
 
-.processHeading {
-  font-size: 2.4rem;
-  font-weight: 800;
-  text-align: center;
-  background: linear-gradient(90deg, #0ea5e9, #0284c7);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 2rem;
+.card-header-gradient {
+  height: 80px;
+  background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
 }
 
-.bidInfo {
-  background: #f8faff;
-  padding: 24px;
-  border-radius: 16px;
-  margin-bottom: 30px;
-  border-left: 6px solid #0ea5e9;
+.applicant-profile-main {
+  padding: 0 32px 24px;
+  margin-top: -40px;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
 }
 
-.bidInfo p {
-  margin: 14px 0;
-  font-size: 1.1rem;
-  color: #334155;
+.avatar-wrapper {
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  background: white;
 }
 
-.bidInfo strong {
-  color: #0c4a6e;
+.avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.user-role {
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.user-meta-tags {
+  display: flex;
+  gap: 12px;
+}
+
+.user-meta-tags span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #475569;
   font-weight: 600;
 }
 
-.statusBadge {
-  padding: 8px 16px;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  margin-left: 12px;
+.card-actions-row {
+  padding: 0 32px 32px;
 }
 
-.statusBadge.pending   { background: #fff3cd; color: #856404; }
-.statusBadge.approved  { background: #d4edda; color: #155724; }
-.statusBadge.rejected  { background: #f8d7da; color: #721c24; }
-
-.proposalBox {
-  background: white;
-  padding: 18px;
-  border-radius: 12px;
-  border: 1px dashed #cbd5e1;
-  margin-top: 10px;
-  font-size: 1rem;
-  line-height: 1.8;
-  color: #475569;
-  max-height: 220px;
-  overflow-y: auto;
-}
-
-.processForm {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  margin-top: 20px;
-}
-
-.formGroup {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  background: #f8faff;
-  padding: 18px 22px;
-  border-radius: 16px;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-}
-
-.formGroup:focus-within {
-  border-color: #0ea5e9;
-  box-shadow: 0 0 0 5px rgba(14, 165, 233, 0.15);
-}
-
-.formGroup .icon {
-  width: 52px;
-  height: 52px;
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
-  color: white;
-  border-radius: 14px;
+.btn-chat-premium {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  gap: 10px;
+  padding: 14px;
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
 }
 
-.formGroup select {
-  flex: 1;
-  padding: 12px 0;
-  border: none;
-  background: transparent;
-  font-size: 1.15rem;
-  color: #0c4a6e;
-  outline: none;
+.btn-chat-premium:hover {
+  background: #0284c7;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
+}
+
+/* Proposal Card */
+.proposal-card-premium {
+  background: white;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  color: #1e293b;
+}
+
+.card-title-row svg {
+  font-size: 1.25rem;
+  color: #0ea5e9;
+}
+
+.card-title-row h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.proposal-text-container {
+  background: #f8fafc;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 20px;
+}
+
+.proposal-text-container p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #334155;
+  white-space: pre-wrap;
+}
+
+.bid-footer-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #94a3b8;
   font-weight: 500;
 }
 
-.processBtn {
-  align-self: center;
-  padding: 16px 56px;
-  font-size: 1.1rem;
+/* Action Card (Right Side) */
+.action-card-premium {
+  background: white;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f1f5f9;
+  position: sticky;
+  top: 40px;
+}
+
+.process-form-premium {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.premium-field label {
+  display: block;
+  font-size: 0.95rem;
   font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.select-wrapper {
+  position: relative;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.select-wrapper:focus-within {
+  border-color: #0ea5e9;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+}
+
+.select-wrapper select {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+}
+
+/* Conditional Colors for Selection */
+.select-wrapper.approved { border-color: #22c55e; background: #f0fdf4; }
+.select-wrapper.rejected { border-color: #ef4444; background: #fef2f2; }
+
+/* Payment Section */
+.payment-section-premium {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  padding: 24px;
+  border-radius: 18px;
+  border: 1px solid #bae6fd;
+  margin-top: 8px;
+}
+
+.payment-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #0369a1;
+  margin-bottom: 20px;
+}
+
+.payment-title h5 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.currency-prefix {
+  position: absolute;
+  left: 18px;
+  font-weight: 700;
+  color: #0369a1;
+  font-size: 1.1rem;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 14px 14px 14px 40px;
+  background: white;
+  border: 2px solid #bae6fd;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0c4a6e;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-with-icon input:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+}
+
+.field-hint {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.field-hint.error-text {
+  color: #ef4444;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.payment-completed-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #dcfce7;
+    color: #166534;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Submit Button */
+.btn-submit-premium {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  background: #cbd5e1;
   color: white;
-  background: #94a3b8;
   border: none;
   border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 800;
   cursor: not-allowed;
-  transition: all 0.4s ease;
-  box-shadow: 0 8px 25px rgba(14, 165, 233, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 12px;
 }
 
-.processBtn.active {
-  background: linear-gradient(90deg, #0ea5e9, #0284c7);
+.btn-submit-premium.active {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
   cursor: pointer;
+  box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4);
 }
 
-.processBtn.active:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 18px 40px rgba(14, 165, 233, 0.4);
+.btn-submit-premium.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(14, 165, 233, 0.5);
 }
 
-.alreadyProcessed {
-  text-align: center;
-  padding: 24px;
-  background: #fef3c7;
-  color: #92400e;
-  border-radius: 16px;
-  font-weight: 600;
-  margin-top: 30px;
-  border: 1px solid #fcd34d;
+.btn-submit-premium:disabled {
+    opacity: 0.7;
 }
 
-/* Responsive */
+.btn-loader-text {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mini-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top: 3px solid white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.status-indicator-footer {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.bottom-badge {
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.bottom-badge.approved { background: #f0fdf4; color: #15803d; }
+.bottom-badge.rejected { background: #fef2f2; color: #b91c1c; }
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .process-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .admin-content {
-    margin-left: 0 !important;
-    padding: 20px 15px;
+    margin-left: 0;
+    padding: 24px 16px;
   }
-  .processResponseCard {
-    padding: 24px;
+  .process-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
   }
-  .formGroup {
-    flex-direction: column;
-    align-items: stretch;
+  .applicant-profile-main {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: -50px;
   }
-  .formGroup .icon {
-    align-self: center;
+  .user-meta-tags {
+      justify-content: center;
+      flex-wrap: wrap;
   }
 }

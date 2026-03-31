@@ -7,6 +7,8 @@ import Sidebar from "./Sidebar";
 import { deleteBid, getAllBids, clearErrors } from "../../actions/bidAction";
 import { DELETE_BID_RESET } from "../../constants/bidConstant";
 import "./BidList.css";
+import "./BidList.css";
+import { FaEdit, FaTrash, FaEye, FaChevronLeft, FaChevronRight, FaTimes, FaCreditCard, FaComments, FaCheckCircle, FaTimesCircle, FaClock } from "react-icons/fa";
 
 const BidList = () => {
   const dispatch = useDispatch();
@@ -66,7 +68,7 @@ const BidList = () => {
   const indexOfLastBid = currentPage * bidsPerPage;
   const indexOfFirstBid = indexOfLastBid - bidsPerPage;
   const currentBids = sortedBids.slice(indexOfFirstBid, indexOfLastBid);
-  const totalPages = Math.ceil(sortedBids.length / bidsPerPage);
+  const totalPages = Math.ceil(sortedBids.length / bidsPerPage) || 1;
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -88,73 +90,84 @@ const BidList = () => {
               </div>
             ) : (
               <div className="bids-card">
-                <div className="bids-table">
-                  {/* Header */}
-                  <div className="bids-header">
-                    <div className="bids-header-cell">Bid ID</div>
-                    <div className="bids-header-cell">Proposal</div>
-                    <div className="bids-header-cell">Status</div>
-                    <div className="bids-header-cell">Date</div>
-                    <div className="bids-header-cell">Actions</div>
-                  </div>
+                <div className="bids-table-scroll">
+                  <table className="bids-table">
+                    <thead>
+                      <tr>
+                        <th>Bid ID</th>
+                        <th>Project</th>
+                        <th>Applicant</th>
+                        <th>Price</th>
+                        <th>Proposal</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentBids.map((bid) => (
+                        <tr key={bid._id}>
+                          <td className="bids-id">#{bid._id.slice(-8).toUpperCase()}</td>
+                          <td style={{maxWidth: '180px', fontWeight: '600'}}>
+                             {bid.bidsItems?.map(item => item.title).join(', ') || "N/A"}
+                          </td>
+                          <td>
+                            <div className="applicant-info">
+                              <img
+                                src={bid.user?.avatar?.url || "/default-avatar.png"}
+                                alt={bid.user?.name}
+                                className="applicant-avatar"
+                              />
+                              <div className="applicant-details">
+                                <span className="applicant-name">{bid.user?.name || "Unknown"}</span>
+                                <span className="applicant-role">{bid.user?.role || "User"}</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td style={{fontWeight: '700', color: '#1e293b'}}>
+                             ₹{bid.bidsItems?.reduce((sum, item) => sum + (item.price || 0), 0).toLocaleString("en-IN")}
+                          </td>
+                          <td>
+                            <div className="proposal-content">
+                              <p className="proposal-preview">
+                                {bid.proposal}
+                              </p>
+                              {bid.proposal.length > 80 && (
+                                <button
+                                  className="view-full-btn"
+                                  onClick={() => openProposalModal(bid.proposal, bid._id)}
+                                >
+                                  View Full →
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                          <td>
+                            <span className={`bids-status-badge ${bid.response?.toLowerCase() || "pending"}`}>
+                              {bid.response === "Approved" ? <FaCheckCircle /> : bid.response === "Rejected" ? <FaTimesCircle /> : <FaClock />}
+                              {bid.response || "Pending"}
+                            </span>
+                          </td>
+                          <td className="bids-date">{formatDate(bid.createdAt)}</td>
+                          <td>
+                            <div className="bids-action-group">
+                              <Link to={`/admin/bid/${bid._id}`} className="bids-btn bids-edit" title="Process Response">
+                                <FaEdit />
+                              </Link>
 
-                  {/* Rows */}
-                  {currentBids.map((bid) => (
-                    <div key={bid._id} className="bids-row">
-                      <div className="bids-cell bids-id">
-                        <span className="bids-mobile-label">ID:</span>
-                        #{bid._id.slice(-8).toUpperCase()}
-                      </div>
+                              <Link to={`/bid/${bid._id}`} className="bids-btn bids-view" title="View Details">
+                                <FaEye />
+                              </Link>
 
-                      <div className="bids-cell bids-proposal">
-                        <span className="bids-mobile-label">Proposal:</span>
-                        <div className="proposal-content">
-                          <p className="proposal-preview">
-                            {bid.proposal.length > 140
-                              ? bid.proposal.substring(0, 140) + "..."
-                              : bid.proposal}
-                          </p>
-                          {bid.proposal.length > 140 && (
-                            <button
-                              className="view-full-btn"
-                              onClick={() => openProposalModal(bid.proposal, bid._id)}
-                            >
-                              View Full →
-                            </button>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="bids-cell bids-status">
-                        <span className="bids-mobile-label">Status:</span>
-                        <span className={`bids-status-badge ${bid.response?.toLowerCase() || "pending"}`}>
-                          {bid.response || "Pending"}
-                        </span>
-                      </div>
-
-                      <div className="bids-cell bids-date">
-                        <span className="bids-mobile-label">Date:</span>
-                        {formatDate(bid.createdAt)}
-                      </div>
-
-                      <div className="bids-cell bids-actions">
-                        <span className="bids-mobile-label">Actions:</span>
-                        <div className="bids-action-group">
-                          <Link to={`/admin/bid/${bid._id}`} className="bids-btn bids-edit" title="Process">
-                            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                          </Link>
-
-                          <button onClick={() => deleteBidHandler(bid._id)} className="bids-btn bids-delete" title="Delete">
-                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                          </button>
-
-                          <Link to={`/bid/${bid._id}`} className="bids-btn bids-view" title="View Details">
-                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                              <button onClick={() => deleteBidHandler(bid._id)} className="bids-btn bids-delete" title="Delete">
+                                <FaTrash />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
 
                 {/* Pagination */}
@@ -163,9 +176,9 @@ const BidList = () => {
                     <button
                       onClick={() => paginate(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="bids-page-btn bids-prev"
+                      className="bids-page-btn"
                     >
-                      ← Previous
+                      <FaChevronLeft />
                     </button>
 
                     <div className="bids-page-numbers">
@@ -183,9 +196,9 @@ const BidList = () => {
                     <button
                       onClick={() => paginate(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className="bids-page-btn bids-next"
+                      className="bids-page-btn"
                     >
-                      Next →
+                      <FaChevronRight />
                     </button>
                   </div>
                 )}
@@ -201,7 +214,9 @@ const BidList = () => {
           <div className="proposal-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Full Proposal</h3>
-              <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
+              <button className="modal-close" onClick={() => setShowModal(false)}>
+                <FaTimes />
+              </button>
             </div>
             <div className="modal-body">
               <p className="modal-bid-id">Bid ID: #{selectedBidId.slice(-8).toUpperCase()}</p>

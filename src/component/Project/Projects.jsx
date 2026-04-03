@@ -7,6 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader/Loader";
+import useDebounce from "../../hooks/useDebounce";
 
 const categories = [
   "Article", "Creative Writing", "Translations", "Speech Writing",
@@ -26,6 +27,9 @@ const Projects = () => {
   const [category, setCategory] = useState("");
   const [ratings, setRatings] = useState(0);
 
+  // Enterprise Debounce Search
+  const debouncedSearch = useDebounce(searchKeyword, 500);
+
   const { projects, loading, error, projectsCount, resultPerPage } =
     useSelector((state) => state.projects);
 
@@ -36,9 +40,16 @@ const Projects = () => {
       toast.error(error);
       dispatch(clearErrors());
     }
-    // Using the URL param 'keyword' for fetching
-    dispatch(getProject(keyword || "", currentPage, price, category, ratings));
-  }, [dispatch, keyword, currentPage, price, category, ratings, error]);
+    
+    // Live Search Fetch using debounced keyword
+    dispatch(getProject(debouncedSearch || "", currentPage, price, category, ratings));
+    
+    // If user types, reset to first page to see relevant results
+    if (debouncedSearch !== keyword) {
+       // Only navigate if we want the URL to reflect the search specifically
+       // But for enterprise "live" feel, we can just update the state
+    }
+  }, [dispatch, debouncedSearch, currentPage, price, category, ratings, error]);
 
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages && page !== currentPage) {

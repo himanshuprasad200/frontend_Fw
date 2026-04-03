@@ -7,19 +7,19 @@
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: rgb(235, 237, 237);
+  background-color: #f7f7f5;
   overflow-x: hidden;
 }
 
 /* Global Content Offset – Fixes Navbar Overlapping UI */
 .app-main {
-  padding-top: 70px; /* Exact height of the fixed app-header */
-  min-height: calc(100vh - 70px);
+  padding-top: 64px; /* Exact height of the fixed app-header */
+  min-height: calc(100vh - 64px);
 }
 
 @media (max-width: 992px) {
   .app-main {
-    padding-top: 70px; /* Keeping consistent since header height is static */
+    padding-top: 64px;
   }
 }
 

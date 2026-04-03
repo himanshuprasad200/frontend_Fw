@@ -18,7 +18,7 @@ import { login, register, clearErrors } from "../../actions/userAction";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import Loader from "../layout/Loader/Loader";
-import logo from "../../images/logo.png";
+import Logo from "../layout/Logo/Logo";
 
 const LoginSignUp = () => {
   const dispatch = useDispatch();
@@ -124,7 +124,7 @@ const LoginSignUp = () => {
           {/* Visual Side */}
           <div className="auth-visual-side">
             <div className="visual-content">
-              <img src={logo} alt="FlexiWork Logo" className="auth-logo-large" />
+              <Logo size="large" className="auth-logo-large navy-white" />
               <div className="quote-container">
                 <h2 className="auth-quote">"Unleash Your Potential with FlexiWork."</h2>
                 <p className="auth-subquote">Where World-Class Talent Meets Limitless Opportunity.</p>

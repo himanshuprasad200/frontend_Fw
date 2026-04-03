@@ -1,0 +1,88 @@
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Sizes */
+.logo-container.normal .logo-badge { width: 38px; height: 38px; }
+.logo-container.normal .logo-wordmark { font-size: 1.8rem; }
+
+.logo-container.large .logo-badge { width: 52px; height: 52px; border-radius: 16px; }
+.logo-container.large .logo-wordmark { font-size: 2.8rem; }
+
+.logo-container.small .logo-badge { width: 30px; height: 30px; border-radius: 8px; }
+.logo-container.small .logo-wordmark { font-size: 1.4rem; }
+
+.logo-badge {
+  background: #1a1a2e;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7ec8c0;
+  box-shadow: 0 4px 12px rgba(26,26,46,0.2);
+  flex-shrink: 0;
+}
+
+.logo-badge svg {
+  width: 65%;
+  height: 65%;
+}
+
+.logo-wordmark {
+  display: flex;
+  align-items: baseline;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.logo-p1 {
+  font-weight: 900;
+  color: #fff; /* Default contrast for colored backgrounds */
+}
+
+.logo-p2 {
+  font-weight: 300;
+  color: #1a1a2e;
+}
+
+/* Variant for light backgrounds (where navy text is needed) */
+.logo-container.dark-text .logo-p2 {
+  color: #1a1a2e;
+}
+.logo-container.dark-text .logo-p1 {
+  color: #333;
+}
+
+/* Variant for dark backgrounds (Footer/Login) */
+.logo-container.light-text .logo-p1 {
+  color: #fff;
+}
+.logo-container.light-text .logo-p2 {
+  color: #7ec8c0;
+}
+.logo-container.light-text .logo-badge {
+    background: #7ec8c0;
+    color: #1a1a2e;
+}
+
+/* Variant for dusty teal background (Hero-style) */
+.logo-container.navy-white .logo-p1 {
+  color: #fff;
+}
+.logo-container.navy-white .logo-p2 {
+  color: #1a1a2e;
+}
+.logo-container.navy-white .logo-badge {
+    background: #1a1a2e;
+    color: #7ec8c0;
+}
+
+.logo-container:hover {
+  transform: scale(1.05);
+}

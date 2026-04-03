@@ -1,75 +1,132 @@
-/* src/component/User/UpdateProfile.css */
+/* UpdateProfile.css - Redesigned for FlexiWork Navy/Teal Theme */
+
 .update-profile-master {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  padding: 40px 20px;
+  background: #f8fafc;
+  padding: 100px 20px 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 .update-profile-card {
   background: white;
   width: 100%;
-  max-width: 520px;
-  border-radius: 24px;
-  padding: 40px;
-  box-shadow: 0 20px 60px rgba(14, 165, 233, 0.2);
-  border: 1px solid #e0f2fe;
+  max-width: 600px;
+  border-radius: 28px;
+  padding: 50px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
   text-align: center;
 }
 
 .header-section h2 {
-  font-size: 32px;
-  color: #0c4a6e;
-  margin: 0 0 8px;
-  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 38px;
+  color: #1a1a2e;
+  margin: 0 0 10px;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .header-section p {
   color: #64748b;
-  font-size: 16px;
-  margin: 0 0 32px;
+  font-size: 1.1rem;
+  margin: 0 0 40px;
 }
 
-.avatar-upload-section {
-  margin: 0 auto 32px;
+/* Banner Upload */
+.banner-upload-box {
   position: relative;
-  display: inline-block;
+  width: 100%;
+  height: 180px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: -60px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
 }
 
-.avatar-preview {
-  width: 140px;
-  height: 140px;
+.banner-update-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+
+.banner-update-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1a1a2e;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+}
+
+.banner-update-btn:hover {
+  background: #7ec8c0;
+  color: #1a1a2e;
+}
+
+/* Avatar Upload Overlap */
+.avatar-upload-section {
+  position: relative;
+  z-index: 20;
+  margin-bottom: 40px;
+}
+
+.avatar-preview, .initials-preview-new {
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   object-fit: cover;
-  border: 6px solid #e0f2fe;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border: 6px solid #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  background: #1a1a2e; /* Navy theme */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 3rem;
+  color: #7ec8c0;
+  text-transform: uppercase;
 }
+.avatar-preview { background: #fff; }
 
 .upload-btn {
-  margin-top: 16px;
-  display: block;
-  background: #0ea5e9;
-  color: white;
-  padding: 10px 24px;
-  border-radius: 50px;
-  font-weight: 600;
+  margin-top: 15px;
+  display: inline-block;
+  color: #7ec8c0;
+  font-weight: 800;
+  font-family: 'Barlow Condensed', sans-serif;
   cursor: pointer;
-  transition: all 0.3s;
-  font-size: 15px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .upload-btn:hover {
-  background: #0284c7;
-  transform: translateY(-2px);
+  color: #1a1a2e;
 }
 
 .update-profile-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
 }
 
 .input-group {
@@ -78,66 +135,64 @@
 
 .input-group i {
   position: absolute;
-  left: 16px;
+  left: 20px;
   top: 50%;
   transform: translateY(-50%);
-  color: #0ea5e9;
-  font-size: 20px;
+  color: #1a1a2e;
+  font-size: 1.1rem;
   z-index: 2;
 }
 
 .input-group input {
   width: 100%;
-  padding: 16px 16px 16px 50px;
-  border: 2px solid #e0f2fe;
+  padding: 16px 20px 16px 54px;
+  border: 1.5px solid #e2e8f0;
   border-radius: 16px;
-  font-size: 16px;
+  font-size: 1rem;
   background: #f8fafc;
   transition: all 0.3s;
-  color: #1e293b;
+  color: #1a1a2e;
+  box-sizing: border-box;
 }
 
 .input-group input:focus {
   outline: none;
-  border-color: #0ea5e9;
+  border-color: #7ec8c0;
   background: white;
-  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
-}
-
-.input-group input::placeholder {
-  color: #94a3b8;
+  box-shadow: 0 8px 25px rgba(126, 200, 192, 0.1);
 }
 
 .update-btn {
-  margin-top: 24px;
-  padding: 16px;
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  margin-top: 15px;
+  padding: 18px;
+  background: #1a1a2e;
   color: white;
   border: none;
   border-radius: 16px;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 800;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
   cursor: pointer;
+  letter-spacing: 1px;
   transition: all 0.3s;
 }
 
 .update-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(14, 165, 233, 0.4);
+  background: #7ec8c0;
+  color: #1a1a2e;
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(126, 200, 192, 0.3);
 }
 
 .update-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
-  transform: none;
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-  .update-profile-card {
-    padding: 32px 24px;
-    border-radius: 20px;
-  }
-  .header-section h2 { font-size: 28px; }
-  .avatar-preview { width: 120px; height: 120px; }
+@media (max-width: 600px) {
+  .update-profile-card { padding: 40px 24px; border-radius: 20px; }
+  .header-section h2 { font-size: 32px; }
+  .banner-upload-box { height: 140px; }
+  .avatar-preview { width: 100px; height: 100px; margin-top: 10px; }
 }

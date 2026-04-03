@@ -57,13 +57,23 @@ const UserOptions = ({ user }) => {
       // Mouse leaves the ENTIRE area → close
       onMouseLeave={() => setIsOpen(false)}
     >
-      {/* Avatar */}
+      {/* Avatar or Initials */}
       <div className="avatar-trigger">
-        <img
-          src={user.avatar?.url || "/Profile.png"}
-          alt={user.name}
-          className="avatar-img"
-        />
+        {user.avatar?.url && user.avatar.url !== "/Profile.png" ? (
+          <img
+            src={user.avatar.url}
+            alt={user.name}
+            className="avatar-img"
+          />
+        ) : (
+          <div className="avatar-initials">
+            {user.name ? (
+              user.name.split(" ").length > 1 
+                ? (user.name.split(" ")[0][0] + user.name.split(" ")[user.name.split(" ").length-1][0]).toUpperCase()
+                : user.name.slice(0, 2).toUpperCase()
+            ) : "U"}
+          </div>
+        )}
       </div>
 
       {/* Dropdown */}

@@ -7,7 +7,8 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import Loader from "../layout/Loader/Loader";
 import MetaData from "../layout/MetaData";
 import toast from "react-hot-toast";
-import { FaComments, FaAward, FaCalendarAlt, FaCheckCircle, FaProjectDiagram, FaWallet, FaChevronRight } from "react-icons/fa";
+import { FaComments, FaAward, FaCalendarAlt, FaCheckCircle } from "react-icons/fa";
+import { FiMessageCircle, FiBriefcase, FiChevronRight } from "react-icons/fi";
 
 const BidDetails = () => {
   const { bid, error, loading } = useSelector((state) => state.bidDetails);
@@ -33,49 +34,63 @@ const BidDetails = () => {
 
   return (
     <Fragment>
-      <MetaData title={`Bid #${bid._id?.slice(-8).toUpperCase()} - Details`} />
+      <MetaData title={`Bid #${bid._id?.slice(-8).toUpperCase()} | FlexiWork`} />
 
       <div className="bid-details-container">
-        {/* Main Grid: Header + Body */}
         <div className="bid-content-grid">
           
-          {/* Top Bar: Title & Primary Stats */}
+          {/* ── Top Bar: Identity & Status ── */}
           <div className="bid-top-bar">
             <div className="top-info">
-              <h1>Bid <small>#{bid._id?.slice(-8).toUpperCase()}</small></h1>
-              <p><FaAward /> Candidate: <strong>{bid.user?.name}</strong></p>
-              <p><FaCalendarAlt /> Submitted on {new Date(bid.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</p>
+              <h1>
+                Bid Submission
+                <small>REQ-{bid._id?.slice(-8).toUpperCase()}</small>
+              </h1>
+              <p>
+                <FaAward /> Freelancer: <strong>{bid.user?.name}</strong>
+              </p>
+              <p>
+                <FaCalendarAlt /> 
+                {new Date(bid.createdAt).toLocaleDateString("en-IN", { 
+                  day: "numeric", 
+                  month: "long", 
+                  year: "numeric" 
+                })}
+              </p>
             </div>
             
             <div className="top-stats">
               <div className="stat-box">
-                <span className="box-label">Bid Status</span>
+                <span className="box-label">Evaluation Status</span>
                 <span className={`status-badge-lg ${bid.response?.toLowerCase() || "pending"}`}>
-                  <FaCheckCircle /> {bid.response || "Pending"}
+                  <FaCheckCircle /> {bid.response || "Pending Review"}
                 </span>
               </div>
               <div className="stat-box">
-                <span className="box-label">Evaluation Balance</span>
+                <span className="box-label">Estimated Allocation</span>
                 <span className="price-lg">₹{totalBudget.toLocaleString("en-IN")}</span>
               </div>
             </div>
           </div>
 
           <div className="bid-main-flex">
-            {/* Left: Proposal & Freelancer */}
+            {/* ── Left Column: Proposal Detail ── */}
             <div className="bid-left-col">
               
               <div className="info-section">
-                <h3><FaAward /> Proposal Narrative</h3>
+                <h3>
+                  <FiMessageCircle style={{color: '#7ec8c0'}} /> 
+                  Professional Proposal
+                </h3>
                 <div className="proposal-content">
                   {bid.proposal}
                 </div>
               </div>
 
-              {/* Client Info (Dynamic from Project) */}
+              {/* Client Profile Context */}
               {bid.bidsItems?.[0]?.postedBy && (
-                <div className="user-profile-card client-info-box">
-                   <div className="card-tag">PROJECT OWNER</div>
+                <div className="user-profile-card">
+                   <div className="card-tag">Project Lead</div>
                   <div className="user-card-head">
                     <img 
                       src={bid.bidsItems[0].postedBy.avatar?.url || "/Profile.png"} 
@@ -83,40 +98,45 @@ const BidDetails = () => {
                     />
                     <div className="user-card-id">
                       <h4>{bid.bidsItems[0].postedBy.name}</h4>
-                      <p>Client / Employer</p>
+                      <p>Hiring Manager</p>
                     </div>
                   </div>
-                  <div className="user-card-actions">
-                     <button 
-                       className="chat-action-btn client-btn"
-                       onClick={() => navigate(`/chat/${bid.bidsItems[0].postedBy._id}`)}
-                     >
-                       <FaComments /> Chat with Client
-                     </button>
-                  </div>
+                  <button 
+                    className="chat-action-btn"
+                    onClick={() => navigate(`/chat/${bid.bidsItems[0].postedBy._id}`)}
+                  >
+                    <FaComments /> Chat with Client
+                  </button>
                 </div>
               )}
             </div>
 
-            {/* Right: Project Items */}
+            {/* ── Right Column: Project Inventory ── */}
             <div className="bid-right-col">
               <div className="projects-list-header">
-                <h3><FaProjectDiagram /> Scope of Work ({bid.bidsItems?.length || 0})</h3>
+                <h3>
+                  <FiBriefcase style={{color: '#7ec8c0', fontSize: '1.4rem'}} /> 
+                  Scope Inventory ({bid.bidsItems?.length || 0})
+                </h3>
               </div>
               
               <div className="items-container">
                 {bid.bidsItems && bid.bidsItems.map((project) => (
                   <div key={project._id} className="bid-item-card">
-                    <img src={project.images?.[0]?.url || "/default-avatar.png"} alt="thumb" className="item-thumb" />
+                    <img 
+                      src={project.images?.[0]?.url || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=200"} 
+                      alt="thumb" 
+                      className="item-thumb" 
+                    />
                     <div className="item-meta">
                       <div className="item-title-row">
                         <Link to={`/project/${project._id}`} className="item-link">
-                          {project.title} <FaChevronRight />
+                          {project.title} <FiChevronRight />
                         </Link>
                         <span className="item-price">₹{project.price?.toLocaleString()}</span>
                       </div>
                       <div className="item-client-row">
-                         <span>Client: <strong>{project.postedBy?.name}</strong></span>
+                         <span>Owner: {project.postedBy?.name}</span>
                          {project.postedBy?._id && (
                            <button 
                              className="small-chat-link"
@@ -131,13 +151,15 @@ const BidDetails = () => {
                 ))}
                 
                 {(!bid.bidsItems || bid.bidsItems.length === 0) && (
-                  <div className="empty-items">No projects in this bid.</div>
+                  <div className="no-items-placeholder">
+                    No scoped projects attached to this bid.
+                  </div>
                 )}
               </div>
 
               <div className="summary-footer">
                 <div className="total-row">
-                   <span>Grand Total</span>
+                   <span>Projected Total</span>
                    <strong>₹{totalBudget.toLocaleString()}</strong>
                 </div>
               </div>

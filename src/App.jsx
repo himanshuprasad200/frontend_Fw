@@ -9,7 +9,6 @@ import LoginSignUp from "./component/User/LoginSignUp";
 import Profile from "./component/User/Profile";
 import ProjectDetails from "./component/Project/ProjectDetails";
 import Projects from "./component/Project/Projects";
-import Search from "./component/Project/Search";
 import BidDetails from "./component/Bid/BidDetails";
 import Proposal from "./component/Project/Proposal";
 import Footer from "./component/layout/Footer/Footer";
@@ -20,6 +19,7 @@ import { loadUser } from "./actions/userAction";
 import axios from "axios";
 import Loader from "./component/layout/Loader/Loader";
 import UpdateProfile from "./component/User/UpdateProfile";
+import UpdatePassword from "./component/User/UpdatePassword";
 import AccountAnalytics from "./component/User/AccountAnalytics";
 import PublicEarning from "./component/User/PublicEarning";
 import Chat from "./component/Chat/Chat";
@@ -43,6 +43,7 @@ import UpdateUser from "./component/Admin/UpdateUser";
 import UpdateProject from "./component/Admin/UpdateProject";
 import ForgotPassword from "./component/User/ForgotPassword";
 import ResetPassword from "./component/User/ResetPassword";
+import Success from "./component/layout/Success/Success";
 
 // Set Axios to send cookies
 axios.defaults.withCredentials = true;
@@ -183,9 +184,9 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:keyword" element={<Projects />} />
             <Route path="/project/:id" element={<ProjectDetails />} />
-            <Route path="/search" element={<Search />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/help-center" element={<HelpCenter />} />
+            <Route path="/success-stories" element={<Success />} />
 
             {/* Protected User Routes */}
             <Route
@@ -201,6 +202,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <UpdateProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/password/update"
+              element={
+                <ProtectedRoute>
+                  <UpdatePassword />
                 </ProtectedRoute>
               }
             />

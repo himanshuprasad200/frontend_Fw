@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Sidebar.css";
-import logo from "../../images/logo2.png";
+import Logo from "../layout/Logo/Logo";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -17,8 +17,7 @@ const Sidebar = () => {
         {/* Logo Section */}
         <div className="sidebar-logo">
           <Link to="/">
-            <img src={logo} alt="FlexiWork" className="logo-img" />
-            <span className="logo-text">FlexiWork</span>
+            <Logo size="small" className="sidebar-logo-comp light-text" hideText={isCollapsed} />
           </Link>
         </div>
 

@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import MetaData from "../layout/MetaData";
 import { useNavigate } from "react-router-dom";
 import Loader from "../layout/Loader/Loader";
-import logo from "../../images/logo.png";
+import Logo from "../layout/Logo/Logo";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
@@ -68,7 +68,7 @@ const ForgotPassword = () => {
           {/* Visual Side */}
           <div className="auth-visual-side">
             <div className="visual-content">
-              <img src={logo} alt="FlexiWork Logo" className="auth-logo-large" />
+              <Logo size="large" className="auth-logo-large navy-white" />
               <div className="quote-container">
                 <h2 className="auth-quote">"Recover Your Access."</h2>
                 <p className="auth-subquote">Your FlexiWork Journey Continues Here. Securely Restore Your Profile.</p>

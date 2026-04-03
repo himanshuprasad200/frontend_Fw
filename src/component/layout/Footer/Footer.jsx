@@ -1,9 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Footer.css";
-import logo from "../../../images/logo.png";
+import Logo from "../Logo/Logo";
 import {
-  FaPinterest,
   FaInstagram,
   FaLinkedin,
   FaFacebookF,
@@ -19,11 +18,11 @@ const Footer = () => {
       <div className="footerContainer">
         {/* Logo & Description */}
         <div className="footerSection logoSection">
-          <Link to="/" className="footerLogo">
-            <img src={logo} alt="FlexiWork Logo" />
+          <Link to="/" className="footerLogoLink">
+            <Logo size="normal" className="footer-logo light-text" />
           </Link>
           <p className="footerDesc">
-            Your go-to platform for freelance opportunities. Connect, create, and grow with top talent worldwide.
+            A freelance service web portal connects businesses with freelancers, facilitating project collaboration and hiring.
           </p>
           <div className="socialIcons">
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
@@ -38,69 +37,56 @@ const Footer = () => {
             <a href="https://x.com" target="_blank" rel="noopener noreferrer">
               <FaXTwitter className="socialIcon" />
             </a>
-            <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer">
-              <FaPinterest className="socialIcon" />
-            </a>
             <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
               <FaYoutube className="socialIcon" />
             </a>
           </div>
         </div>
 
-        {/* For Freelancers */}
+        {/* Product */}
         <div className="footerSection">
-          <h3 className="footerTitle">For Freelancers</h3>
+          <h3 className="footerTitle">Product</h3>
           <ul className="footerLinks">
-            <li><Link to="/freelancer/how-it-works">How It Works</Link></li>
-            <li><Link to="/freelancer/pricing">Pricing</Link></li>
-            <li><Link to="/freelancer/success-stories">Success Stories</Link></li>
-            <li><Link to="/freelancer/resources">Resources</Link></li>
-            <li><Link to="/freelancer/blog">Blog</Link></li>
-          </ul>
-        </div>
-
-        {/* For Clients */}
-        <div className="footerSection">
-          <h3 className="footerTitle">For Clients</h3>
-          <ul className="footerLinks">
-            <li><Link to="/admin/new-project">Post a Project</Link></li>
-            <li><Link to="/client/find-talent">Find Talent</Link></li>
-            <li><Link to="/client/enterprise">Enterprise</Link></li>
-            <li><Link to="/client/case-studies">Case Studies</Link></li>
-            <li><Link to="/client/support">Client Support</Link></li>
-          </ul>
-        </div>
-
-        {/* Company & Legal */}
-        <div className="footerSection">
-          <h3 className="footerTitle">Company</h3>
-          <ul className="footerLinks">
-            <li><Link to="/about">About Us</Link></li>
-            <li><Link to="/careers">Careers</Link></li>
-            <li><Link to="/press">Press</Link></li>
+            <li><Link to="/">About</Link></li>
+            <li><Link to="/projects">Find Jobs</Link></li>
+            <li><Link to="/admin/joinasclient">Clients</Link></li>
             <li><Link to="/contact">Contact</Link></li>
-            <li><Link to="/privacy-policy">Privacy Policy</Link></li>
-            <li><Link to="/terms-of-service">Terms of Service</Link></li>
+            <li><Link to="/careers">Careers</Link></li>
           </ul>
         </div>
 
-        {/* NEW: Support */}
+        {/* Support */}
         <div className="footerSection">
           <h3 className="footerTitle">Support</h3>
           <ul className="footerLinks">
-            <li><Link to="/help-center">Help Center</Link></li>
-            <li><Link to="/faq">FAQs</Link></li>
-            <li><Link to="/safety">Safety Tips</Link></li>
-            <li><Link to="/report">Report Issue</Link></li>
-            <li><Link to="/accessibility">Accessibility</Link></li>
+            <li><Link to="/help-center">Find a Mentor</Link></li>
+            <li><Link to="/faq">Community</Link></li>
+            <li><Link to="/safety">Help Center</Link></li>
+            <li><Link to="/report">Safety Tips</Link></li>
+            <li><Link to="/accessibility">Settings & Policy</Link></li>
+          </ul>
+        </div>
+
+        {/* Resources */}
+        <div className="footerSection">
+          <h3 className="footerTitle">Resources</h3>
+          <ul className="footerLinks">
+            <li><Link to="/freelancer/how-it-works">Customer Stories</Link></li>
+            <li><Link to="/freelancer/blog">Blog</Link></li>
+            <li><Link to="/freelancer/resources">Help Docs</Link></li>
+            <li><Link to="/client/enterprise">Pricing</Link></li>
           </ul>
         </div>
       </div>
 
       {/* Bottom Bar */}
       <div className="footerBottom">
-        <p>&copy; {currentYear} FLEXIWORK. All rights reserved.</p>
-        <p className="madeWith">Made with <span className="heart">love</span> in India</p>
+        <p>© {currentYear} Connect Pvt. Ltd.</p>
+        <div className="footerBottomLinks">
+          <Link to="/privacy-policy">Privacy</Link>
+          <Link to="/sitemap">Sitemap</Link>
+          <Link to="/terms-of-service">Compliance</Link>
+        </div>
       </div>
     </footer>
   );

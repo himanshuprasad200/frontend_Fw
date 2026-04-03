@@ -1,42 +1,41 @@
 import React from "react";
-import ReactStars from "react-rating-stars-component";
 import { Link } from "react-router-dom";
 import "./ProjectCard.css";
+import { FiArrowRight, FiStar, FiMessageSquare } from "react-icons/fi";
 
-const ProjectCard = ({ project, isHome = false }) => {
-  const options = {
-    value: project.ratings || 4.5,
-    edit: false,
-    isHalf: true,
-    size: 20,
-    activeColor: "#ffd700",
-  };
-
-  const cardClass = isHome ? "modern-project-card home-card" : "modern-project-card";
-
+const ProjectCard = ({ project }) => {
   return (
-    <Link className={cardClass} to={`/project/${project._id}`}>
-      <div className="card-image">
-        <img src={project.images[0]?.url || "/placeholder.jpg"} alt={project.name} />
-        <div className="card-overlay"></div>
+    <Link className="project-card-new" to={`/project/${project._id}`}>
+      {/* Visual Header */}
+      <div className="pc-visual">
+        <img 
+          src={project.images?.[0]?.url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=600"} 
+          alt={project.name} 
+        />
+        <div className="pc-category-tag">{project.category}</div>
       </div>
 
-      <div className="card-content">
-        <div className="card-header">
-          <h3>{project.name}</h3>
-          <span className="badge">{project.category}</span>
+      {/* Content Body */}
+      <div className="pc-body">
+        <div className="pc-meta-top">
+          <span className="pc-rating">
+            <FiStar className="star-icon" /> {project.ratings || "0.0"}
+          </span>
+          <span className="pc-reviews">
+            <FiMessageSquare className="msg-icon" /> {project.numOfReviews || 0} Reviews
+          </span>
         </div>
 
-        <p className="card-description">{project.title}</p>
-
-        <div className="card-rating">
-          <ReactStars {...options} />
-          <span>({project.numOfReviews || 0})</span>
-        </div>
-
-        <div className="card-footer">
-          <span className="price">From ₹{project.price}</span>
-          <span className="heart">♡</span>
+        <h3 className="pc-title">{project.name}</h3>
+        
+        <div className="pc-footer">
+          <div className="pc-price-box">
+             <span className="pc-price-label">Starting from</span>
+             <span className="pc-price-value">₹{project.price?.toLocaleString()}</span>
+          </div>
+          <div className="pc-explore-btn">
+            EXPLORE <FiArrowRight />
+          </div>
         </div>
       </div>
     </Link>

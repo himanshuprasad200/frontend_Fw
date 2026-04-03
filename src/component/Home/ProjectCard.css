@@ -1,146 +1,147 @@
-/* src/component/Home/ProjectCard.css */
+/* ProjectCard.css - Premium Navy/Teal Styling */
 
-/* --- SHARED BASE STYLES --- */
-.modern-project-card {
+.project-card-new {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  text-decoration: none !important;
+  color: #1a1a2e;
+  border: 1px solid #e2e8f0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   display: flex;
   flex-direction: column;
-  border-radius: 24px;
-  overflow: hidden;
-  text-decoration: none;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  position: relative;
   height: 100%;
 }
 
-.card-image {
+.project-card-new:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(26, 26, 46, 0.08);
+  border-color: #7ec8c0;
+}
+
+/* 1. Visual Section */
+.pc-visual {
   position: relative;
-  height: 220px;
+  width: 100%;
+  padding-top: 60%; /* 16:9 Aspect Ratio */
+  background: #f1f5f9;
   overflow: hidden;
 }
 
-.card-image img {
+.pc-visual img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
 }
 
-.modern-project-card:hover .card-image img {
-  transform: scale(1.1);
+.pc-category-tag {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #1a1a2e;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  z-index: 10;
 }
 
-.card-content {
+/* 2. Body Section */
+.pc-body {
   padding: 24px;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  gap: 12px;
 }
 
-.card-header {
+.pc-meta-top {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
+  gap: 15px;
+  margin-bottom: 12px;
 }
 
-.card-header h3 {
-  font-size: 1.25rem;
+.pc-rating, .pc-reviews {
+  font-size: 0.85rem;
   font-weight: 700;
-  margin: 0;
-  line-height: 1.2;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.card-description {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin: 4px 0 8px;
+.star-icon { color: #f59e0b; }
+.msg-icon { color: #1a1a2e; }
+
+.pc-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin: 0 0 20px;
+  text-transform: uppercase;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.card-rating {
+/* 3. Footer Section */
+.pc-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 18px;
+}
+
+.pc-price-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.pc-price-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.pc-price-value {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #1a1a2e;
+  line-height: 1;
+}
+
+.pc-explore-btn {
+  background: #1a1a2e;
+  color: #fff;
+  width: auto;
+  padding: 8px 18px;
+  border-radius: 12px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  text-transform: uppercase;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  transition: all 0.3s;
 }
 
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 16px;
-  border-top: 1px solid rgba(0,0,0,0.05);
+.project-card-new:hover .pc-explore-btn {
+  background: #7ec8c0;
+  color: #1a1a2e;
 }
-
-.price {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #10b981;
-}
-
-.heart {
-  font-size: 1.5rem;
-  transition: all 0.3s ease;
-}
-
-/* --- PROJECTS PAGE SPECIFIC (Default) --- */
-.modern-project-card:not(.home-card) {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  color: #1e293b;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-.modern-project-card:not(.home-card):hover {
-  transform: translateY(-12px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  border-color: #0ea5e9;
-}
-
-.modern-project-card:not(.home-card) .card-header h3 { color: #0f172a; }
-.modern-project-card:not(.home-card) .card-description { color: #64748b; }
-.modern-project-card:not(.home-card) .badge {
-  background: #f0f9ff;
-  color: #0ea5e9;
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  border: 1px solid #e0f2fe;
-}
-.modern-project-card:not(.home-card) .heart { color: #cbd5e1; }
-
-/* --- HOME PAGE SPECIFIC (Dark Glass Theme) --- */
-.modern-project-card.home-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.modern-project-card.home-card:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-15px);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-}
-
-.modern-project-card.home-card .card-header h3 { color: #ffffff; }
-.modern-project-card.home-card .card-description { color: #cbd5e1; }
-.modern-project-card.home-card .badge {
-  background: rgba(139, 92, 246, 0.2);
-  color: #c4b5fd;
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border: 1px solid rgba(139, 92, 246, 0.3);
-}
-.modern-project-card.home-card .heart { color: rgba(255, 255, 255, 0.3); }
-.modern-project-card.home-card .card-footer { border-top-color: rgba(255, 255, 255, 0.1); }

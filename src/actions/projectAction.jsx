@@ -30,10 +30,10 @@ export const getProject =
       try {
         dispatch({ type: ALL_PROJECT_REQUEST });
 
-        let link = `/api/v1/projects?page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${ratings}`;
+        let link = `/api/v1/projects?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${ratings}`;
 
         if (category) {
-          link = `/api/v1/projects?page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}&ratings[gte]=${ratings}`;
+          link = `/api/v1/projects?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}&ratings[gte]=${ratings}`;
         }
 
         const { data } = await axios.get(link);

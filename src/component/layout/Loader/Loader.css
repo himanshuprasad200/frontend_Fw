@@ -1,91 +1,123 @@
 .loader-container {
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(15, 17, 21, 0.75); /* Translucent backdrop */
-  backdrop-filter: blur(4px); /* Glass effect */
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(247, 247, 245, 0.85); /* Light glass effect match background */
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  overflow: hidden;
 }
 
 .loader-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  gap: 32px;
 }
 
-.loader-rings {
+/* ── Modern Orbit Spinner ── */
+.modern-spinner {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
-.ring {
+.spinner-orbit {
   position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 4px solid #e1e8e8;
   border-radius: 50%;
+}
+
+.spinner-planet {
+  position: absolute;
+  width: 100%;
+  height: 100%;
   border: 4px solid transparent;
+  border-top-color: #7ec8c0;
+  border-radius: 50%;
+  animation: orbitRotate 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 }
 
-.ring-outer {
-  width: 120px;
-  height: 120px;
-  border-top-color: #00c2ff;
-  border-bottom-color: #00c2ff;
-  animation: rotateClockwise 1.5s linear infinite;
-  box-shadow: 0 0 15px rgba(0, 194, 255, 0.4);
+.spinner-core {
+  width: 24px;
+  height: 24px;
+  background: #1a1a2e;
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(126, 200, 192, 0.4);
+  animation: corePulse 1s ease-in-out infinite alternate;
 }
 
-.ring-inner {
-  width: 90px;
-  height: 90px;
-  border-left-color: #00eaff;
-  border-right-color: #00eaff;
-  animation: rotateAntiClockwise 1s linear infinite;
-  box-shadow: 0 0 10px rgba(0, 234, 255, 0.3);
-}
-
-.ring-center {
-  width: 25px;
-  height: 25px;
-  background: radial-gradient(circle, #00c2ff, #005f7a);
-  animation: pulse 1s ease-in-out infinite;
-  box-shadow: 0 0 20px #00c2ff;
-}
-
-.loader-text {
-  color: #94a3b8;
-  font-family: 'Inter', sans-serif;
-  letter-spacing: 4px;
-  font-size: 14px;
-  font-weight: 600;
+/* ── Brand Letter Animation ── */
+.loader-brand-text {
+  display: flex;
+  gap: 6px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #1a1a2e;
   text-transform: uppercase;
-  animation: textFade 1.5s ease-in-out infinite;
 }
 
-@keyframes rotateClockwise {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.loader-brand-text span {
+  display: inline-block;
+  animation: letterFloat 1.5s ease-in-out infinite;
 }
 
-@keyframes rotateAntiClockwise {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
+.loader-brand-text span:nth-child(2) { animation-delay: 0.1s; }
+.loader-brand-text span:nth-child(3) { animation-delay: 0.2s; }
+.loader-brand-text span:nth-child(4) { animation-delay: 0.3s; }
+.loader-brand-text span:nth-child(5) { animation-delay: 0.4s; }
+.loader-brand-text span:nth-child(6) { animation-delay: 0.5s; }
+.loader-brand-text span:nth-child(7) { animation-delay: 0.6s; }
+.loader-brand-text span:nth-child(8) { animation-delay: 0.7s; }
+.loader-brand-text span:nth-child(9) { animation-delay: 0.8s; }
+
+/* ── Animations ── */
+@keyframes orbitRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.2); opacity: 0.7; }
+@keyframes corePulse {
+  from { transform: scale(0.85); opacity: 0.7; }
+  to { transform: scale(1.15); opacity: 1; }
 }
 
-@keyframes textFade {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; text-shadow: 0 0 8px rgba(0, 194, 255, 0.6); }
+@keyframes letterFloat {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-8px);
+    opacity: 1;
+    color: #7ec8c0;
+  }
+}
+
+/* Light/Dark Adaptation (Optional if user might prefer dark mode) */
+@media (prefers-color-scheme: dark) {
+  .loader-container {
+    background: rgba(10, 10, 15, 0.9);
+  }
+  .loader-brand-text {
+    color: #ffffff;
+  }
+  .spinner-orbit {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  .spinner-core {
+    background: #7ec8c0;
+  }
 }

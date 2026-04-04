@@ -197,7 +197,7 @@ const ProcessResponse = () => {
                     )}
 
                     <div className="bid-footer-meta">
-                       <span>Project: {bid?.bidsItems?.map(i => i.title).join(', ') || "N/A"}</span>
+                       <span>Project: {bid?.bidsItems?.map(i => i.project?.title).join(', ') || "N/A"}</span>
                        <span>Price: ₹{bid?.bidsItems?.reduce((sum, item) => sum + (item.price || 0), 0).toLocaleString("en-IN")}</span>
                        <span>Applied on: {new Date(bid?.createdAt).toLocaleDateString()}</span>
                        <span>Bid ID: #{id?.slice(-8).toUpperCase()}</span>

@@ -100,8 +100,9 @@ const MyBids = () => {
               </thead>
               <tbody>
                 {currentBids.map((bid) => {
-                  const totalBudget = (bid.bidsItems || []).reduce((sum, p) => sum + Number(p.price || 0), 0);
-                  const firstProject = bid.bidsItems?.[0] || {};
+                  const totalBudget = (bid.bidsItems || []).reduce((sum, item) => sum + Number(item.price || 0), 0);
+                  const firstItem = bid.bidsItems?.[0] || {};
+                  const firstProject = firstItem.project || {};
                   const status = bid.response || "Pending";
                   
                   return (

@@ -128,7 +128,7 @@ const BidList = () => {
                         <tr key={bid._id}>
                           <td className="bids-id">#{bid._id.slice(-8).toUpperCase()}</td>
                           <td style={{maxWidth: '180px', fontWeight: '600'}}>
-                             {bid.bidsItems?.map(item => item.title).join(', ') || "N/A"}
+                             {bid.bidsItems?.map(item => item.project?.title).join(', ') || "N/A"}
                           </td>
                           <td>
                             <div className="applicant-info">

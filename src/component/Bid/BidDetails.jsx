@@ -30,7 +30,7 @@ const BidDetails = () => {
   if (loading) return <Loader />;
   if (!bid) return <div className="not-found">Bid not found</div>;
 
-  const totalBudget = (bid.bidsItems || []).reduce((sum, p) => sum + Number(p.price || 0), 0);
+  const totalBudget = (bid.bidsItems || []).reduce((sum, item) => sum + Number(item.price || 0), 0);
 
   return (
     <Fragment>
@@ -113,22 +113,22 @@ const BidDetails = () => {
               </div>
 
               {/* Client Profile Context */}
-              {bid.bidsItems?.[0]?.postedBy && (
+              {bid.bidsItems?.[0]?.project?.postedBy && (
                 <div className="user-profile-card">
                    <div className="card-tag">Project Lead</div>
                   <div className="user-card-head">
                     <img 
-                      src={bid.bidsItems[0].postedBy.avatar?.url || "/Profile.png"} 
+                      src={bid.bidsItems[0].project.postedBy.avatar?.url || "/Profile.png"} 
                       alt="client" 
                     />
                     <div className="user-card-id">
-                      <h4>{bid.bidsItems[0].postedBy.name}</h4>
+                      <h4>{bid.bidsItems[0].project.postedBy.name}</h4>
                       <p>Hiring Manager</p>
                     </div>
                   </div>
                   <button 
                     className="chat-action-btn"
-                    onClick={() => navigate(`/chat/${bid.bidsItems[0].postedBy._id}`)}
+                    onClick={() => navigate(`/chat/${bid.bidsItems[0].project.postedBy._id}`)}
                   >
                     <FaComments /> Chat with Client
                   </button>
@@ -146,34 +146,37 @@ const BidDetails = () => {
               </div>
               
               <div className="items-container">
-                {bid.bidsItems && bid.bidsItems.map((project) => (
-                  <div key={project._id} className="bid-item-card">
-                    <img 
-                      src={project.images?.[0]?.url || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=200"} 
-                      alt="thumb" 
-                      className="item-thumb" 
-                    />
-                    <div className="item-meta">
-                      <div className="item-title-row">
-                        <Link to={`/project/${project._id}`} className="item-link">
-                          {project.title} <FiChevronRight />
-                        </Link>
-                        <span className="item-price">₹{project.price?.toLocaleString()}</span>
-                      </div>
-                      <div className="item-client-row">
-                         <span>Owner: {project.postedBy?.name}</span>
-                         {project.postedBy?._id && (
-                           <button 
-                             className="small-chat-link"
-                             onClick={() => navigate(`/chat/${project.postedBy._id}`)}
-                           >
-                              Chat
-                           </button>
-                         )}
+                {bid.bidsItems && bid.bidsItems.map((item) => {
+                  const project = item.project || {};
+                  return (
+                    <div key={item._id} className="bid-item-card">
+                      <img 
+                        src={project.images?.[0]?.url || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=200"} 
+                        alt="thumb" 
+                        className="item-thumb" 
+                      />
+                      <div className="item-meta">
+                        <div className="item-title-row">
+                          <Link to={`/project/${project._id}`} className="item-link">
+                            {project.title} <FiChevronRight />
+                          </Link>
+                          <span className="item-price">₹{item.price?.toLocaleString()}</span>
+                        </div>
+                        <div className="item-client-row">
+                           <span>Owner: {project.postedBy?.name}</span>
+                           {project.postedBy?._id && (
+                             <button 
+                               className="small-chat-link"
+                               onClick={() => navigate(`/chat/${project.postedBy._id}`)}
+                             >
+                                Chat
+                             </button>
+                           )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 
                 {(!bid.bidsItems || bid.bidsItems.length === 0) && (
                   <div className="no-items-placeholder">

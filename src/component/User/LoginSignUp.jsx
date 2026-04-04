@@ -52,14 +52,18 @@ const LoginSignUp = () => {
 
   const handleRegisterInput = (e) => {
     if (e.target.name === "avatar") {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      setAvatar(file);
+
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.readyState === 2) {
           setAvatarPreview(reader.result);
-          setAvatar(reader.result);
         }
       };
-      reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(file);
     } else {
       let value = e.target.value;
       if (e.target.name === "pancard") value = value.toUpperCase();

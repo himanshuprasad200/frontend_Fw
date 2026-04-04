@@ -54,29 +54,35 @@ const UpdateProfile = () => {
   };
 
   const handleAvatarChange = (e) => {
-    const reader = new FileReader();
+    const file = e.target.files[0];
+    if (!file) return;
 
+    setAvatar(file);
+
+    const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
         setAvatarPreview(reader.result);
-        setAvatar(reader.result);
       }
     };
 
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(file);
   };
 
   const handleBannerChange = (e) => {
-    const reader = new FileReader();
+    const file = e.target.files[0];
+    if (!file) return;
 
+    setBanner(file);
+
+    const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
         setBannerPreview(reader.result);
-        setBanner(reader.result);
       }
     };
 
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(file);
   };
 
   useEffect(() => {

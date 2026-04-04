@@ -1,6 +1,6 @@
 // src/components/Contact/Contact.jsx
 import React, { useState } from 'react';
-import toast from 'react-hot-toast';
+import toast from "../../../utils/CustomToast";
 import Loader from '../Loader/Loader'; // Reuse your existing loader
 import './Contact.css';
 

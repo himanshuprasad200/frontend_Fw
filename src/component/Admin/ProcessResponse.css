@@ -214,6 +214,78 @@
   font-weight: 500;
 }
 
+/* Attachments Section */
+.attachments-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px dashed #e2e8f0;
+  margin-bottom: 24px;
+}
+
+.attachments-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 16px;
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+
+.attachments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.attachment-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  text-decoration: none !important;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.attachment-item:hover {
+  background: white;
+  border-color: #0ea5e9;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
+  transform: translateY(-2px);
+}
+
+.file-icon {
+  font-size: 1.2rem;
+  color: #0ea5e9;
+  display: flex;
+  align-items: center;
+}
+
+.file-name-span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.external-icon {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  transition: color 0.3s ease;
+}
+
+.attachment-item:hover .external-icon {
+  color: #0ea5e9;
+}
+
 /* Action Card (Right Side) */
 .action-card-premium {
   background: white;

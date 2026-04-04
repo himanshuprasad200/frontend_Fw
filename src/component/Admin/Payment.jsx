@@ -2,7 +2,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import MetaData from "../layout/MetaData";
 import Sidebar from "./Sidebar";
 import Loader from "../layout/Loader/Loader";

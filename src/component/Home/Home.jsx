@@ -12,7 +12,7 @@ import "./Home.css";
 import MetaData from "../layout/MetaData.jsx";
 import { clearErrors, getProject } from "../../actions/projectAction.jsx";
 import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-hot-toast";
+import { toast } from "../../utils/CustomToast";
 
 const popularSkills = ["UI Design", "Web Dev", "Branding", "Animation", "Copywriting"];
 

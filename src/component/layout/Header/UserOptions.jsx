@@ -11,7 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../actions/userAction";
-import toast from "react-hot-toast";
+import toast from "../../../utils/CustomToast";
 
 const UserOptions = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);

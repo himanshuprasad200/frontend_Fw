@@ -1,28 +1,35 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import MetaData from "../layout/MetaData";
 import Sidebar from "./Sidebar";
 import { deleteBid, getAllBids, clearErrors } from "../../actions/bidAction";
 import { DELETE_BID_RESET } from "../../constants/bidConstant";
 import "./BidList.css";
-import "./BidList.css";
-import { FaEdit, FaTrash, FaEye, FaChevronLeft, FaChevronRight, FaTimes, FaCreditCard, FaComments, FaCheckCircle, FaTimesCircle, FaClock } from "react-icons/fa";
+import { 
+  FaEdit, FaTrash, FaEye, FaChevronLeft, FaChevronRight, FaTimes, 
+  FaCreditCard, FaComments, FaCheckCircle, FaTimesCircle, FaClock,
+  FaExclamationTriangle, FaSpinner
+} from "react-icons/fa";
 
 const BidList = () => {
   const dispatch = useDispatch();
 
-  const { error, bids } = useSelector((state) => state.allBids);
-  const { error: deleteError, isDeleted } = useSelector((state) => state.bid);
-
-  const [currentPage, setCurrentPage] = useState(1);
+   const { error, bids } = useSelector((state) => state.allBids);
+   const { loading: isDeleting, error: deleteError, isDeleted } = useSelector((state) => state.bid);
+ 
+   const [currentPage, setCurrentPage] = useState(1);
   const bidsPerPage = 8;
 
   // Modal State
-  const [showModal, setShowModal] = useState(false);
-  const [selectedProposal, setSelectedProposal] = useState("");
-  const [selectedBidId, setSelectedBidId] = useState("");
+   const [showModal, setShowModal] = useState(false);
+   const [selectedProposal, setSelectedProposal] = useState("");
+   const [selectedBidId, setSelectedBidId] = useState("");
+ 
+   // Delete Modal State
+   const [showDeleteModal, setShowDeleteModal] = useState(false);
+   const [bidToDelete, setBidToDelete] = useState(null);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -33,10 +40,22 @@ const BidList = () => {
   };
 
   const deleteBidHandler = (id) => {
-    if (window.confirm("Are you sure you want to delete this bid?")) {
-      dispatch(deleteBid(id));
+    setBidToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (bidToDelete) {
+      dispatch(deleteBid(bidToDelete));
     }
   };
+
+  useEffect(() => {
+    if (isDeleted) {
+       setShowDeleteModal(false);
+       setBidToDelete(null);
+    }
+  }, [isDeleted]);
 
   const openProposalModal = (proposal, bidId) => {
     setSelectedProposal(proposal);
@@ -225,6 +244,45 @@ const BidList = () => {
             <div className="modal-footer">
               <button className="modal-close-btn" onClick={() => setShowModal(false)}>
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modern Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="delete-modal-overlay">
+          <div className="delete-modal animate-pop-in">
+            <div className="delete-modal-icon">
+              <FaExclamationTriangle />
+            </div>
+            <h2>Confirm Deletion</h2>
+            <p>
+              Are you sure you want to delete this bid? <br />
+              <span>This action cannot be undone and will remove all associated data.</span>
+            </p>
+            
+            <div className="delete-modal-actions">
+              <button 
+                className="btn-cancel" 
+                onClick={() => setShowDeleteModal(false)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn-delete-confirm" 
+                onClick={confirmDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <span className="deleting-loader">
+                    <FaSpinner className="spin" /> Deleting...
+                  </span>
+                ) : (
+                  "Delete Permanently"
+                )}
               </button>
             </div>
           </div>

@@ -24,28 +24,22 @@ import { CLEAR_ERRORS } from "../constants/bidConstant";
 
 
 // Create Bid
-export const createBid = (bid) => async (dispatch) => {
+export const createBid = (bidData) => async (dispatch) => {
   try {
     dispatch({ type: CREATE_BID_REQUEST });
 
-    const formData = new FormData();
-    formData.append("proposal", bid.proposal);
-
-    if (bid.file) {
-      formData.append("file", bid.file);
-    }
-
-    const config = {
+    let config = {
       headers: {
-        "Content-Type": bid.file ? "multipart/form-data" : "application/json",
+        "Content-Type": "application/json",
       },
     };
 
-    const { data } = await axios.post(
-      "/api/v1/bid/new",
-      bid.file ? formData : bid,
-      config
-    );
+    // If it's FormData (for file uploads)
+    if (bidData instanceof FormData) {
+      config.headers["Content-Type"] = "multipart/form-data";
+    }
+
+    const { data } = await axios.post("/api/v1/bid/new", bidData, config);
 
     dispatch({
       type: CREATE_BID_SUCCESS,
@@ -54,7 +48,7 @@ export const createBid = (bid) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: CREATE_BID_FAIL,
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message,
     });
   }
 };

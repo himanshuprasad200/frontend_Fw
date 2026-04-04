@@ -1,7 +1,7 @@
 // src/component/Admin/UpdateProject.jsx
 import React, { Fragment, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import { toast } from "../../utils/CustomToast";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, getProjectDetails, updateProject } from "../../actions/projectAction";
 import { UPDATE_PROJECT_RESET } from "../../constants/projectConstant";

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import profilePng from "../../images/Profile.png";
 
 const ReviewCard = ({ review }) => {

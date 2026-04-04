@@ -3,7 +3,7 @@ import "./ProcessResponse.css";
 import Sidebar from "./Sidebar";
 import MetaData from "../layout/MetaData";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import { UPDATE_BID_RESET } from "../../constants/bidConstant";
 import { getBidDetails, clearErrors, updateBid } from "../../actions/bidAction";
 import { createEarning, clearErrors as clearEarningErrors } from "../../actions/earningAction";
@@ -19,7 +19,10 @@ import {
   FaCreditCard,
   FaChevronRight,
   FaIdBadge,
-  FaFileAlt
+  FaFileAlt,
+  FaExternalLinkAlt,
+  FaImage,
+  FaPaperclip
 } from "react-icons/fa";
 import Loader from "../layout/Loader/Loader";
 import { CREATE_EARNING_RESET } from "../../constants/earningConstant";
@@ -165,6 +168,34 @@ const ProcessResponse = () => {
                     <div className="proposal-text-container">
                       <p>{bid?.proposal || "No proposal content provided."}</p>
                     </div>
+
+                    {/* Attachments UI */}
+                    {bid?.attachments && bid.attachments.length > 0 && (
+                      <div className="attachments-section">
+                        <h5 className="attachments-title">
+                          <FaPaperclip /> Attachments ({bid.attachments.length})
+                        </h5>
+                        <div className="attachments-grid">
+                          {bid.attachments.map((file, index) => (
+                            <a 
+                              key={index} 
+                              href={file.url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="attachment-item"
+                              title={file.name}
+                            >
+                              <div className="file-icon">
+                                 {file.url.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? <FaImage /> : <FaFileAlt />}
+                              </div>
+                              <span className="file-name-span">{file.name}</span>
+                              <FaExternalLinkAlt className="external-icon" />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="bid-footer-meta">
                        <span>Project: {bid?.bidsItems?.map(i => i.title).join(', ') || "N/A"}</span>
                        <span>Price: ₹{bid?.bidsItems?.reduce((sum, item) => sum + (item.price || 0), 0).toLocaleString("en-IN")}</span>

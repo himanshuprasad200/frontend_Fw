@@ -16,7 +16,7 @@ import { FaGlobe, FaUpload } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { login, register, clearErrors } from "../../actions/userAction";
 import { useNavigate, Link } from "react-router-dom";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import Loader from "../layout/Loader/Loader";
 import Logo from "../layout/Logo/Logo";
 

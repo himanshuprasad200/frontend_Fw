@@ -6,8 +6,8 @@ import { clearErrors, getBidDetails } from "../../actions/bidAction";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Loader from "../layout/Loader/Loader";
 import MetaData from "../layout/MetaData";
-import toast from "react-hot-toast";
-import { FaComments, FaAward, FaCalendarAlt, FaCheckCircle } from "react-icons/fa";
+import toast from "../../utils/CustomToast";
+import { FaComments, FaAward, FaCalendarAlt, FaCheckCircle, FaPaperclip, FaFileAlt, FaImage, FaExternalLinkAlt } from "react-icons/fa";
 import { FiMessageCircle, FiBriefcase, FiChevronRight } from "react-icons/fi";
 
 const BidDetails = () => {
@@ -85,6 +85,31 @@ const BidDetails = () => {
                 <div className="proposal-content">
                   {bid.proposal}
                 </div>
+
+                {/* Attachments for User */}
+                {bid.attachments && bid.attachments.length > 0 && (
+                  <div className="attachments-wrapper">
+                    <h4><FaPaperclip /> Attached documents ({bid.attachments.length})</h4>
+                    <div className="attachments-list">
+                      {bid.attachments.map((file, index) => (
+                        <a 
+                          key={index} 
+                          href={file.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="attachment-card"
+                          title={file.name}
+                        >
+                          <span className="file-icon">
+                            {file.url.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? <FaImage /> : <FaFileAlt />}
+                          </span>
+                          <span className="file-name">{file.name}</span>
+                          <FaExternalLinkAlt className="external-icon" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Client Profile Context */}

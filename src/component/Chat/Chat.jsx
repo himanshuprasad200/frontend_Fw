@@ -6,7 +6,7 @@ import axios from "axios";
 import "./Chat.css";
 import { FaPaperPlane, FaArrowLeft, FaComments, FaLock, FaCheckDouble } from "react-icons/fa";
 import Loader from "../layout/Loader/Loader";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 
 const Chat = () => {
   const { id: targetUserId } = useParams(); // The user to chat with

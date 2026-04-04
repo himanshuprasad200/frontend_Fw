@@ -3,7 +3,7 @@ import "./ForgotPassword.css";
 import { MdEmail, MdLock, MdConfirmationNumber, MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, forgotPassword, resetPassword } from "../../actions/userAction";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import MetaData from "../layout/MetaData";
 import { useNavigate } from "react-router-dom";
 import Loader from "../layout/Loader/Loader";

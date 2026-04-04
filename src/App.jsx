@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import { CustomToaster, toast } from "./utils/CustomToast";
 import Navbar from "./component/layout/Header/Header";
 import Home from "./component/Home/Home";
 import LoginSignUp from "./component/User/LoginSignUp";
@@ -48,7 +48,7 @@ import Success from "./component/layout/Success/Success";
 // Set Axios to send cookies
 axios.defaults.withCredentials = true;
 
-import toast from "react-hot-toast";
+// removed toast import from hot-toast
 import io from "socket.io-client";
 import { FaComments } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -154,19 +154,7 @@ function App() {
         <Navbar />
       </header>
 
-      {/* Toast Notifications */}
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: "#1a1d23",
-            color: "#fff",
-            border: "1px solid #333",
-            borderRadius: "12px",
-          },
-        }}
-      />
+      <CustomToaster />
 
       {/* Full-page loader during initial auth check */}
       {loading ? (

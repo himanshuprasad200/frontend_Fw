@@ -1,7 +1,7 @@
 // src/component/Admin/NewProject.jsx
 import React, { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import { toast } from "../../utils/CustomToast";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, createProject } from "../../actions/projectAction";
 import { NEW_PROJECT_RESET } from "../../constants/projectConstant";

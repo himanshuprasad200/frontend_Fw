@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import "./ProjectList.css";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import { Link, useNavigate } from "react-router-dom";
 import { 
   FaEdit, 

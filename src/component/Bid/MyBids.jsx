@@ -5,10 +5,10 @@ import { clearErrors, myBids } from "../../actions/bidAction";
 import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import { Link, useNavigate } from "react-router-dom";
 import { FiExternalLink, FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { FaComments } from "react-icons/fa";
+import { FaComments, FaRocket } from "react-icons/fa";
 
 const MyBids = () => {
   const dispatch = useDispatch();
@@ -79,7 +79,11 @@ const MyBids = () => {
 
         {bids.length === 0 ? (
           <div className="empty-bids-state">
-            <p>No bids found. Your future successes wait in the projects list!</p>
+            <div className="empty-icon-wrapper">
+               <FaRocket />
+            </div>
+            <h3>No Active Bids Found</h3>
+            <p>Your future successes wait in the projects list! Start applying to build your portfolio.</p>
             <Link to="/projects" className="action-link-new">Explore Opportunities</Link>
           </div>
         ) : (

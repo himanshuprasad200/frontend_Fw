@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchEarnings } from "../../actions/earningAction";
 import { myBids } from "../../actions/bidAction";
 import Loader from "../layout/Loader/Loader";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import "./AccountAnalytics.css";
 import { 
   FiPieChart, 

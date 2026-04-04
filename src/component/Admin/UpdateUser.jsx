@@ -4,7 +4,7 @@ import "./UpdateUser.css";
 import Sidebar from "./Sidebar";
 import MetaData from "../layout/MetaData";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getUserDetails, updateUser, clearErrors } from "../../actions/userAction";
 import { UPDATE_USER_RESET } from "../../constants/userConstant";

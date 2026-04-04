@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import "./ResetPassword.css";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, resetPassword } from "../../actions/userAction";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import MetaData from "../layout/MetaData";
 import { useNavigate } from "react-router-dom";
 import Loader from "../layout/Loader/Loader";

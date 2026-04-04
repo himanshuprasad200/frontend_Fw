@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./ProjectDetails.css";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import {
   clearErrors,
   getProjectDetails,

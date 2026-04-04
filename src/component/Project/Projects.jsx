@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearErrors, getProject } from "../../actions/projectAction";
 import ProjectCard from "../Home/ProjectCard";
 import { useParams, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader/Loader";
 import useDebounce from "../../hooks/useDebounce";

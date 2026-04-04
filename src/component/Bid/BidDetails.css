@@ -171,6 +171,81 @@
   border: 1px dashed #cbd5e0;
 }
 
+/* Attachments Section */
+.attachments-wrapper {
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px dashed #cbd5e0;
+}
+
+.attachments-wrapper h4 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+}
+
+.attachments-wrapper h4 svg {
+  color: #7ec8c0;
+}
+
+.attachments-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 15px;
+}
+
+.attachment-card {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  text-decoration: none !important;
+  transition: all 0.3s;
+  gap: 12px;
+}
+
+.attachment-card:hover {
+  background: white;
+  border-color: #7ec8c0;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(126, 200, 192, 0.15);
+}
+
+.attachment-card .file-icon {
+  font-size: 1.4rem;
+  color: #7ec8c0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.attachment-card .file-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.attachment-card .external-icon {
+  font-size: 0.8rem;
+  color: #cbd5e0;
+}
+
+.attachment-card:hover .external-icon {
+  color: #7ec8c0;
+}
+
 .user-profile-card {
   background: white;
   padding: 35px;

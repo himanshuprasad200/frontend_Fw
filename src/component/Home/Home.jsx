@@ -137,7 +137,7 @@ const Home = () => {
 
   return (
     <Fragment>
-      <MetaData title="Connect — Find Top Freelancers & Get Work Done" />
+      <MetaData title="FlexiWork — Find Top Freelancers & Get Work Done" />
 
       <div className="lp-root">
 

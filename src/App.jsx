@@ -86,12 +86,12 @@ function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, isAuthenticated, user } = useSelector((state) => state.user);
-  
+
   // Real-time notification socket
   useEffect(() => {
     if (isAuthenticated && user) {
       const socketUrl = window.location.hostname === "localhost"
-        ? "http://localhost:4050"
+        ? "https://backend-i86g.onrender.com"
         : axios.defaults.baseURL || window.location.origin;
 
       const socket = io(socketUrl, { withCredentials: true });
@@ -106,21 +106,21 @@ function App() {
         if (window.location.pathname.includes(data.sender)) return;
 
         toast((t) => (
-          <div 
+          <div
             onClick={() => {
               navigate(`/chat/${data.sender}`);
               toast.dismiss(t.id);
             }}
-            style={{ 
-              cursor: "pointer", 
-              display: "flex", 
-              alignItems: "center", 
-              gap: "10px", 
-              padding: "5px" 
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "5px"
             }}
           >
             <div style={{ backgroundColor: "#00a884", borderRadius: "50%", padding: "8px", color: "white", display: "flex" }}>
-               <FaComments />
+              <FaComments />
             </div>
             <div>
               <strong style={{ display: "block", color: "#f7bc0b" }}>{data.senderName}</strong>
@@ -128,12 +128,12 @@ function App() {
             </div>
           </div>
         ), {
-            duration: 6000,
-            style: {
-                background: "#2a2f32",
-                color: "#fff",
-                borderLeft: "5px solid #00a884"
-            }
+          duration: 6000,
+          style: {
+            background: "#2a2f32",
+            color: "#fff",
+            borderLeft: "5px solid #00a884"
+          }
         });
       });
 

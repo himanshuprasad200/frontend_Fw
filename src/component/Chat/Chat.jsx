@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import axios from "axios";
 import "./Chat.css";
-import { FaPaperPlane, FaArrowLeft, FaComments, FaLock, FaCheckDouble } from "react-icons/fa";
+import { FaPaperPlane, FaArrowLeft, FaComments, FaLock, FaCheckDouble, FaImage, FaFileAlt, FaVideo, FaPaperclip, FaTimes } from "react-icons/fa";
 import Loader from "../layout/Loader/Loader";
 import toast from "../../utils/CustomToast";
 
@@ -12,15 +12,18 @@ const Chat = () => {
   const { id: targetUserId } = useParams(); // The user to chat with
   const navigate = useNavigate();
   const { user, isAuthenticated } = useSelector((state) => state.user);
-  
+
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [targetUser, setTargetUser] = useState(null);
   const [isOnline, setIsOnline] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const scrollRef = useRef();
   const socketRef = useRef();
   const textareaRef = useRef();
+  const fileInputRef = useRef();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -29,28 +32,28 @@ const Chat = () => {
     }
 
     const socketUrl = window.location.hostname === "localhost"
-      ? "http://localhost:4050"
+      ? "https://backend-i86g.onrender.com"
       : axios.defaults.baseURL || window.location.origin;
 
     socketRef.current = io(socketUrl, {
       withCredentials: true,
     });
 
-    // Notify server of current user
-    socketRef.current.emit("add_user", user._id);
+    socketRef.current.emit("add_user", String(user._id));
 
     // Join specialized project room
-    const room = [user._id, targetUserId].sort().join("_");
+    const room = [String(user._id), String(targetUserId)].sort().join("_");
     socketRef.current.emit("join_chat", room);
 
     // Listen for incoming messages
     socketRef.current.on("received_message", (arrivalMessage) => {
+      console.log("Socket received_message event:", arrivalMessage);
       setMessages((prev) => [...prev, arrivalMessage]);
     });
 
     // Listen for online users
     socketRef.current.on("get_users", (onlineUsers) => {
-      const online = onlineUsers.some((u) => u.userId === targetUserId);
+      const online = onlineUsers.some((u) => String(u.userId) === String(targetUserId));
       setIsOnline(online);
     });
 
@@ -61,7 +64,7 @@ const Chat = () => {
           axios.get(`/api/v1/messages?userId=${targetUserId}`),
           axios.get(`/api/v1/user/chat/${targetUserId}`)
         ]);
-        
+
         setMessages(messagesRes.data.messages);
         setTargetUser(userRes.data.user);
         setLoading(false);
@@ -82,22 +85,71 @@ const Chat = () => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const handleFileChange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    if (files.length > 10) {
+      toast.error("You can select max 10 files");
+      return;
+    }
+
+    // Basic size check (e.g., 20MB per file)
+    const tooLarge = files.some(file => file.size > 20 * 1024 * 1024);
+    if (tooLarge) {
+      toast.error("One or more files are too large (max 20MB each)");
+      return;
+    }
+
+    setUploading(true);
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append("media", file);
+    });
+
+    try {
+      console.log(`Starting upload of ${files.length} files...`);
+      const { data } = await axios.post("/api/v1/chat/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (data.success) {
+        console.log("Media upload success:", data.media);
+        setSelectedMedia(data.media); // This is now an array
+      }
+    } catch (error) {
+      console.error("Media upload error:", error);
+      toast.error(error.response?.data?.message || "FileUpload failed");
+    } finally {
+      setUploading(false);
+      // Reset file input so the same file can be selected again
+      if (e.target) e.target.value = "";
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() && !selectedMedia) {
+      console.log("Send blocked: empty message and no media");
+      return;
+    }
 
-    const room = [user._id, targetUserId].sort().join("_");
+    const room = [String(user._id), String(targetUserId)].sort().join("_");
 
     const messageData = {
-      sender: user._id,
-      senderName: user.name, // Added for notifications
-      receiver: targetUserId,
+      sender: String(user._id),
+      senderName: user.name,
+      receiver: String(targetUserId),
       text: newMessage,
+      media: selectedMedia || null,
       room,
     };
 
+    console.log("Emitting send_message:", messageData);
     socketRef.current.emit("send_message", messageData);
+
     setNewMessage("");
+    setSelectedMedia(null);
     if (textareaRef.current) {
       textareaRef.current.style.height = 'inherit';
     }
@@ -113,11 +165,11 @@ const Chat = () => {
           <button className="backBtn" onClick={() => navigate(-1)}>
             <FaArrowLeft />
           </button>
-          
+
           <div className="targetUserProfile">
-            <img 
-              src={targetUser?.avatar?.url || "/default-avatar.png"} 
-              alt={targetUser?.name} 
+            <img
+              src={targetUser?.avatar?.url || "/default-avatar.png"}
+              alt={targetUser?.name}
               className="targetUserAvatar"
             />
             <div className="targetUserInfo">
@@ -137,13 +189,30 @@ const Chat = () => {
                 <FaLock style={{ fontSize: "10px", marginRight: "5px" }} /> Messages are encrypted with standard security protocol.
               </div>
             )}
-            
+
             {messages.map((m, index) => (
               <div
                 key={index}
-                className={m.sender === user._id ? "message ownMessage" : "message receivedMessage"}
+                className={String(m.sender) === String(user._id) ? "message ownMessage" : "message receivedMessage"}
               >
-                <div className="messageText">{m.text}</div>
+                {m.media && m.media.length > 0 && (
+                  <div className={`messageMediaContainer ${m.media.length > 1 ? "multiMedia" : ""}`}>
+                    {m.media.map((item, i) => (
+                      <div key={i} className="messageMedia">
+                        {item.type === "image" ? (
+                          <img src={item.url} alt="Shared" className="sharedImage" onClick={() => window.open(item.url, '_blank')} />
+                        ) : item.type === "video" ? (
+                          <video src={item.url} controls className="sharedVideo" />
+                        ) : (
+                          <a href={item.url} target="_blank" rel="noopener noreferrer" className="documentLink">
+                            <FaFileAlt /> <span>Document</span>
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {m.text && <div className="messageText">{m.text}</div>}
                 <div className="messageMeta">
                   <span className="messageTime">
                     {new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -158,8 +227,35 @@ const Chat = () => {
 
         {/* Improved Input Area */}
         <div className="chatInputWrapper">
+          {selectedMedia && selectedMedia.length > 0 && (
+            <div className="selectedMediaPreview">
+              <div className="previewInfo">
+                <FaPaperclip />
+                <span>{selectedMedia.length} files attached</span>
+              </div>
+              <button className="removeMediaBtn" onClick={() => setSelectedMedia(null)}>
+                <FaTimes />
+              </button>
+            </div>
+          )}
           <form className="chatForm" onSubmit={handleSubmit}>
             <div className="inputGroup">
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+                accept="image/*,video/*,application/pdf,.doc,.docx,.txt"
+                multiple
+              />
+              <button
+                type="button"
+                className="attachBtn"
+                onClick={() => fileInputRef.current.click()}
+                disabled={uploading}
+              >
+                {uploading ? <div className="uploadSpinner"></div> : <FaPaperclip />}
+              </button>
               <textarea
                 ref={textareaRef}
                 placeholder="Type a message"
@@ -178,7 +274,7 @@ const Chat = () => {
                 }}
               />
             </div>
-            <button type="submit" className="sendBtn" disabled={!newMessage.trim()}>
+            <button type="submit" className="sendBtn" disabled={(!newMessage.trim() && !selectedMedia) || uploading}>
               <FaPaperPlane />
             </button>
           </form>

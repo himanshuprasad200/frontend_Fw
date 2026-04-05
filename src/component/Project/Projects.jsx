@@ -92,12 +92,12 @@ const Projects = () => {
         
         {/* Modern Header Section */}
         <div className="projects-hero">
-          <div className="hero-contentt">
+          <div className="hero-content">
              <span className="badge-modern">Discover Work</span>
              <h1>Find the Perfect Project</h1>
              <p>Browse thousands of freelance opportunities tailored for your skills.</p>
              
-             <form className="proj-search-bar" onSubmit={handleSearchSubmit}>
+             <form className="projects-search-bar" onSubmit={handleSearchSubmit}>
                 <i className="fas fa-search search-icon"></i>
                 <input 
                   type="text" 

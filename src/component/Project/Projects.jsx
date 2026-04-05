@@ -16,6 +16,13 @@ const categories = [
   "Fashion Design", "Game Design", "Digital Marketing",
 ];
 
+const budgetRanges = [
+  { label: "Under ₹5k", value: [0, 5000] },
+  { label: "₹5k — ₹15k", value: [5000, 15000] },
+  { label: "₹15k — ₹30k", value: [15000, 30000] },
+  { label: "₹30k+", value: [30000, 1000000] },
+];
+
 const Projects = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -85,12 +92,12 @@ const Projects = () => {
         
         {/* Modern Header Section */}
         <div className="projects-hero">
-          <div className="hero-content">
+          <div className="hero-contentt">
              <span className="badge-modern">Discover Work</span>
              <h1>Find the Perfect Project</h1>
              <p>Browse thousands of freelance opportunities tailored for your skills.</p>
              
-             <form className="projects-search-bar" onSubmit={handleSearchSubmit}>
+             <form className="proj-search-bar" onSubmit={handleSearchSubmit}>
                 <i className="fas fa-search search-icon"></i>
                 <input 
                   type="text" 
@@ -113,33 +120,22 @@ const Projects = () => {
               )}
             </div>
 
-            {/* Price Filter */}
+            {/* Simplified Budget Filter */}
             <div className="modern-filter-group">
-              <label>Budget Range</label>
-              <div className="filter-price-display">
-                <span>₹{price[0].toLocaleString()}</span>
-                <span> - </span>
-                <span>₹{price[1].toLocaleString()}+</span>
-              </div>
-              <div className="modern-range-container">
-                <input
-                  type="range"
-                  min="0"
-                  max="100000"
-                  step="500"
-                  value={price[0]}
-                  onChange={(e) => setPrice([+e.target.value, price[1]])}
-                  className="modern-range-slider"
-                />
-                <input
-                  type="range"
-                  min="0"
-                  max="100000"
-                  step="500"
-                  value={price[1]}
-                  onChange={(e) => setPrice([price[0], +e.target.value])}
-                  className="modern-range-slider"
-                />
+              <label>Project Budget</label>
+              <div className="budget-chip-container">
+                {budgetRanges.map((range) => (
+                  <button 
+                    key={range.label}
+                    className={`budget-chip ${price[0] === range.value[0] && price[1] === range.value[1] ? "active" : ""}`}
+                    onClick={() => {
+                      setPrice(range.value);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    {range.label}
+                  </button>
+                ))}
               </div>
             </div>
 

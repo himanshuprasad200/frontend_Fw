@@ -104,8 +104,8 @@ const SearchModal = ({ isOpen, onClose }) => {
                         <FaBriefcase />
                       </div>
                       <div className="result-info">
-                        <span className="result-name">{project.name}</span>
-                        <span className="result-meta">{project.category} • {project.employmentType}</span>
+                        <span className="result-name">{project.title}</span>
+                        <span className="result-meta">By {project.name} • {project.category} • {project.employmentType}</span>
                       </div>
                       <div className="result-price">
                         {project.price > 0 ? `₹${project.price}` : "Negotiable"}

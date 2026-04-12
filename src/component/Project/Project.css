@@ -89,10 +89,22 @@
   border: 1.5px solid #e2e8f0;
 }
 
-.search-icon {
-  margin: 0 15px;
+.pj-search-icon {
+  margin-left: 20px;
+  margin-right: 12px;
   color: #1a1a2e;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  opacity: 0.6;
+}
+
+.star-icon-small {
+  color: #f59e0b;
+  margin-right: 8px;
+}
+
+.cat-check-icon {
+  font-size: 0.8rem;
+  color: #7ec8c0;
 }
 
 .projects-search-bar input {

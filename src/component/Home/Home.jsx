@@ -1,11 +1,11 @@
 // src/component/Home/Home.jsx
 import React, { Fragment, useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   FaSearch, FaStar, FaArrowLeft, FaArrowRight,
   FaUsers, FaShieldAlt, FaHandshake, FaChevronLeft, FaChevronRight,
   FaQuoteLeft, FaCheckCircle, FaThLarge, FaVideo, FaPaintBrush,
-  FaBullhorn, FaBolt, FaLock, FaMicrophone,
+  FaBullhorn, FaBolt, FaLock, FaMicrophone, FaBriefcase,
 } from "react-icons/fa";
 import { TbGridDots } from "react-icons/tb";
 import "./Home.css";
@@ -13,6 +13,7 @@ import MetaData from "../layout/MetaData.jsx";
 import { clearErrors, getProject } from "../../actions/projectAction.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "../../utils/CustomToast";
+import useDebounce from "../../hooks/useDebounce";
 
 const popularSkills = ["UI Design", "Web Dev", "Branding", "Animation", "Copywriting"];
 
@@ -116,17 +117,63 @@ const freelancerAvatars = [
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { error } = useSelector((state) => state.projects);
+  const navigate = useNavigate();
+  const { error, projects } = useSelector((state) => state.projects);
+  
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [servicesStart, setServicesStart] = useState(0);
+  
+  // Dynamic Search State
+  const [keyword, setKeyword] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const debouncedKeyword = useDebounce(keyword, 500);
+  const searchRef = useRef(null);
 
   useEffect(() => {
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
     }
-    dispatch(getProject());
   }, [dispatch, error]);
+
+  // Handle Click Outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Handle Dynamic Search Fetch
+  useEffect(() => {
+     if (debouncedKeyword.trim()) {
+       setIsSearching(true);
+       dispatch(getProject(debouncedKeyword)).then(() => {
+         setIsSearching(false);
+         setShowResults(true);
+       });
+     } else {
+       setShowResults(false);
+       setIsSearching(false);
+     }
+  }, [debouncedKeyword, dispatch]);
+
+  const handleSearchSubmit = (e) => {
+    if (e) e.preventDefault();
+    if (keyword.trim()) {
+      navigate(`/projects/${keyword}`);
+      setShowResults(false);
+    }
+  };
+
+  const handleResultClick = (id) => {
+    navigate(`/project/${id}`);
+    setShowResults(false);
+  };
 
   const nextTestimonial = () =>
     setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
@@ -172,14 +219,56 @@ const Home = () => {
             {/* Left column */}
             <div className="lp-hero__left">
               {/* Search Bar */}
-              <div className="lp-hero__search">
+              <form 
+                ref={searchRef}
+                className="lp-hero__search" 
+                onSubmit={handleSearchSubmit}
+              >
                 <FaSearch className="lp-hero__search-icon" />
-                <input type="text" placeholder="Search for any services..." />
+                <input 
+                  type="text" 
+                  placeholder="Search for any services..." 
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  onFocus={() => keyword.trim() && setShowResults(true)}
+                />
+                
+                {isSearching && <div className="lp-search-loader"></div>}
+
+                {/* Dropdown Results */}
+                {showResults && (
+                  <div className="lp-search-results-dropdown">
+                    {projects && projects.length > 0 ? (
+                      projects.slice(0, 5).map((project) => (
+                        <div 
+                          key={project._id} 
+                          className="lp-search-result-item"
+                          onClick={() => handleResultClick(project._id)}
+                        >
+                          <div className="res-icon"><FaBriefcase /></div>
+                          <div className="res-info">
+                            <span className="res-title">{project.title}</span>
+                            <span className="res-meta">By {project.name} • {project.category}</span>
+                          </div>
+                          <div className="res-price">₹{project.price?.toLocaleString()}</div>
+                        </div>
+                      ))
+                    ) : (
+                      !isSearching && <div className="lp-search-no-results">No projects found for "{keyword}"</div>
+                    )}
+                    {projects && projects.length > 5 && (
+                      <div className="lp-search-view-all" onClick={handleSearchSubmit}>
+                        View all matching projects <FaArrowRight />
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <FaMicrophone className="lp-hero__mic-icon" />
-                <button className="lp-hero__search-btn">
+                <button type="submit" className="lp-hero__search-btn">
                   <FaArrowRight />
                 </button>
-              </div>
+              </form>
 
               {/* Popular Skills */}
               <div className="lp-hero__skills">

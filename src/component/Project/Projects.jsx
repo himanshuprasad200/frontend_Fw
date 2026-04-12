@@ -8,6 +8,7 @@ import toast from "../../utils/CustomToast";
 import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader/Loader";
 import useDebounce from "../../hooks/useDebounce";
+import { FaSearch, FaStar, FaCheck, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const categories = [
   "Article", "Creative Writing", "Translations", "Speech Writing",
@@ -98,7 +99,7 @@ const Projects = () => {
              <p>Browse thousands of freelance opportunities tailored for your skills.</p>
              
              <form className="projects-search-bar" onSubmit={handleSearchSubmit}>
-                <i className="fas fa-search search-icon"></i>
+                <FaSearch className="pj-search-icon" />
                 <input 
                   type="text" 
                   placeholder="Search by title, skill, or keyword..." 
@@ -143,7 +144,7 @@ const Projects = () => {
             <div className="modern-filter-group">
               <label>Minimum Client Rating</label>
               <div className="modern-rating-display">
-                <i className="fas fa-star text-yellow-500"></i> {ratings} & Up
+                <FaStar className="star-icon-small" /> {ratings} & Up
               </div>
               <input
                 type="range"
@@ -170,7 +171,7 @@ const Projects = () => {
                     }}
                   >
                     {cat}
-                    {category === cat && <i className="fas fa-check"></i>}
+                    {category === cat && <FaCheck className="cat-check-icon" />}
                   </li>
                 ))}
               </ul>
@@ -196,7 +197,7 @@ const Projects = () => {
               </div>
             ) : (
               <div className="no-projects-found animated-fade-in-up">
-                 <div className="empty-state-icon"><i className="fas fa-search"></i></div>
+                 <div className="empty-state-icon"><FaSearch /></div>
                  <h2>No Projects Found</h2>
                  <p>Try adjusting your search filters or browse other categories.</p>
                  <button className="reset-search-btn" onClick={clearFilters}>Reset Filters</button>
@@ -211,7 +212,7 @@ const Projects = () => {
                   disabled={currentPage === 1} 
                   className="mp-btn mp-prev"
                 >
-                  <i className="fas fa-chevron-left"></i> Prev
+                  <FaChevronLeft /> Prev
                 </button>
 
                 <div className="mp-numbers">
@@ -242,7 +243,7 @@ const Projects = () => {
                   disabled={currentPage === totalPages} 
                   className="mp-btn mp-next"
                 >
-                  Next <i className="fas fa-chevron-right"></i>
+                  Next <FaChevronRight />
                 </button>
               </div>
             )}

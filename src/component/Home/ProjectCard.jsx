@@ -10,7 +10,7 @@ const ProjectCard = ({ project }) => {
       <div className="pc-visual">
         <img 
           src={project.images?.[0]?.url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=600"} 
-          alt={project.name} 
+          alt={project.title} 
         />
         <div className="pc-category-tag">{project.category}</div>
       </div>
@@ -26,7 +26,8 @@ const ProjectCard = ({ project }) => {
           </span>
         </div>
 
-        <h3 className="pc-title">{project.name}</h3>
+        <span className="pc-client-name">Posted by {project.name}</span>
+        <h3 className="pc-title">{project.title}</h3>
         
         <div className="pc-footer">
           <div className="pc-price-box">

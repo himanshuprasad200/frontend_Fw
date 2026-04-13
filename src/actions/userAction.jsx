@@ -39,6 +39,12 @@ import {
   USER_REVIEW_REQUEST,
   USER_REVIEW_SUCCESS,
   USER_REVIEW_FAIL,
+  ALL_FREELANCERS_REQUEST,
+  ALL_FREELANCERS_SUCCESS,
+  ALL_FREELANCERS_FAIL,
+  GET_CATEGORIES_REQUEST,
+  GET_CATEGORIES_SUCCESS,
+  GET_CATEGORIES_FAIL,
   CLEAR_ERRORS,
 } from "../constants/userConstant";
 
@@ -229,6 +235,49 @@ export const newReviewForUser = (reviewData) => async (dispatch) => {
     dispatch({ type: USER_REVIEW_SUCCESS, payload: data.success });
   } catch (error) {
     dispatch({ type: USER_REVIEW_FAIL, payload: error.response?.data?.message });
+  }
+};
+
+// Get All Freelancers
+export const getFreelancers = (keyword = "", category = "", page = 1) => async (dispatch) => {
+  try {
+    dispatch({ type: ALL_FREELANCERS_REQUEST });
+
+    let link = `/api/v1/freelancers?keyword=${keyword}&page=${page}`;
+    if (category) {
+      link += `&category=${category}`;
+    }
+
+    const { data } = await axios.get(link);
+
+    dispatch({
+      type: ALL_FREELANCERS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ALL_FREELANCERS_FAIL,
+      payload: error.response?.data?.message,
+    });
+  }
+};
+
+// Get All Dynamic Categories
+export const getCategories = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_CATEGORIES_REQUEST });
+
+    const { data } = await axios.get("/api/v1/categories");
+
+    dispatch({
+      type: GET_CATEGORIES_SUCCESS,
+      payload: data.categories,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_CATEGORIES_FAIL,
+      payload: error.response?.data?.message,
+    });
   }
 };
 

@@ -1,15 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FaSearch, FaBars, FaTimes, FaBell } from "react-icons/fa";
+import { FaSearch, FaBars, FaTimes, FaBell, FaChevronDown, FaArrowRight } from "react-icons/fa";
 import "./Header.css";
 import Logo from "../Logo/Logo";
 import { useSelector, useDispatch } from "react-redux";
 import UserOptions from "./UserOptions";
 import axios from "axios";
 import SearchModal from "../SearchModal/SearchModal";
+import { getCategories } from "../../../actions/userAction";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { categories } = useSelector((state) => state.dynamicCategories);
+
+  // Fetch dynamic categories on mount
+  useEffect(() => {
+    dispatch(getCategories());
+  }, [dispatch]);
 
   const [isMobile, setIsMobile] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -92,7 +100,50 @@ const Navbar = () => {
 
         {/* Desktop Navigation Links */}
         <ul className="navbar-links">
-          <li><Link to="/">Find Freelancers</Link></li>
+          <li className="nav-item-dropdown mega-menu-trigger">
+            <Link to="/freelancers" className="nav-link-with-icon">
+              Hire freelancers <FaChevronDown className="nav-chevron" />
+            </Link>
+            <div className="nav-mega-menu">
+              <div className="mega-menu-grid">
+                {/* Dynamically grouped categories */}
+                {Array.from({ length: 4 }).map((_, colIndex) => {
+                  const itemsPerCol = Math.ceil((categories?.length || 0) / 4);
+                  const colCategories = categories?.slice(colIndex * itemsPerCol, (colIndex + 1) * itemsPerCol);
+                  
+                  return (
+                    <div key={colIndex} className="mega-menu-column">
+                      <h4 className="mega-menu-header">
+                        {colIndex === 0 ? "Featured" : colIndex === 1 ? "Technology" : colIndex === 2 ? "Creative" : "More"}
+                      </h4>
+                      <ul className="mega-menu-list">
+                        {colCategories?.map((cat) => (
+                          <li key={cat}>
+                            <Link to={`/freelancers/${encodeURIComponent(cat)}`} className="mega-menu-item">
+                              {cat}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+                
+                {/* Decorative / Action Column */}
+                <div className="mega-menu-column actions-column">
+                  <Link to="/freelancers" className="mega-action-link green">
+                    Explore more <FaArrowRight />
+                  </Link>
+                  <Link to="/help-center" className="mega-action-link green">
+                    Book consultation <FaArrowRight />
+                  </Link>
+                  <Link to="/admin/joinasclient" className="mega-action-link green">
+                    Join Business Plus <FaArrowRight />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </li>
           <li><Link to="/projects">Find Projects</Link></li>
           <li><Link to="/admin/joinasclient">Join as Client</Link></li>
           {!isAuthenticated && <li><Link to="/success-stories">Success</Link></li>}

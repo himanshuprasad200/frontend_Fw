@@ -1,0 +1,238 @@
+.freelancers-page-container {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding-bottom: 100px;
+}
+
+/* Hero Section */
+.talent-hero {
+  background: #1a1a2e;
+  padding: 180px 20px 120px; /* Offset for fixed header */
+  text-align: center;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.talent-hero::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 20% 30%, rgba(126, 200, 192, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 80% 70%, rgba(26, 26, 46, 0.2) 0%, transparent 50%);
+  z-index: 1;
+}
+
+.talent-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.talent-badge {
+  background: rgba(126, 200, 192, 0.1);
+  color: #7ec8c0;
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  border: 1px solid rgba(126, 200, 192, 0.2);
+}
+
+.talent-hero-content h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 4.5rem;
+  font-weight: 800;
+  margin: 40px 0 20px;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+.talent-hero-content p {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto 50px;
+  font-weight: 500;
+}
+
+.talent-search-bar {
+  background: #fff;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 10px 25px;
+  border-radius: 50px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.ts-search-icon {
+  color: #64748b;
+  font-size: 1.2rem;
+  margin-right: 15px;
+}
+
+.talent-search-bar input {
+  flex-grow: 1;
+  border: none;
+  background: none;
+  padding: 12px 0;
+  font-size: 1.1rem;
+  color: #1a1a2e;
+  outline: none;
+  font-weight: 500;
+}
+
+/* Categories Ribbon */
+.talent-main-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.talent-categories-ribbon {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 0;
+  flex-wrap: wrap;
+}
+
+.category-chip {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.category-chip:hover {
+  border-color: #1a1a2e;
+  color: #1a1a2e;
+  background: #f8fafc;
+}
+
+.category-chip.active {
+  background: #1a1a2e;
+  color: #fff;
+  border-color: #1a1a2e;
+  box-shadow: 0 10px 20px rgba(26, 26, 46, 0.15);
+}
+
+.talent-results-info {
+  margin-bottom: 30px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.talent-results-info strong {
+  color: #1a1a2e;
+}
+
+/* Grid */
+.talent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.talent-loader-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 100px 0;
+}
+
+/* No Results */
+.no-talent-found {
+  text-align: center;
+  padding: 100px 20px;
+  background: #fff;
+  border-radius: 20px;
+  border: 2px dashed #e2e8f0;
+}
+
+.talent-empty-icon {
+  font-size: 3rem;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+}
+
+.no-talent-found h2 {
+  font-size: 24px;
+  color: #1a1a2e;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.reset-talent-btn {
+  margin-top: 30px;
+  background: #1a1a2e;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Pagination */
+.talent-pagination {
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.tp-btn {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  color: #1a1a2e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tp-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tp-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #1a1a2e;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tp-num.active {
+  background: #1a1a2e;
+  color: #fff;
+  border-color: #1a1a2e;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .talent-hero-content h1 { font-size: 3rem; }
+  .talent-main-layout { padding: 0 20px; }
+  .tp-numbers { display: none; }
+}

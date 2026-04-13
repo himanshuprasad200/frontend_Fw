@@ -23,6 +23,7 @@ import UpdatePassword from "./component/User/UpdatePassword";
 import AccountAnalytics from "./component/User/AccountAnalytics";
 import PublicEarning from "./component/User/PublicEarning";
 import Chat from "./component/Chat/Chat";
+import Freelancers from "./component/User/Freelancers";
 
 // Admin Components
 import JoinAsClient from "./component/Admin/JoinAsClient";
@@ -175,6 +176,8 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/help-center" element={<HelpCenter />} />
             <Route path="/success-stories" element={<Success />} />
+            <Route path="/freelancers" element={<Freelancers />} />
+            <Route path="/freelancers/:category" element={<Freelancers />} />
 
             {/* Protected User Routes */}
             <Route

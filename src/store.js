@@ -12,6 +12,8 @@ import {
   profileReducer,
   userDetailsReducer,
   userReducer,
+  allFreelancersReducer,
+  dynamicCategoriesReducer,
 } from "./reducers/userReducer";
 import {
   newProjectReducer,
@@ -38,6 +40,8 @@ const rootReducers = combineReducers({
   profile: profileReducer,
   userDetails: userDetailsReducer,
   newUserReview: newUserReviewReducer,
+  allFreelancers: allFreelancersReducer,
+  dynamicCategories: dynamicCategoriesReducer,
 
   //Projects
   projects: projectsReducer,

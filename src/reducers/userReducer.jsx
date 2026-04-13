@@ -43,6 +43,12 @@ import {
   USER_REVIEW_REQUEST,
   USER_REVIEW_RESET,
   USER_REVIEW_SUCCESS,
+  ALL_FREELANCERS_REQUEST,
+  ALL_FREELANCERS_SUCCESS,
+  ALL_FREELANCERS_FAIL,
+  GET_CATEGORIES_REQUEST,
+  GET_CATEGORIES_SUCCESS,
+  GET_CATEGORIES_FAIL,
 } from "../constants/userConstant";
 
 export const userReducer = (state = { user: {}, loading: true }, action) => {
@@ -257,7 +263,6 @@ export const userDetailsReducer = (state = { user: {} }, action) => {
   }
 };
 
-
 export const newUserReviewReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_REVIEW_REQUEST:
@@ -290,4 +295,59 @@ export const newUserReviewReducer = (state = {}, action) => {
       return state;
   }
 };
- 
+
+export const allFreelancersReducer = (state = { freelancers: [] }, action) => {
+  switch (action.type) {
+    case ALL_FREELANCERS_REQUEST:
+      return {
+        loading: true,
+        freelancers: [],
+      };
+    case ALL_FREELANCERS_SUCCESS:
+      return {
+        loading: false,
+        freelancers: action.payload.freelancers,
+        freelancersCount: action.payload.freelancersCount,
+        resultPerPage: action.payload.resultPerPage,
+      };
+    case ALL_FREELANCERS_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};
+
+export const dynamicCategoriesReducer = (state = { categories: [] }, action) => {
+  switch (action.type) {
+    case GET_CATEGORIES_REQUEST:
+      return {
+        loading: true,
+        categories: [],
+      };
+    case GET_CATEGORIES_SUCCESS:
+      return {
+        loading: false,
+        categories: action.payload,
+      };
+    case GET_CATEGORIES_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
+};

@@ -21,6 +21,7 @@ const BidList = () => {
  
    const [currentPage, setCurrentPage] = useState(1);
   const bidsPerPage = 8;
+  const [statusFilter, setStatusFilter] = useState("All");
 
   // Modal State
    const [showModal, setShowModal] = useState(false);
@@ -65,24 +66,30 @@ const BidList = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error);
-      dispatch(clearErrors());
+       toast.error(error);
+       dispatch(clearErrors());
     }
     if (deleteError) {
-      toast.error(deleteError);
-      dispatch(clearErrors());
+       toast.error(deleteError);
+       dispatch(clearErrors());
     }
     if (isDeleted) {
-      toast.success("Bid Deleted Successfully");
-      setCurrentPage(1);
-      dispatch({ type: DELETE_BID_RESET });
+       toast.success("Bid Deleted Successfully");
+       setCurrentPage(1);
+       dispatch({ type: DELETE_BID_RESET });
     }
     dispatch(getAllBids());
   }, [dispatch, error, deleteError, isDeleted]);
 
-  const sortedBids = bids
-    ? [...bids].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  const filteredBids = bids
+    ? bids.filter((bid) => {
+        const bidStatus = bid.response?.toLowerCase() || "pending";
+        if (statusFilter === "All") return true;
+        return bidStatus === statusFilter.toLowerCase();
+      })
     : [];
+
+  const sortedBids = [...filteredBids].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   const indexOfLastBid = currentPage * bidsPerPage;
   const indexOfFirstBid = indexOfLastBid - bidsPerPage;
@@ -100,12 +107,37 @@ const BidList = () => {
 
         <div className="admin-content">
           <div className="bids-container">
-            <h1 className="bids-title">All Bids</h1>
-            <p className="bids-total">Total: {sortedBids.length} bids</p>
+            <div className="bids-header-row">
+              <div>
+                <h1 className="bids-title">All Bids</h1>
+                <p className="bids-total">Total: {sortedBids.length} bids</p>
+              </div>
+
+              {/* Status Filter Tabs */}
+              <div className="status-filter-container">
+                {["All", "Pending", "Approved", "Rejected"].map((status) => (
+                  <button
+                    key={status}
+                    className={`filter-tab ${statusFilter === status ? "active" : ""} ${status.toLowerCase()}`}
+                    onClick={() => {
+                      setStatusFilter(status);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    {status}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {sortedBids.length === 0 ? (
               <div className="bids-empty">
-                <p>No bids found.</p>
+                <p>{statusFilter !== "All" ? `No ${statusFilter.toLowerCase()} bids found.` : "No bids found."}</p>
+                {statusFilter !== "All" && (
+                  <button className="reset-filter-btn" onClick={() => setStatusFilter("All")}>
+                    Clear Filter
+                  </button>
+                )}
               </div>
             ) : (
               <div className="bids-card">

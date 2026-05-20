@@ -31,6 +31,7 @@ import BidList from "./component/Admin/BidList";
 import ProcessResponse from "./component/Admin/ProcessResponse";
 import UsersList from "./component/Admin/UsersList";
 import Payment from "./component/Admin/Payment";
+import AdminChats from "./component/Admin/AdminChats";
 
 // Layout & Auth
 import RestrictedAccess from "./component/layout/Restricted/RestrictedAccess";
@@ -277,6 +278,14 @@ function App() {
               element={
                 <ProtectedRoute isAdmin={true}>
                   <UsersList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/chats"
+              element={
+                <ProtectedRoute isAdmin={true}>
+                  <AdminChats />
                 </ProtectedRoute>
               }
             />

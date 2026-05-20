@@ -51,7 +51,79 @@
   color: var(--text-muted);
   font-size: 0.95rem;
   font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.bids-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.status-filter-container {
+  display: flex;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 12px;
+  gap: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.filter-tab {
+  border: none;
+  background: transparent;
+  padding: 8px 18px;
+  border-radius: 9px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-tab:hover {
+  color: #1e293b;
+}
+
+.filter-tab.active {
+  background: white;
+  color: #1e293b;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.filter-tab.active.pending {
+  color: #b45309;
+}
+
+.filter-tab.active.approved {
+  color: #059669;
+}
+
+.filter-tab.active.rejected {
+  color: #dc2626;
+}
+
+.reset-filter-btn {
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-top: 15px;
+}
+
+.reset-filter-btn:hover {
+  background: #0284c7;
+  transform: translateY(-1px);
 }
 
 /* Card Wrapper */
@@ -423,6 +495,21 @@
     padding: 20px 15px;
   }
   .bids-title { font-size: 1.75rem; }
+  .bids-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 1.5rem;
+  }
+  .status-filter-container {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .filter-tab {
+    flex: 1;
+    justify-content: center;
+    padding: 8px 10px;
+  }
 }
 
 /* Modern Delete Modal Styling */

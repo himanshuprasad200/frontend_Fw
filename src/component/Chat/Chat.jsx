@@ -25,6 +25,24 @@ const Chat = () => {
   const textareaRef = useRef();
   const fileInputRef = useRef();
 
+  const getMessageDateLabel = (dateStr) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const now = new Date();
+
+    if (date.toDateString() === now.toDateString()) {
+      return "Today";
+    }
+
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    if (date.toDateString() === yesterday.toDateString()) {
+      return "Yesterday";
+    }
+
+    return date.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
@@ -190,37 +208,51 @@ const Chat = () => {
               </div>
             )}
 
-            {messages.map((m, index) => (
-              <div
-                key={index}
-                className={String(m.sender) === String(user._id) ? "message ownMessage" : "message receivedMessage"}
-              >
-                {m.media && m.media.length > 0 && (
-                  <div className={`messageMediaContainer ${m.media.length > 1 ? "multiMedia" : ""}`}>
-                    {m.media.map((item, i) => (
-                      <div key={i} className="messageMedia">
-                        {item.type === "image" ? (
-                          <img src={item.url} alt="Shared" className="sharedImage" onClick={() => window.open(item.url, '_blank')} />
-                        ) : item.type === "video" ? (
-                          <video src={item.url} controls className="sharedVideo" />
-                        ) : (
-                          <a href={item.url} target="_blank" rel="noopener noreferrer" className="documentLink">
-                            <FaFileAlt /> <span>Document</span>
-                          </a>
-                        )}
+            {messages.map((m, index) => {
+              const currentDate = m.createdAt ? new Date(m.createdAt).toDateString() : "";
+              const previousDate = index > 0 && messages[index - 1].createdAt
+                ? new Date(messages[index - 1].createdAt).toDateString()
+                : null;
+              const showDivider = currentDate && currentDate !== previousDate;
+
+              return (
+                <React.Fragment key={index}>
+                  {showDivider && (
+                    <div className="chatDateDivider">
+                      <span>{getMessageDateLabel(m.createdAt)}</span>
+                    </div>
+                  )}
+                  <div
+                    className={String(m.sender) === String(user._id) ? "message ownMessage" : "message receivedMessage"}
+                  >
+                    {m.media && m.media.length > 0 && (
+                      <div className={`messageMediaContainer ${m.media.length > 1 ? "multiMedia" : ""}`}>
+                        {m.media.map((item, i) => (
+                          <div key={i} className="messageMedia">
+                            {item.type === "image" ? (
+                              <img src={item.url} alt="Shared" className="sharedImage" onClick={() => window.open(item.url, '_blank')} />
+                            ) : item.type === "video" ? (
+                              <video src={item.url} controls className="sharedVideo" />
+                            ) : (
+                              <a href={item.url} target="_blank" rel="noopener noreferrer" className="documentLink">
+                                <FaFileAlt /> <span>Document</span>
+                              </a>
+                            )}
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    )}
+                    {m.text && <div className="messageText">{m.text}</div>}
+                    <div className="messageMeta">
+                      <span className="messageTime">
+                        {new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                      {m.sender === user._id && <FaCheckDouble className="readCheck" />}
+                    </div>
                   </div>
-                )}
-                {m.text && <div className="messageText">{m.text}</div>}
-                <div className="messageMeta">
-                  <span className="messageTime">
-                    {new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                  {m.sender === user._id && <FaCheckDouble className="readCheck" />}
-                </div>
-              </div>
-            ))}
+                </React.Fragment>
+              );
+            })}
             <div ref={scrollRef}></div>
           </div>
         </div>

@@ -90,6 +90,17 @@ const Sidebar = () => {
             <span className="menu-text">Users</span>
           </Link>
 
+          {/* Chats */}
+          <Link
+            to="/admin/chats"
+            className={`menu-item ${isActive("/admin/chats") ? "active" : ""}`}
+          >
+            <div className="icon-box">
+              <i className="fas fa-comments"></i>
+            </div>
+            <span className="menu-text">Chats</span>
+          </Link>
+
           {/* Reviews */}
           <Link
             to="/admin/reviews"

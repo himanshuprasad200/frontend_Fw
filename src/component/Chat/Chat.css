@@ -161,6 +161,11 @@
   border-top-color: #ffffff;
 }
 
+.messageText {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .messageMeta {
   display: flex;
   align-items: center;

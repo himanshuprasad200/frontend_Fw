@@ -336,7 +336,86 @@
   border-color: #1a1a2e;
 }
 
-/* Responsive Table */
+.bids-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Filter Dropdown Container & Select Styling */
+.filter-dropdown-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+}
+
+.premium-filter-select {
+  background-color: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 50px;
+  color: #1a1a2e;
+  padding: 10px 40px 10px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231a1a2e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.premium-filter-select:hover {
+  border-color: #1a1a2e;
+  box-shadow: 0 4px 12px rgba(26, 26, 46, 0.1);
+  transform: translateY(-1px);
+}
+
+.premium-filter-select:focus {
+  border-color: #7ec8c0;
+  box-shadow: 0 0 0 3px rgba(126, 200, 192, 0.2);
+}
+
+/* Empty filter results styling */
+.no-filtered-results {
+  text-align: center;
+  padding: 60px 0 !important;
+}
+
+.no-results-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #64748b;
+}
+
+.no-results-inner span {
+  font-size: 2.5rem;
+}
+
+.no-results-inner p {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
 @media (max-width: 900px) {
   .p-cell-date, .p-cell-price span { display: none; }
 }
@@ -345,4 +424,16 @@
   .my-bids-page { padding: 120px 20px 80px; }
   .bids-header-new { flex-direction: column; align-items: flex-start; gap: 20px; }
   .p-cell-box img { display: none; }
+  .bids-header-actions {
+    width: 100%;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 15px;
+  }
+  .filter-dropdown-container {
+    justify-content: space-between;
+  }
+  .premium-filter-select {
+    width: 60%;
+  }
 }

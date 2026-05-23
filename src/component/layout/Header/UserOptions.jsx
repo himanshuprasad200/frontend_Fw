@@ -7,6 +7,7 @@ import {
   MdPerson,
   MdExitToApp,
   MdListAlt,
+  MdBookmarkBorder,
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -29,6 +30,11 @@ const UserOptions = ({ user }) => {
       func: () => navigate("/user/earning"),
     },
     { icon: <MdListAlt />, name: "My Bids", func: () => navigate("/bids") },
+    {
+      icon: <MdBookmarkBorder />,
+      name: "Saved Projects",
+      func: () => navigate("/projects/saved"),
+    },
     {
       icon: <MdExitToApp />,
       name: "Logout",

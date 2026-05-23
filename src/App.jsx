@@ -9,6 +9,7 @@ import LoginSignUp from "./component/User/LoginSignUp";
 import Profile from "./component/User/Profile";
 import ProjectDetails from "./component/Project/ProjectDetails";
 import Projects from "./component/Project/Projects";
+import SavedProjects from "./component/Project/SavedProjects";
 import BidDetails from "./component/Bid/BidDetails";
 import Proposal from "./component/Project/Proposal";
 import Footer from "./component/layout/Footer/Footer";
@@ -227,6 +228,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <MyBids />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/projects/saved"
+              element={
+                <ProtectedRoute>
+                  <SavedProjects />
                 </ProtectedRoute>
               }
             />

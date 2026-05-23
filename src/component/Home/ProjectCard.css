@@ -155,3 +155,43 @@
   background: #7ec8c0;
   color: #1a1a2e;
 }
+
+/* 4. Bookmark Button styling */
+.pc-bookmark-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(5px);
+  color: #1a1a2e;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 12;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.pc-bookmark-btn:hover {
+  transform: scale(1.1);
+  background: #ffffff;
+  color: #7ec8c0;
+}
+
+.pc-bookmark-btn svg {
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+}
+
+.pc-bookmark-btn.bookmarked {
+  color: #e11d48; /* Premium vibrant crimson */
+}
+
+.pc-bookmark-btn.bookmarked:hover {
+  color: #be123c;
+}

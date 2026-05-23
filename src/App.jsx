@@ -53,7 +53,7 @@ axios.defaults.withCredentials = true;
 
 // removed toast import from hot-toast
 import io from "socket.io-client";
-import { FaComments } from "react-icons/fa";
+import { FaComments, FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 // ──────────────────────────────────────────────────────────────
@@ -136,6 +136,48 @@ function App() {
             background: "#2a2f32",
             color: "#fff",
             borderLeft: "5px solid #00a884"
+          }
+        });
+      });
+
+      socket.on("new_system_notification", (data) => {
+        // Dispatch to update header system notifications list
+        window.dispatchEvent(new CustomEvent("new_system_notification", { detail: data }));
+
+        toast((t) => (
+          <div
+            onClick={() => {
+              if (data.type === "payment_received") {
+                navigate("/user/earning");
+              } else if (data.type === "bid_applied") {
+                navigate(user?.role === "admin" || user?.role === "superadmin" ? "/admin/bids" : "/bids");
+              } else {
+                navigate("/bids");
+              }
+              toast.dismiss(t.id);
+            }}
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "5px"
+            }}
+          >
+            <div style={{ backgroundColor: "#7ec8c0", borderRadius: "50%", padding: "8px", color: "#1a1a2e", display: "flex" }}>
+              <FaBell />
+            </div>
+            <div>
+              <strong style={{ display: "block", color: "#7ec8c0" }}>System Update</strong>
+              <span style={{ fontSize: "12px", color: "#ccc" }}>{data.message}</span>
+            </div>
+          </div>
+        ), {
+          duration: 6000,
+          style: {
+            background: "#1a1a2e",
+            color: "#fff",
+            borderLeft: "5px solid #7ec8c0"
           }
         });
       });

@@ -712,3 +712,137 @@
   padding: 0 6px;
   margin-left: 10px;
 }
+
+/* Tabbed Notification Headers */
+.notif-tabs {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.notif-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #888;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 12px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.notif-tab:hover {
+  color: #fff;
+}
+
+.notif-tab.active {
+  color: #7ec8c0;
+}
+
+.notif-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #7ec8c0;
+}
+
+.notif-tab-badge {
+  background-color: #e11d48;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: bold;
+  height: 16px;
+  min-width: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* System Notifications Layout */
+.notification-item.system-notif {
+  align-items: flex-start;
+  gap: 12px;
+  border-left: 3px solid transparent;
+}
+
+.notification-item.system-notif.unread {
+  background-color: rgba(126, 200, 192, 0.05);
+  border-left-color: #7ec8c0;
+}
+
+.notification-item.system-notif.unread:hover {
+  background-color: rgba(126, 200, 192, 0.08);
+}
+
+.notif-type-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.notif-type-icon.bid_applied {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.notif-type-icon.bid_approved {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.notif-type-icon.bid_rejected {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.notif-type-icon.payment_received {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.notif-time {
+  font-size: 0.7rem;
+  color: #64748b;
+  margin-top: 4px;
+  display: block;
+}
+
+.sp-mark-read-btn {
+  background: none;
+  border: none;
+  color: #7ec8c0;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 0;
+}
+
+.sp-mark-read-btn:hover {
+  color: #5bb3aa;
+}
+
+.notification-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}

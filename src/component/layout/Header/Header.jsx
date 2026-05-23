@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaSearch, FaBars, FaTimes, FaBell, FaChevronDown, FaArrowRight } from "react-icons/fa";
+import { FiBookmark, FiCheckCircle, FiXCircle, FiDollarSign } from "react-icons/fi";
 import "./Header.css";
 import Logo from "../Logo/Logo";
 import { useSelector, useDispatch } from "react-redux";
@@ -21,6 +22,8 @@ const Navbar = () => {
 
   const [isMobile, setIsMobile] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [systemNotifications, setSystemNotifications] = useState([]);
+  const [activeTab, setActiveTab] = useState("chats"); // "chats" or "alerts"
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   
@@ -46,7 +49,7 @@ const Navbar = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Fetch unread notifications
+  // Fetch unread chat notifications
   const fetchNotifications = async () => {
     if (!isAuthenticated) return;
     try {
@@ -57,12 +60,37 @@ const Navbar = () => {
     }
   };
 
+  // Fetch system notifications
+  const fetchSystemNotifications = async () => {
+    if (!isAuthenticated) return;
+    try {
+      const { data } = await axios.get("/api/v1/system/notifications");
+      setSystemNotifications(data.notifications || []);
+    } catch (error) {
+      console.log("Failed to fetch system notifications");
+    }
+  };
+
   useEffect(() => {
     fetchNotifications();
+    fetchSystemNotifications();
+  }, [isAuthenticated, location.pathname]);
+
+  // Listen to live system notifications
+  useEffect(() => {
+    const handleNewSystemNotification = (e) => {
+      setSystemNotifications((prev) => [e.detail, ...prev]);
+    };
+    window.addEventListener("new_system_notification", handleNewSystemNotification);
+
     const handleNewNotification = () => fetchNotifications();
     window.addEventListener("new_notification", handleNewNotification);
-    return () => window.removeEventListener("new_notification", handleNewNotification);
-  }, [isAuthenticated, location.pathname]);
+
+    return () => {
+      window.removeEventListener("new_system_notification", handleNewSystemNotification);
+      window.removeEventListener("new_notification", handleNewNotification);
+    };
+  }, []);
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -86,7 +114,46 @@ const Navbar = () => {
     }
   };
 
+  const handleSystemNotificationClick = async (notif) => {
+    try {
+      // Mark as read inside local state
+      setSystemNotifications(prev => 
+        prev.map(n => n._id === notif._id ? { ...n, isRead: true } : n)
+      );
+      setShowDropdown(false);
+
+      // Route based on type
+      if (notif.type === "payment_received") {
+        navigate("/user/earning");
+      } else if (notif.type === "bid_applied") {
+        navigate(user?.role === "admin" || user?.role === "superadmin" ? "/admin/bids" : "/bids");
+      } else {
+        navigate("/bids");
+      }
+    } catch (error) {
+      console.log("Error processing system notification click");
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      await axios.put("/api/v1/system/notifications/read");
+      setSystemNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    } catch (error) {
+      console.log("Failed to mark system notifications as read");
+    }
+  };
+
   const totalUnread = notifications.reduce((acc, curr) => acc + curr.count, 0);
+  const unreadAlerts = systemNotifications.filter(n => !n.isRead).length;
+  const totalUnreadBadge = totalUnread + unreadAlerts;
+
+  // Automatically mark system notifications as read when the alerts tab is opened/viewed
+  useEffect(() => {
+    if (showDropdown && activeTab === "alerts" && unreadAlerts > 0) {
+      handleMarkAllRead();
+    }
+  }, [showDropdown, activeTab, unreadAlerts]);
 
   return (
     <>
@@ -168,41 +235,105 @@ const Navbar = () => {
                 onClick={() => setShowDropdown(!showDropdown)}
               >
                 <FaBell />
-                {totalUnread > 0 && <span className="notification-badge">{totalUnread}</span>}
+                {totalUnreadBadge > 0 && <span className="notification-badge">{totalUnreadBadge}</span>}
               </div>
 
               {/* Notification Dropdown */}
               {showDropdown && (
                 <div className="notification-dropdown">
-                  <div className="notification-header">
-                    <h4>Notifications</h4>
+                  {/* Tabs Selector */}
+                  <div className="notif-tabs">
+                    <button 
+                      className={`notif-tab ${activeTab === "chats" ? "active" : ""}`}
+                      onClick={() => setActiveTab("chats")}
+                    >
+                      Chats {totalUnread > 0 && <span className="notif-tab-badge">{totalUnread}</span>}
+                    </button>
+                    <button 
+                      className={`notif-tab ${activeTab === "alerts" ? "active" : ""}`}
+                      onClick={() => setActiveTab("alerts")}
+                    >
+                      Alerts {unreadAlerts > 0 && <span className="notif-tab-badge">{unreadAlerts}</span>}
+                    </button>
                   </div>
-                  <div className="notification-list">
-                    {notifications.length === 0 ? (
-                      <div className="no-notifications">No new messages</div>
-                    ) : (
-                      notifications.map((notif) => (
-                        <div 
-                          key={notif.senderId} 
-                          className="notification-item"
-                          onClick={() => handleNotificationClick(notif.senderId)}
-                        >
-                          <img 
-                            src={notif.senderAvatar || "/default-avatar.png"} 
-                            alt="avatar" 
-                            className="notif-avatar" 
-                          />
-                          <div className="notif-content">
-                            <p className="notif-name">{notif.senderName}</p>
-                            <p className="notif-text">{notif.text.slice(0, 30)}...</p>
+
+                  {activeTab === "chats" ? (
+                    <div className="notification-list">
+                      {notifications.length === 0 ? (
+                        <div className="no-notifications">No new messages</div>
+                      ) : (
+                        notifications.map((notif) => (
+                          <div 
+                            key={notif.senderId} 
+                            className="notification-item"
+                            onClick={() => handleNotificationClick(notif.senderId)}
+                          >
+                            <img 
+                              src={notif.senderAvatar || "/default-avatar.png"} 
+                              alt="avatar" 
+                              className="notif-avatar" 
+                            />
+                            <div className="notif-content">
+                              <p className="notif-name">{notif.senderName}</p>
+                              <p className="notif-text">{notif.text.slice(0, 30)}...</p>
+                            </div>
+                            <div className="notif-count">
+                              {notif.count}
+                            </div>
                           </div>
-                          <div className="notif-count">
-                            {notif.count}
-                          </div>
+                        ))
+                      )}
+                    </div>
+                  ) : (
+                    <div className="notification-list">
+                      <div className="notification-header" style={{ padding: "10px 15px" }}>
+                        <div className="notification-header-content">
+                          <h4 style={{ fontSize: "0.85rem", textTransform: "uppercase" }}>System Alerts</h4>
+                          {unreadAlerts > 0 && (
+                            <button className="sp-mark-read-btn" onClick={handleMarkAllRead}>
+                              Mark all as read
+                            </button>
+                          )}
                         </div>
-                      ))
-                    )}
-                  </div>
+                      </div>
+                      {systemNotifications.length === 0 ? (
+                        <div className="no-notifications">No new system alerts</div>
+                      ) : (
+                        systemNotifications.map((notif) => {
+                          let typeIcon = <FaBell />;
+                          if (notif.type === "bid_applied") typeIcon = <FiBookmark />;
+                          else if (notif.type === "bid_approved") typeIcon = <FiCheckCircle />;
+                          else if (notif.type === "bid_rejected") typeIcon = <FiXCircle />;
+                          else if (notif.type === "payment_received") typeIcon = <FiDollarSign />;
+
+                          return (
+                            <div 
+                              key={notif._id} 
+                              className={`notification-item system-notif ${!notif.isRead ? "unread" : ""}`}
+                              onClick={() => handleSystemNotificationClick(notif)}
+                            >
+                              <div className={`notif-type-icon ${notif.type}`}>
+                                {typeIcon}
+                              </div>
+                              <div className="notif-content">
+                                <p style={{ fontSize: "0.85rem", color: "#fff", margin: "0 0 3px", fontWeight: !notif.isRead ? "bold" : "normal" }}>
+                                  {notif.message}
+                                </p>
+                                <span className="notif-time">
+                                  {new Date(notif.createdAt).toLocaleDateString("en-IN", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    hour: "2-digit",
+                                    minute: "2-digit"
+                                  })}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

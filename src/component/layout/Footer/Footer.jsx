@@ -59,10 +59,10 @@ const Footer = () => {
         <div className="footerSection">
           <h3 className="footerTitle">Support</h3>
           <ul className="footerLinks">
-            <li><Link to="/help-center">Find a Mentor</Link></li>
+            <li><Link to="/find-a-mentor">Find a Mentor</Link></li>
             <li><Link to="/faq">Community</Link></li>
-            <li><Link to="/safety">Help Center</Link></li>
-            <li><Link to="/report">Safety Tips</Link></li>
+            <li><Link to="/help-center">Help Center</Link></li>
+            <li><Link to="/safety">Safety Tips</Link></li>
             <li><Link to="/accessibility">Settings & Policy</Link></li>
           </ul>
         </div>

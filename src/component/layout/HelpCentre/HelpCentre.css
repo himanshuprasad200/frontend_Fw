@@ -1,28 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
 .help-center-page {
   min-height: 100vh;
-  background: #f8fafc;
+  background: #f7f7f5; /* Warm off-white from project theme */
   font-family: 'Inter', sans-serif;
+  color: #111;
 }
 
+/* Hero Section matching landing page banner */
 .help-hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #a3b8b6; /* Dusty modern teal matching project hero */
   color: white;
   text-align: center;
-  padding: 2rem 20px 80px;
+  padding: 4rem 20px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.help-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 .hero-content h1 {
-  font-size: 48px;
-  margin: 0 0 16px;
-  font-weight: 800;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  margin: 0 0 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(26, 26, 46, 0.15);
 }
 
 .hero-content p {
-  font-size: 20px;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
   opacity: 0.9;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
+  font-weight: 400;
 }
 
+/* Premium Search Bar */
 .search-bar {
   max-width: 600px;
   margin: 0 auto;
@@ -31,11 +55,25 @@
 
 .search-bar input {
   width: 100%;
-  padding: 18px 60px 18px 50px;
-  border: none;
-  border-radius: 50px;
-  font-size: 18px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  padding: 16px 24px 16px 54px;
+  border: 1px solid rgba(126, 200, 192, 0.4);
+  border-radius: 30px;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 8px 30px rgba(26, 26, 46, 0.08);
+  background: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #111;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: #7ec8c0; /* Signature Teal */
+  box-shadow: 0 8px 30px rgba(126, 200, 192, 0.25);
+}
+
+.search-bar input::placeholder {
+  color: #a0aec0;
 }
 
 .search-icon {
@@ -43,16 +81,23 @@
   left: 20px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 20px;
-  color: #667eea;
+  font-size: 18px;
+  color: #7ec8c0; /* Signature Teal */
+  transition: color 0.3s ease;
 }
 
+.search-bar input:focus + .search-icon {
+  color: #1a1a2e; /* Navy focus */
+}
+
+/* Content Container */
 .help-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 60px 20px;
 }
 
+/* Premium Themed Category Cards */
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -62,156 +107,254 @@
 
 .category-cardd {
   background: white;
-  padding: 32px;
-  border-radius: 16px;
+  padding: 32px 24px;
+  border-radius: 18px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  transition: all 0.3s;
+  border: 1px solid rgba(26, 26, 46, 0.05);
+  box-shadow: 0 6px 20px rgba(26, 26, 46, 0.02);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .category-cardd:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+  transform: translateY(-8px);
+  border-color: rgba(126, 200, 192, 0.5);
+  box-shadow: 0 16px 36px rgba(126, 200, 192, 0.15);
 }
 
-.category-cardd i {
-  font-size: 48px;
-  color: #667eea;
-  margin-bottom: 20px;
+.category-icon {
+  font-size: 42px;
+  color: #7ec8c0; /* Signature Teal */
+  margin-bottom: 18px;
+  transition: transform 0.3s ease;
+}
+
+.category-cardd:hover .category-icon {
+  transform: scale(1.1);
 }
 
 .category-cardd h3 {
+  font-family: 'Barlow Condensed', sans-serif;
   font-size: 22px;
-  margin: 0 0 12px;
-  color: #1e293b;
+  font-weight: 800;
+  margin: 0 0 10px;
+  color: #1a1a2e; /* Navy */
+  text-transform: uppercase;
+  letter-spacing: -0.3px;
 }
 
 .category-cardd p {
-  color: #64748b;
-  margin-bottom: 20px;
+  color: #666;
+  font-size: 14.5px;
+  line-height: 1.5;
+  margin-bottom: 18px;
 }
 
 .category-cardd a {
-  color: #667eea;
+  color: #7ec8c0; /* Teal link */
   font-weight: 600;
   text-decoration: none;
+  font-size: 14.5px;
+  transition: color 0.2s ease;
 }
 
+.category-cardd a:hover {
+  color: #1a1a2e; /* Navy hover */
+}
+
+/* FAQ Sections Styling */
 .faq-sections h2 {
+  font-family: 'Barlow Condensed', sans-serif;
   text-align: center;
-  font-size: 36px;
-  margin-bottom: 60px;
-  color: #1e293b;
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  margin-bottom: 50px;
+  color: #1a1a2e; /* Navy */
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: -0.5px;
 }
 
 .faq-category {
-  margin-bottom: 60px;
+  margin-bottom: 48px;
 }
 
 .faq-category h3 {
-  font-size: 28px;
-  color: #667eea;
-  margin-bottom: 30px;
-  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  color: #1a1a2e; /* Navy */
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  border-bottom: 2px solid rgba(126, 200, 192, 0.2);
+  padding-bottom: 8px;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .faq-item {
   background: white;
   border-radius: 12px;
-  margin-bottom: 12px;
+  border: 1px solid rgba(26, 26, 46, 0.05);
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(26, 26, 46, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-item:hover {
+  border-color: rgba(126, 200, 192, 0.3);
+  box-shadow: 0 8px 20px rgba(126, 200, 192, 0.05);
 }
 
 .faq-question {
-  padding: 20px;
+  padding: 18px 24px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: 600;
-  color: #1e293b;
+  color: #1a1a2e; /* Navy */
+  font-size: 16px;
+  transition: all 0.2s ease;
 }
 
 .faq-question:hover {
-  background: #f8f9ff;
+  background: #f0fbfa; /* Light Teal background on hover */
 }
 
 .arrow {
-  transition: transform 0.3s;
+  color: #7ec8c0;
+  font-size: 14px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-item.active {
+  border-left: 4px solid #7ec8c0; /* Teal Accent left border */
+  border-color: rgba(126, 200, 192, 0.3);
+  box-shadow: 0 8px 24px rgba(126, 200, 192, 0.08);
 }
 
 .faq-item.active .arrow {
   transform: rotate(90deg);
+  color: #1a1a2e;
 }
 
 .faq-answer {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.4s ease;
-  background: #f8f9ff;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #f0fbfa; /* Match active header hover */
 }
 
 .faq-item.active .faq-answer {
-  max-height: 200px;
-  padding: 20px;
+  max-height: 300px;
 }
 
 .faq-answer p {
   margin: 0;
-  color: #475569;
-  line-height: 1.7;
+  padding: 20px 24px;
+  color: #444;
+  line-height: 1.65;
+  font-size: 15px;
+  border-top: 1px solid rgba(126, 200, 192, 0.1);
 }
 
+/* Fallback Styling */
+.no-faqs-found {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid rgba(26, 26, 46, 0.05);
+  box-shadow: 0 4px 15px rgba(26, 26, 46, 0.02);
+  color: #666;
+  font-size: 16px;
+}
+
+.no-faqs-found p {
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Contact Support Section in Navy & Teal */
 .contact-support {
   text-align: center;
-  padding: 80px 40px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  padding: 60px 40px;
+  background: #1a1a2e; /* Original Navy Theme */
   border-radius: 24px;
   color: white;
-  margin: 80px 0;
+  margin: 80px 0 20px;
+  box-shadow: 0 12px 40px rgba(26, 26, 46, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.contact-support i {
-  font-size: 64px;
+.contact-support::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 15% 85%, rgba(126, 200, 192, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.support-icon {
+  font-size: 54px;
   margin-bottom: 20px;
+  color: #7ec8c0; /* Signature Teal */
 }
 
 .contact-support h3 {
+  font-family: 'Barlow Condensed', sans-serif;
   font-size: 32px;
-  margin: 0 0 16px;
+  font-weight: 900;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: -0.3px;
 }
 
 .contact-support p {
-  font-size: 18px;
-  opacity: 0.9;
+  font-size: 16.5px;
+  opacity: 0.85;
   margin-bottom: 30px;
+  max-width: 600px;
+  line-height: 1.5;
 }
 
 .contact-btn {
-  background: white;
-  color: #667eea;
-  padding: 16px 40px;
+  background: #7ec8c0; /* Mint Teal */
+  color: #1a1a2e; /* Navy text */
+  padding: 14px 36px;
   border-radius: 50px;
   font-weight: 700;
   text-decoration: none;
   display: inline-block;
-  transition: all 0.3s;
+  font-size: 16px;
+  box-shadow: 0 4px 15px rgba(126, 200, 192, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .contact-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  background: white;
+  color: #1a1a2e;
+  box-shadow: 0 10px 24px rgba(126, 200, 192, 0.35);
 }
 
-/* New category icons */
-.category-cardd .fa-exclamation-triangle { color: #f59e0b; }
-.category-cardd .fa-tools { color: #ec4899; }
+/* Category Specific Colors */
+.category-icon.disputes { color: #f7bc0b; } /* Warn Gold from main theme */
+.category-icon.troubleshooting { color: #7ec8c0; }
 
-/* Responsive */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .hero-content h1 { font-size: 36px; }
+  .help-hero { padding: 3rem 20px 60px; }
   .categories-grid { grid-template-columns: 1fr; }
-  .faq-sections h2 { font-size: 30px; }
+  .contact-support { padding: 40px 20px; }
 }

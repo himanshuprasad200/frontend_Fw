@@ -1,38 +1,68 @@
 // src/component/layout/RestrictedAccess.jsx
 import React from "react";
-import { Link } from "react-router-dom";
-import "./RestrictedAccess.css"; // We'll create this
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "../../../utils/CustomToast";
+import Logo from "../Logo/Logo";
+import "./RestrictedAccess.css";
 
 const RestrictedAccess = () => {
+  const navigate = useNavigate();
+
+  const handleContactSupport = async () => {
+    try {
+      const { data } = await axios.get("/api/v1/support/id");
+      if (data.supportId) {
+        navigate(`/chat/${data.supportId}`);
+      }
+    } catch (error) {
+      toast.error("Could not reach support. Please try again later.");
+    }
+  };
+
   return (
     <div className="restricted-container">
+      <div className="restricted-glow-orb-1"></div>
+      <div className="restricted-glow-orb-2"></div>
+      
       <div className="restricted-card">
-        <div className="lock-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
+        <div className="restricted-logo-wrapper">
+          <Logo size="normal" />
         </div>
 
-        <h1>Restricted Access</h1>
-        <p>
-          This section is available only to <strong>administrators</strong>.
+        <div className="lock-icon-container">
+          <div className="lock-pulse-ring ring-1"></div>
+          <div className="lock-pulse-ring ring-2"></div>
+          <div className="lock-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+        </div>
+
+        <h1 className="restricted-title">Access Denied</h1>
+        
+        <p className="restricted-message">
+          This area is restricted to authorized platform administrators only.
         </p>
-        <p className="subtext">
-          If you believe you should have access, please contact the platform administrator.
+        <p className="restricted-subtext">
+          If you believe you should have access, please get in touch with our support desk or return to the safety of the homepage.
         </p>
 
-        <div className="action-buttons">
-          <Link to="/" className="btn-primary">
+        <div className="restricted-action-buttons">
+          <Link to="/" className="btn-restricted-primary">
             Go to Homepage
           </Link>
-          <Link to="/contact" className="btn-secondary">
+          <button onClick={handleContactSupport} className="btn-restricted-secondary">
             Contact Support
-          </Link>
+          </button>
         </div>
 
-        <div className="footer-note">
-          <small>Only users with the role <code>admin</code> can access this page.</small>
+        <div className="restricted-footer-note">
+          <small>
+            Security Level: <code>Restricted_Admin</code>
+          </small>
         </div>
       </div>
     </div>

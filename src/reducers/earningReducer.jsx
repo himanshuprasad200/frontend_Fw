@@ -7,7 +7,7 @@ import {
   CREATE_EARNING_RESET,
   CREATE_EARNING_SUCCESS,
   USER_EARNINGS_FAIL,
-  // USER_EARNINGS_REQUEST,
+  USER_EARNINGS_REQUEST,
   USER_EARNINGS_SUCCESS,
 } from "../constants/earningConstant";
 
@@ -71,12 +71,12 @@ export const allEarningReducer = (state = initialState, action) => {
 
 export const userEarningsReducer = (state = { earnings: []}, action) => {
   switch (action.type) {
-    // case USER_EARNINGS_REQUEST:
-    //   return {
-    //     ...state,
-    //     loading: true,
-    //     error: null, // Reset error on new request
-    //   };
+    case USER_EARNINGS_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null, 
+      };
     case USER_EARNINGS_SUCCESS:
       return {
         ...state,

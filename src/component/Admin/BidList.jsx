@@ -1,26 +1,36 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import MetaData from "../layout/MetaData";
 import Sidebar from "./Sidebar";
 import { deleteBid, getAllBids, clearErrors } from "../../actions/bidAction";
 import { DELETE_BID_RESET } from "../../constants/bidConstant";
 import "./BidList.css";
+import { 
+  FaEdit, FaTrash, FaEye, FaChevronLeft, FaChevronRight, FaTimes, 
+  FaCreditCard, FaComments, FaCheckCircle, FaTimesCircle, FaClock,
+  FaExclamationTriangle, FaSpinner
+} from "react-icons/fa";
 
 const BidList = () => {
   const dispatch = useDispatch();
 
-  const { error, bids } = useSelector((state) => state.allBids);
-  const { error: deleteError, isDeleted } = useSelector((state) => state.bid);
-
-  const [currentPage, setCurrentPage] = useState(1);
+   const { error, bids } = useSelector((state) => state.allBids);
+   const { loading: isDeleting, error: deleteError, isDeleted } = useSelector((state) => state.bid);
+ 
+   const [currentPage, setCurrentPage] = useState(1);
   const bidsPerPage = 8;
+  const [statusFilter, setStatusFilter] = useState("All");
 
   // Modal State
-  const [showModal, setShowModal] = useState(false);
-  const [selectedProposal, setSelectedProposal] = useState("");
-  const [selectedBidId, setSelectedBidId] = useState("");
+   const [showModal, setShowModal] = useState(false);
+   const [selectedProposal, setSelectedProposal] = useState("");
+   const [selectedBidId, setSelectedBidId] = useState("");
+ 
+   // Delete Modal State
+   const [showDeleteModal, setShowDeleteModal] = useState(false);
+   const [bidToDelete, setBidToDelete] = useState(null);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -31,10 +41,22 @@ const BidList = () => {
   };
 
   const deleteBidHandler = (id) => {
-    if (window.confirm("Are you sure you want to delete this bid?")) {
-      dispatch(deleteBid(id));
+    setBidToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (bidToDelete) {
+      dispatch(deleteBid(bidToDelete));
     }
   };
+
+  useEffect(() => {
+    if (isDeleted) {
+       setShowDeleteModal(false);
+       setBidToDelete(null);
+    }
+  }, [isDeleted]);
 
   const openProposalModal = (proposal, bidId) => {
     setSelectedProposal(proposal);
@@ -44,29 +66,35 @@ const BidList = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error);
-      dispatch(clearErrors());
+       toast.error(error);
+       dispatch(clearErrors());
     }
     if (deleteError) {
-      toast.error(deleteError);
-      dispatch(clearErrors());
+       toast.error(deleteError);
+       dispatch(clearErrors());
     }
     if (isDeleted) {
-      toast.success("Bid Deleted Successfully");
-      setCurrentPage(1);
-      dispatch({ type: DELETE_BID_RESET });
+       toast.success("Bid Deleted Successfully");
+       setCurrentPage(1);
+       dispatch({ type: DELETE_BID_RESET });
     }
     dispatch(getAllBids());
   }, [dispatch, error, deleteError, isDeleted]);
 
-  const sortedBids = bids
-    ? [...bids].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  const filteredBids = bids
+    ? bids.filter((bid) => {
+        const bidStatus = bid.response?.toLowerCase() || "pending";
+        if (statusFilter === "All") return true;
+        return bidStatus === statusFilter.toLowerCase();
+      })
     : [];
+
+  const sortedBids = [...filteredBids].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   const indexOfLastBid = currentPage * bidsPerPage;
   const indexOfFirstBid = indexOfLastBid - bidsPerPage;
   const currentBids = sortedBids.slice(indexOfFirstBid, indexOfLastBid);
-  const totalPages = Math.ceil(sortedBids.length / bidsPerPage);
+  const totalPages = Math.ceil(sortedBids.length / bidsPerPage) || 1;
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -79,82 +107,118 @@ const BidList = () => {
 
         <div className="admin-content">
           <div className="bids-container">
-            <h1 className="bids-title">All Bids</h1>
-            <p className="bids-total">Total: {sortedBids.length} bids</p>
+            <div className="bids-header-row">
+              <div>
+                <h1 className="bids-title">All Bids</h1>
+                <p className="bids-total">Total: {sortedBids.length} bids</p>
+              </div>
+
+              {/* Status Filter Tabs */}
+              <div className="status-filter-container">
+                {["All", "Pending", "Approved", "Rejected"].map((status) => (
+                  <button
+                    key={status}
+                    className={`filter-tab ${statusFilter === status ? "active" : ""} ${status.toLowerCase()}`}
+                    onClick={() => {
+                      setStatusFilter(status);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    {status}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {sortedBids.length === 0 ? (
               <div className="bids-empty">
-                <p>No bids found.</p>
+                <p>{statusFilter !== "All" ? `No ${statusFilter.toLowerCase()} bids found.` : "No bids found."}</p>
+                {statusFilter !== "All" && (
+                  <button className="reset-filter-btn" onClick={() => setStatusFilter("All")}>
+                    Clear Filter
+                  </button>
+                )}
               </div>
             ) : (
               <div className="bids-card">
-                <div className="bids-table">
-                  {/* Header */}
-                  <div className="bids-header">
-                    <div className="bids-header-cell">Bid ID</div>
-                    <div className="bids-header-cell">Proposal</div>
-                    <div className="bids-header-cell">Status</div>
-                    <div className="bids-header-cell">Date</div>
-                    <div className="bids-header-cell">Actions</div>
-                  </div>
+                <div className="bids-table-scroll">
+                  <table className="bids-table">
+                    <thead>
+                      <tr>
+                        <th>Bid ID</th>
+                        <th>Project</th>
+                        <th>Applicant</th>
+                        <th>Price</th>
+                        <th>Proposal</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentBids.map((bid) => (
+                        <tr key={bid._id}>
+                          <td className="bids-id">#{bid._id.slice(-8).toUpperCase()}</td>
+                          <td style={{maxWidth: '180px', fontWeight: '600'}}>
+                             {bid.bidsItems?.map(item => item.project?.title).join(', ') || "N/A"}
+                          </td>
+                          <td>
+                            <div className="applicant-info">
+                              <img
+                                src={bid.user?.avatar?.url || "/default-avatar.png"}
+                                alt={bid.user?.name}
+                                className="applicant-avatar"
+                              />
+                              <div className="applicant-details">
+                                <span className="applicant-name">{bid.user?.name || "Unknown"}</span>
+                                <span className="applicant-role">{bid.user?.role || "User"}</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td style={{fontWeight: '700', color: '#1e293b'}}>
+                             ₹{bid.bidsItems?.reduce((sum, item) => sum + (item.price || 0), 0).toLocaleString("en-IN")}
+                          </td>
+                          <td>
+                            <div className="proposal-content">
+                              <p className="proposal-preview">
+                                {bid.proposal}
+                              </p>
+                              {bid.proposal.length > 80 && (
+                                <button
+                                  className="view-full-btn"
+                                  onClick={() => openProposalModal(bid.proposal, bid._id)}
+                                >
+                                  View Full →
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                          <td>
+                            <span className={`bids-status-badge ${bid.response?.toLowerCase() || "pending"}`}>
+                              {bid.response === "Approved" ? <FaCheckCircle /> : bid.response === "Rejected" ? <FaTimesCircle /> : <FaClock />}
+                              {bid.response || "Pending"}
+                            </span>
+                          </td>
+                          <td className="bids-date">{formatDate(bid.createdAt)}</td>
+                          <td>
+                            <div className="bids-action-group">
+                              <Link to={`/admin/bid/${bid._id}`} className="bids-btn bids-edit" title="Process Response">
+                                <FaEdit />
+                              </Link>
 
-                  {/* Rows */}
-                  {currentBids.map((bid) => (
-                    <div key={bid._id} className="bids-row">
-                      <div className="bids-cell bids-id">
-                        <span className="bids-mobile-label">ID:</span>
-                        #{bid._id.slice(-8).toUpperCase()}
-                      </div>
+                              <Link to={`/bid/${bid._id}`} className="bids-btn bids-view" title="View Details">
+                                <FaEye />
+                              </Link>
 
-                      <div className="bids-cell bids-proposal">
-                        <span className="bids-mobile-label">Proposal:</span>
-                        <div className="proposal-content">
-                          <p className="proposal-preview">
-                            {bid.proposal.length > 140
-                              ? bid.proposal.substring(0, 140) + "..."
-                              : bid.proposal}
-                          </p>
-                          {bid.proposal.length > 140 && (
-                            <button
-                              className="view-full-btn"
-                              onClick={() => openProposalModal(bid.proposal, bid._id)}
-                            >
-                              View Full →
-                            </button>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="bids-cell bids-status">
-                        <span className="bids-mobile-label">Status:</span>
-                        <span className={`bids-status-badge ${bid.response?.toLowerCase() || "pending"}`}>
-                          {bid.response || "Pending"}
-                        </span>
-                      </div>
-
-                      <div className="bids-cell bids-date">
-                        <span className="bids-mobile-label">Date:</span>
-                        {formatDate(bid.createdAt)}
-                      </div>
-
-                      <div className="bids-cell bids-actions">
-                        <span className="bids-mobile-label">Actions:</span>
-                        <div className="bids-action-group">
-                          <Link to={`/admin/bid/${bid._id}`} className="bids-btn bids-edit" title="Process">
-                            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                          </Link>
-
-                          <button onClick={() => deleteBidHandler(bid._id)} className="bids-btn bids-delete" title="Delete">
-                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                          </button>
-
-                          <Link to={`/bid/${bid._id}`} className="bids-btn bids-view" title="View Details">
-                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                              <button onClick={() => deleteBidHandler(bid._id)} className="bids-btn bids-delete" title="Delete">
+                                <FaTrash />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
 
                 {/* Pagination */}
@@ -163,9 +227,9 @@ const BidList = () => {
                     <button
                       onClick={() => paginate(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="bids-page-btn bids-prev"
+                      className="bids-page-btn"
                     >
-                      ← Previous
+                      <FaChevronLeft />
                     </button>
 
                     <div className="bids-page-numbers">
@@ -183,9 +247,9 @@ const BidList = () => {
                     <button
                       onClick={() => paginate(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className="bids-page-btn bids-next"
+                      className="bids-page-btn"
                     >
-                      Next →
+                      <FaChevronRight />
                     </button>
                   </div>
                 )}
@@ -201,7 +265,9 @@ const BidList = () => {
           <div className="proposal-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Full Proposal</h3>
-              <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
+              <button className="modal-close" onClick={() => setShowModal(false)}>
+                <FaTimes />
+              </button>
             </div>
             <div className="modal-body">
               <p className="modal-bid-id">Bid ID: #{selectedBidId.slice(-8).toUpperCase()}</p>
@@ -210,6 +276,45 @@ const BidList = () => {
             <div className="modal-footer">
               <button className="modal-close-btn" onClick={() => setShowModal(false)}>
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modern Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="delete-modal-overlay">
+          <div className="delete-modal animate-pop-in">
+            <div className="delete-modal-icon">
+              <FaExclamationTriangle />
+            </div>
+            <h2>Confirm Deletion</h2>
+            <p>
+              Are you sure you want to delete this bid? <br />
+              <span>This action cannot be undone and will remove all associated data.</span>
+            </p>
+            
+            <div className="delete-modal-actions">
+              <button 
+                className="btn-cancel" 
+                onClick={() => setShowDeleteModal(false)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn-delete-confirm" 
+                onClick={confirmDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <span className="deleting-loader">
+                    <FaSpinner className="spin" /> Deleting...
+                  </span>
+                ) : (
+                  "Delete Permanently"
+                )}
               </button>
             </div>
           </div>

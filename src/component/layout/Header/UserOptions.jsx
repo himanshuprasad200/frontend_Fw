@@ -7,11 +7,12 @@ import {
   MdPerson,
   MdExitToApp,
   MdListAlt,
+  MdBookmarkBorder,
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../actions/userAction";
-import toast from "react-hot-toast";
+import toast from "../../../utils/CustomToast";
 
 const UserOptions = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +31,11 @@ const UserOptions = ({ user }) => {
     },
     { icon: <MdListAlt />, name: "My Bids", func: () => navigate("/bids") },
     {
+      icon: <MdBookmarkBorder />,
+      name: "Saved Projects",
+      func: () => navigate("/projects/saved"),
+    },
+    {
       icon: <MdExitToApp />,
       name: "Logout",
       func: () => {
@@ -40,7 +46,7 @@ const UserOptions = ({ user }) => {
     },
   ];
 
-  if (user.role === "admin") {
+  if (user.role === "admin" || user.role === "superadmin") {
     options.unshift({
       icon: <MdDashboard />,
       name: "Post a Project",
@@ -57,13 +63,23 @@ const UserOptions = ({ user }) => {
       // Mouse leaves the ENTIRE area → close
       onMouseLeave={() => setIsOpen(false)}
     >
-      {/* Avatar */}
+      {/* Avatar or Initials */}
       <div className="avatar-trigger">
-        <img
-          src={user.avatar?.url || "/Profile.png"}
-          alt={user.name}
-          className="avatar-img"
-        />
+        {user.avatar?.url && user.avatar.url !== "/Profile.png" ? (
+          <img
+            src={user.avatar.url}
+            alt={user.name}
+            className="avatar-img"
+          />
+        ) : (
+          <div className="avatar-initials">
+            {user.name ? (
+              user.name.split(" ").length > 1 
+                ? (user.name.split(" ")[0][0] + user.name.split(" ")[user.name.split(" ").length-1][0]).toUpperCase()
+                : user.name.slice(0, 2).toUpperCase()
+            ) : "U"}
+          </div>
+        )}
       </div>
 
       {/* Dropdown */}

@@ -1,5 +1,9 @@
-import React, { useState } from "react";
-import { FaSearch, FaQuestionCircle, FaUser, FaDollarSign, FaShieldAlt, FaHeadset, FaArrowRight, FaExclamationTriangle, FaTools } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { toast } from "../../../utils/CustomToast";
+import { FaSearch, FaQuestionCircle, FaUser, FaDollarSign, FaShieldAlt, FaHeadset, FaArrowRight, FaExclamationTriangle, FaTools, FaClock } from "react-icons/fa";
 import "./HelpCentre.css";
 
 const faqs = [
@@ -46,12 +50,83 @@ const faqs = [
 ];
 
 const HelpCenter = () => {
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(null);
+
+  // Support Modal States
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalSubject, setModalSubject] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setActiveIndex(null);
+  }, [searchQuery]);
 
   const toggleFAQ = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
+
+  const openSupportModal = (subject) => {
+    setModalSubject(subject);
+    setFormData({
+      name: user?.name || "",
+      email: user?.email || "",
+      message: "",
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleModalSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { data } = await axios.post("/api/v1/support/new", {
+        name: formData.name,
+        email: formData.email,
+        subject: modalSubject,
+        message: formData.message,
+        userId: user?._id,
+      });
+
+      if (data.success) {
+        toast.success(data.message);
+        setIsModalOpen(false);
+        setFormData({ name: "", email: "", message: "" });
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const filteredFaqs = faqs
+    .map((section) => {
+      const filteredQuestions = section.questions.filter(
+        (faq) =>
+          faq.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          faq.a.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      return {
+        ...section,
+        questions: filteredQuestions,
+      };
+    })
+    .filter((section) => section.questions.length > 0);
 
   return (
     <div className="help-center-page">
@@ -69,44 +144,56 @@ const HelpCenter = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
+
+          {isAuthenticated && (
+            <div className="track-queries-cta-hero">
+              <Link to="/support/me" className="track-link-hero">
+                <FaClock /> View & Track Your Submitted Queries
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
       <div className="help-content">
-        {/* Popular Categories - Added new ones */}
+        {/* Popular Categories */}
         <div className="categories-grid">
           <div className="category-cardd">
-            <FaQuestionCircle />
+            <FaQuestionCircle className="category-icon" />
             <h3>Getting Started</h3>
             <p>Account setup, posting jobs, finding work</p>
             <a href="#getting-started">Explore →</a>
           </div>
           <div className="category-cardd">
-            <FaDollarSign />
+            <FaDollarSign className="category-icon payments" />
             <h3>Payments</h3>
             <p>Earnings, withdrawals, fees & invoices</p>
-            <a href="#payments">Explore →</a>
+            <button onClick={() => openSupportModal("Payments & Earnings Support")} className="explore-btn">
+              Explore →
+            </button>
           </div>
           <div className="category-cardd">
-            <FaExclamationTriangle />
+            <FaExclamationTriangle className="category-icon disputes" />
             <h3>Disputes & Issues</h3>
             <p>Late responses, approvals, disputes</p>
-            <a href="#disputes-late-responses">Explore →</a>
+            <button onClick={() => openSupportModal("Disputes & Late Responses Support")} className="explore-btn">
+              Explore →
+            </button>
           </div>
           <div className="category-cardd">
-            <FaTools />
+            <FaTools className="category-icon troubleshooting" />
             <h3>Troubleshooting</h3>
             <p>Website down, errors, technical help</p>
             <a href="#troubleshooting-technical-issues">Explore →</a>
           </div>
           <div className="category-cardd">
-            <FaUser />
+            <FaUser className="category-icon" />
             <h3>Profile & Skills</h3>
             <p>Building your profile, verification</p>
             <a href="#account-security">Explore →</a>
           </div>
           <div className="category-cardd">
-            <FaShieldAlt />
+            <FaShieldAlt className="category-icon" />
             <h3>Safety & Security</h3>
             <p>Trust, disputes, best practices</p>
             <a href="#account-security">Explore →</a>
@@ -117,32 +204,38 @@ const HelpCenter = () => {
         <div className="faq-sections">
           <h2>Frequently Asked Questions</h2>
           
-          {faqs.map((section, secIdx) => (
-            <div key={secIdx} id={section.category.toLowerCase().replace(/ & | /g, "-")} className="faq-category">
-              <h3>{section.category}</h3>
-              <div className="faq-list">
-                {section.questions.map((faq, idx) => {
-                  const globalIdx = `${secIdx}-${idx}`;
-                  return (
-                    <div key={globalIdx} className={`faq-item ${activeIndex === globalIdx ? "active" : ""}`}>
-                      <div className="faq-question" onClick={() => toggleFAQ(globalIdx)}>
-                        <span>{faq.q}</span>
-                        <FaArrowRight className="arrow" />
+          {filteredFaqs.length > 0 ? (
+            filteredFaqs.map((section, secIdx) => (
+              <div key={secIdx} id={section.category.toLowerCase().replace(/ & | /g, "-")} className="faq-category">
+                <h3>{section.category}</h3>
+                <div className="faq-list">
+                  {section.questions.map((faq, idx) => {
+                    const globalIdx = `${secIdx}-${idx}`;
+                    return (
+                      <div key={globalIdx} className={`faq-item ${activeIndex === globalIdx ? "active" : ""}`}>
+                        <div className="faq-question" onClick={() => toggleFAQ(globalIdx)}>
+                          <span>{faq.q}</span>
+                          <FaArrowRight className="arrow" />
+                        </div>
+                        <div className="faq-answer">
+                          <p>{faq.a}</p>
+                        </div>
                       </div>
-                      <div className="faq-answer">
-                        <p>{faq.a}</p>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="no-faqs-found">
+              <p>No questions found matching your search. Please try a different query or contact our support team below.</p>
             </div>
-          ))}
+          )}
         </div>
 
         {/* Contact Support */}
         <div className="contact-support">
-          <FaHeadset />
+          <FaHeadset className="support-icon" />
           <div>
             <h3>Still need help?</h3>
             <p>Our support team is available 24/7 • Average response time: &lt;2 hours</p>
@@ -150,6 +243,64 @@ const HelpCenter = () => {
           </div>
         </div>
       </div>
+
+      {/* Support Query Modal */}
+      {isModalOpen && (
+        <div className="support-modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="support-modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Submit Support Query</h2>
+              <button className="close-modal-btn" onClick={() => setIsModalOpen(false)}>&times;</button>
+            </div>
+            <div className="modal-subheader">
+              <p>Topic: <strong className="subject-highlight">{modalSubject}</strong></p>
+            </div>
+            <form onSubmit={handleModalSubmit} className="support-modal-form">
+              <div className="form-group">
+                <label>Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter your name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                  disabled={isSubmitting || isAuthenticated}
+                />
+              </div>
+              <div className="form-group">
+                <label>Email Address</label>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                  disabled={isSubmitting || isAuthenticated}
+                />
+              </div>
+              <div className="form-group">
+                <label>Your Message / Query</label>
+                <textarea
+                  placeholder="Explain your payment/earnings or dispute issue here..."
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  required
+                  rows="5"
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="cancel-btn" onClick={() => setIsModalOpen(false)} disabled={isSubmitting}>
+                  Cancel
+                </button>
+                <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                  {isSubmitting ? "Sending Request..." : "Submit Query"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

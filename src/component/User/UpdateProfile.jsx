@@ -2,7 +2,7 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader/Loader";
 import { clearErrors, updateProfile, loadUser } from "../../actions/userAction";
@@ -13,6 +13,7 @@ const UpdateProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const bannerInputRef = useRef(null);
 
   const { user } = useSelector((state) => state.user);
   const { error, isUpdated, loading } = useSelector((state) => state.profile);
@@ -23,8 +24,12 @@ const UpdateProfile = () => {
   const [country, setCountry] = useState("");
   const [accountNo, setAccountNo] = useState("");
   const [upiId, setUpiId] = useState("");
-  const [avatar, setAvatar] = useState(null); // actual file
+  
+  const [avatar, setAvatar] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("/Profile.png");
+  
+  const [banner, setBanner] = useState("");
+  const [bannerPreview, setBannerPreview] = useState("https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1600");
 
   const updateProfileSubmit = (e) => {
     e.preventDefault();
@@ -36,10 +41,13 @@ const UpdateProfile = () => {
     myForm.set("country", country);
     myForm.set("accountNo", accountNo || "");
     myForm.set("upiId", upiId || "");
-
-    // Only append avatar if a new file is selected
-    if (avatar) {
-      myForm.append("avatar", avatar); // sends actual file → works with multer
+    
+    if (avatar !== "") {
+      myForm.set("avatar", avatar);
+    }
+    
+    if (banner !== "") {
+      myForm.set("banner", banner);
     }
 
     dispatch(updateProfile(myForm));
@@ -47,17 +55,34 @@ const UpdateProfile = () => {
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setAvatar(file); // store actual file
+    if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setAvatarPreview(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
+    setAvatar(file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatarPreview(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const handleBannerChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setBanner(file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setBannerPreview(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(file);
   };
 
   useEffect(() => {
@@ -69,7 +94,7 @@ const UpdateProfile = () => {
       setAccountNo(user.accountNo || "");
       setUpiId(user.upiId || "");
       setAvatarPreview(user.avatar?.url || "/Profile.png");
-      setAvatar(null); // reset file input
+      setBannerPreview(user.banner?.url || "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1600");
     }
 
     if (error) {
@@ -97,11 +122,37 @@ const UpdateProfile = () => {
             <div className="update-profile-card">
               <div className="header-section">
                 <h2>Update Your Profile</h2>
-                <p>Keep your information accurate and up to date</p>
+                <p>Personalize your banner and profile details</p>
+              </div>
+
+              {/* Banner Upload */}
+              <div className="banner-upload-box">
+                 <img src={bannerPreview} alt="Banner Preview" className="banner-update-preview" />
+                 <label htmlFor="bannerSelect" className="banner-update-btn">
+                   <i className="fas fa-camera"></i> {banner ? "Change Banner" : "Update Banner"}
+                 </label>
+                 <input 
+                   type="file" 
+                   id="bannerSelect" 
+                   accept="image/*" 
+                   ref={bannerInputRef} 
+                   onChange={handleBannerChange}
+                   style={{ display: "none" }}
+                 />
               </div>
 
               <div className="avatar-upload-section">
-                <img src={avatarPreview} alt="Preview" className="avatar-preview" />
+                {avatarPreview && avatarPreview !== "/Profile.png" && avatarPreview !== "default_avatar" ? (
+                  <img src={avatarPreview} alt="Preview" className="avatar-preview" />
+                ) : (
+                  <div className="avatar-preview initials-preview-new">
+                    {name ? (
+                      name.split(" ").length > 1 
+                        ? (name.split(" ")[0][0] + name.split(" ")[name.split(" ").length-1][0]).toUpperCase()
+                        : name.slice(0, 2).toUpperCase()
+                    ) : "U"}
+                  </div>
+                )}
                 <label htmlFor="avatarInput" className="upload-btn">
                   {avatar ? "Change Photo" : "Update Photo"}
                 </label>

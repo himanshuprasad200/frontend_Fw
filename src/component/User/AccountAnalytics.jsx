@@ -17,8 +17,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchEarnings } from "../../actions/earningAction";
 import { myBids } from "../../actions/bidAction";
 import Loader from "../layout/Loader/Loader";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import "./AccountAnalytics.css";
+import { 
+  FiPieChart, 
+  FiTrendingUp, 
+  FiDollarSign, 
+  FiCheckCircle, 
+  FiStar, 
+  FiBriefcase 
+} from "react-icons/fi";
 
 ChartJS.register(
   CategoryScale,
@@ -41,24 +49,20 @@ const AccountAnalytics = () => {
 
   useEffect(() => {
     dispatch(fetchEarnings());
-    dispatch(myBids()); // Fetch real bids
+    dispatch(myBids());
   }, [dispatch]);
 
   useEffect(() => {
     if (error) toast.error(error);
   }, [error]);
 
-  // === REAL BID STATUS BREAKDOWN ===
   const bidStats = useMemo(() => {
     const total = bids.length;
-
     const approved = bids.filter(b => b.response === "Approved").length;
     const pending = bids.filter(b => b.response === "Pending").length;
     const rejected = bids.filter(b => b.response === "Rejected").length;
-
     const winRate = total > 0 ? ((approved / total) * 100).toFixed(1) : 0;
 
-    // Monthly bid growth
     const now = new Date();
     const thisMonth = now.getMonth();
     const thisYear = now.getFullYear();
@@ -79,19 +83,14 @@ const AccountAnalytics = () => {
       ? (bidsThisMonth > 0 ? 100 : 0)
       : ((bidsThisMonth - bidsLastMonth) / bidsLastMonth) * 100;
 
-    return {
-      total,
-      approved,
-      pending,
-      rejected,
-      winRate: Number(winRate),
-      growth: growth.toFixed(1),
-    };
+    return { total, approved, pending, rejected, winRate: Number(winRate), growth: growth.toFixed(1) };
   }, [bids]);
 
-  const totalEarnings = useMemo(() => earnings.reduce((s, e) => s + e.amount, 0), [earnings]);
+  const totalEarnings = useMemo(() => {
+    if (!Array.isArray(earnings)) return 0;
+    return earnings.reduce((s, e) => s + e.amount, 0);
+  }, [earnings]);
 
-  // Monthly Earnings Chart
   const monthlyEarnings = useMemo(() => {
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const now = new Date();
@@ -99,146 +98,156 @@ const AccountAnalytics = () => {
 
     for (let i = 5; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const amount = earnings
-        .filter(e => {
-          const ed = new Date(e.recievedAt);
-          return ed.getMonth() === d.getMonth() && ed.getFullYear() === d.getFullYear();
-        })
-        .reduce((s, e) => s + e.amount, 0);
-
+      const amount = Array.isArray(earnings) 
+        ? earnings
+            .filter(e => {
+              const ed = new Date(e.recievedAt);
+              return ed.getMonth() === d.getMonth() && ed.getFullYear() === d.getFullYear();
+            })
+            .reduce((s, e) => s + e.amount, 0)
+        : 0;
       data.push({ label: months[d.getMonth()], amount });
     }
-
     return { labels: data.map(d => d.label), values: data.map(d => d.amount) };
   }, [earnings]);
 
-  // === DOUGHNUT CHART – REAL STATUS BREAKDOWN ===
   const doughnutData = {
     labels: ["Approved", "Pending", "Rejected"],
     datasets: [{
       data: [bidStats.approved, bidStats.pending, bidStats.rejected],
-      backgroundColor: ["#10b981", "#f59e0b", "#ef4444"],
+      backgroundColor: ["#7ec8c0", "#1a1a2e", "#ff4d4d"],
       borderColor: "#fff",
-      borderWidth: 3,
-      hoverOffset: 10,
+      borderWidth: 4,
+      hoverOffset: 12,
     }]
   };
 
   const lineData = {
     labels: monthlyEarnings.labels,
     datasets: [{
-      label: "Earnings",
+      label: "Revenue (INR)",
       data: monthlyEarnings.values,
       fill: true,
-      backgroundColor: "rgba(14, 165, 233, 0.15)",
-      borderColor: "#0ea5e9",
-      tension: 0.4,
+      backgroundColor: "rgba(126, 200, 192, 0.15)",
+      borderColor: "#7ec8c0",
+      borderWidth: 4,
+      tension: 0.45,
       pointRadius: 6,
-      pointHoverRadius: 8,
+      pointBackgroundColor: "#1a1a2e",
+      pointBorderColor: "#7ec8c0",
+      pointBorderWidth: 2,
     }]
   };
 
   const chartOptions = {
     responsive: true,
-    plugins: { legend: { display: false } },
-    scales: { y: { ticks: { callback: v => "₹" + v.toLocaleString() } } }
+    maintainAspectRatio: false,
+    plugins: { 
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1a1a2e',
+        padding: 12,
+        titleFont: { family: 'Barlow Condensed', size: 16 },
+        bodyFont: { family: 'Inter', size: 14 }
+      }
+    },
+    scales: { 
+      y: { grid: { color: '#f1f5f9' }, ticks: { font: { weight: '600' }, callback: v => "₹" + v.toLocaleString() } },
+      x: { grid: { display: false }, ticks: { font: { weight: '600' } } }
+    }
   };
 
   return (
     <div className="freelancer-dashboard">
       <div className="dashboard-header">
-        <h1>Analytics Dashboard</h1>
-        <p>Welcome back, <strong>{user?.name || "Freelancer"}</strong>! Track your real progress.</p>
+        <h1>Account Performance</h1>
+        <p>Insights for <strong>{user?.name || "Professional"}</strong> • Real-time profile metrics</p>
       </div>
 
-      {/* KPI Cards */}
       <div className="kpi-grid">
         <div className="kpi-card earnings">
-          <i className="fas fa-wallet"></i>
+          <FiDollarSign />
           <div>
-            <p>Total Earnings</p>
+            <p>Net Revenue</p>
             <h2>₹{totalEarnings.toLocaleString()}</h2>
-            <span className="growth">From won projects</span>
+            <span className="growth positive">Verified Earnings</span>
           </div>
         </div>
 
         <div className="kpi-card bids">
-          <i className="fas fa-gavel"></i>
+          <FiBriefcase />
           <div>
-            <p>Bids Placed</p>
+            <p>Active Proposals</p>
             <h2>{bidStats.total}</h2>
-            <span className="growth">
-              {bidStats.approved} Approved • {bidStats.rejected} Rejected
+            <span className="growth" style={{color: '#94a3b8'}}>
+              {bidStats.approved} Success Ratio
             </span>
           </div>
         </div>
 
         <div className="kpi-card winrate">
-          <i className="fas fa-trophy"></i>
+          <FiTrendingUp />
           <div>
             <p>Win Rate</p>
             <h2>{bidStats.winRate}%</h2>
-            <span className={`growth ${bidStats.growth >= 0 ? 'positive' : 'negative'}`}>
-              {bidStats.growth >= 0 ? 'Up' : 'Down'} {Math.abs(bidStats.growth)}% vs last month
+            <span className={`growth ${Number(bidStats.growth) >= 0 ? 'positive' : 'negative'}`}>
+              {Number(bidStats.growth) >= 0 ? '▲' : '▼'} {Math.abs(bidStats.growth)}% momentum
             </span>
           </div>
         </div>
 
         <div className="kpi-card reviews">
-          <i className="fas fa-star"></i>
+          <FiStar />
           <div>
-            <p>Client Rating</p>
+            <p>Reputation Score</p>
             <h2>{user?.ratings?.toFixed(1) || "0.0"}</h2>
-            <span className="growth">{user?.numOfReviews || 0} Reviews</span>
+            <span className="growth" style={{color: '#94a3b8'}}>{user?.numOfReviews || 0} reviews</span>
           </div>
         </div>
       </div>
 
-      {/* Charts */}
       <div className="charts-row">
-        {/* Earnings Over Time */}
         <div className="chart-box large">
-          <h3>Earnings Growth (Last 6 Months)</h3>
+          <h3><FiTrendingUp /> Revenue Trajectory</h3>
           <div className="chart-wrapper">
-            {earningsLoading ? <Loader /> : <Line data={lineData} options={chartOptions} />}
+            {earningsLoading ? (
+              <div className="chart-overlay-loader"><Loader /></div>
+            ) : <Line data={lineData} options={chartOptions} />}
           </div>
         </div>
 
-        {/* Bid Status Distribution */}
         <div className="chart-box">
-          <h3>Bid Status Overview</h3>
+          <h3><FiPieChart /> Conversion Funnel</h3>
           <div className="chart-wrapper doughnut">
             <Doughnut 
               data={doughnutData} 
               options={{
-                cutout: "68%",
+                cutout: "75%",
+                maintainAspectRatio: false,
                 plugins: {
-                  legend: { position: "bottom", labels: { padding: 20, font: { size: 14 } } },
-                  tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}` } }
+                  legend: { position: "bottom", labels: { padding: 30, font: { family: 'Barlow Condensed', size: 15, weight: '700' } } },
                 }
               }} 
             />
           </div>
         </div>
 
-        {/* Recent Payments */}
         <div className="chart-box activity">
-          <h3>Recent Payments</h3>
+          <h3><FiCheckCircle /> Recent Invoices</h3>
           <div className="activity-list">
             {earnings.length === 0 ? (
-              <p className="no-activity">No payments received yet</p>
+              <p className="no-activity">No payment history found</p>
             ) : (
               earnings.slice(-5).reverse().map((e, i) => (
                 <div key={i} className="activity-item">
                   <div>
                     <strong>₹{e.amount.toLocaleString()}</strong>
-                    <small>{new Date(e.recievedAt).toLocaleDateString("en-IN", {
+                    <small>Received: {new Date(e.recievedAt).toLocaleDateString("en-IN", {
                       day: "numeric",
-                      month: "short",
-                      year: "2-digit"
+                      month: "short"
                     })}</small>
                   </div>
-                  <i className="fas fa-check-circle text-success"></i>
+                  <FiCheckCircle className="text-success" />
                 </div>
               ))
             )}

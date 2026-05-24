@@ -20,42 +20,40 @@ import {
   PROJECT_DETAILS_REQUEST,
   PROJECT_DETAILS_SUCCESS,
   UPDATE_PROJECT_FAIL,
-  UPDATE_PROJECT_REQUEST, 
+  UPDATE_PROJECT_REQUEST,
   UPDATE_PROJECT_SUCCESS,
 } from "../constants/projectConstant";
 
-const API_URL = 'http://localhost:4050';
-
 export const getProject =
   (keyword = "", currentPage = 1, price = [0, 90000], category, ratings = 0) =>
-  async (dispatch) => {
-    try {
-      dispatch({ type: ALL_PROJECT_REQUEST });
+    async (dispatch) => {
+      try {
+        dispatch({ type: ALL_PROJECT_REQUEST });
 
-      let link = `${API_URL}/api/v1/projects?page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${ratings}`;
+        let link = `/api/v1/projects?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&ratings[gte]=${ratings}`;
 
-      if (category) {
-        link = `${API_URL}/api/v1/projects?page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}&ratings[gte]=${ratings}`;
+        if (category) {
+          link = `/api/v1/projects?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}&ratings[gte]=${ratings}`;
+        }
+
+        const { data } = await axios.get(link);
+        dispatch({
+          type: ALL_PROJECT_SUCCESS,
+          payload: data,
+        });
+      } catch (error) {
+        dispatch({
+          type: ALL_PROJECT_FAIL,
+          payload: error.response.data.message,
+        });
       }
-
-      const { data } = await axios.get(link);
-      dispatch({
-        type: ALL_PROJECT_SUCCESS,
-        payload: data,
-      });
-    } catch (error) {
-      dispatch({
-        type: ALL_PROJECT_FAIL,
-        payload: error.response.data.message,
-      });
-    }
-  };
+    };
 
 //Get all projects for Admin
 export const getAdminProject = () => async (dispatch) => {
   try {
     dispatch({ type: ADMIN_PROJECT_REQUEST });
-    const { data } = await axios.get(`${API_URL}/api/v1/admin/projects`);
+    const { data } = await axios.get(`/api/v1/admin/projects`);
     dispatch({
       type: ADMIN_PROJECT_SUCCESS,
       payload: data.projects,
@@ -75,7 +73,7 @@ export const createProject = (projectData) => async (dispatch) => {
     const config = {
       headers: { "Content-Type": "application/json" },
     };
-    const { data } = await axios.post(`${API_URL}/api/v1/admin/project/new`, projectData, config);
+    const { data } = await axios.post(`/api/v1/admin/project/new`, projectData, config);
     dispatch({
       type: NEW_PROJECT_SUCCESS,
       payload: data,
@@ -95,7 +93,7 @@ export const updateProject = (id, projectData) => async (dispatch) => {
     const config = {
       headers: { "Content-Type": "application/json" },
     };
-    const { data } = await axios.put(`${API_URL}/api/v1/admin/project/${id}`, projectData, config);
+    const { data } = await axios.put(`/api/v1/admin/project/${id}`, projectData, config);
     dispatch({
       type: UPDATE_PROJECT_SUCCESS,
       payload: data.success,
@@ -112,7 +110,7 @@ export const updateProject = (id, projectData) => async (dispatch) => {
 export const deleteProject = (id) => async (dispatch) => {
   try {
     dispatch({ type: DELETE_PROJECT_REQUEST });
-    const { data } = await axios.delete(`${API_URL}/api/v1/admin/project/${id}`);
+    const { data } = await axios.delete(`/api/v1/admin/project/${id}`);
     dispatch({
       type: DELETE_PROJECT_SUCCESS,
       payload: data.success,
@@ -124,18 +122,18 @@ export const deleteProject = (id) => async (dispatch) => {
     });
   }
 };
- 
+
 //Get Project Details
 export const getProjectDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: PROJECT_DETAILS_REQUEST });
-    const { data } = await axios.get(`${API_URL}/api/v1/project/${id}`);
+    const { data } = await axios.get(`/api/v1/project/${id}`);
     dispatch({
       type: PROJECT_DETAILS_SUCCESS,
-      payload: data.project,
+      payload: data,
     });
   } catch (error) {
-    dispatch({ 
+    dispatch({
       type: PROJECT_DETAILS_FAIL,
       payload: error.response.data.message,
     });
@@ -149,7 +147,7 @@ export const newReviewForProject = (reviewData) => async (dispatch) => {
     const config = {
       headers: { "Content-Type": "application/json" },
     };
-    const { data } = await axios.put(`${API_URL}/api/v1/review`, reviewData, config);
+    const { data } = await axios.put(`/api/v1/review`, reviewData, config);
     dispatch({
       type: NEW_REVIEW_SUCCESS,
       payload: data.success,

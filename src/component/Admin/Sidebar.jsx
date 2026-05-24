@@ -1,10 +1,12 @@
 // src/component/admin/Sidebar.jsx
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import "./Sidebar.css";
-import logo from "../../images/logo2.png";
+import Logo from "../layout/Logo/Logo";
 
 const Sidebar = () => {
+  const { user } = useSelector((state) => state.user);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const location = useLocation();
@@ -13,20 +15,11 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Toggle Button - Only visible when collapsed on mobile/large screens */}
-      <button
-        className="sidebar-toggle-btn"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        aria-label="Toggle Sidebar"
-      >
-        <i className={`fas ${isCollapsed ? "fa-chevron-right" : "fa-chevron-left"}`}></i>
-      </button>
-
       <div className={`admin-sidebar ${isCollapsed ? "collapsed" : ""}`}>
-        {/* Logo */}
+        {/* Logo Section */}
         <div className="sidebar-logo">
           <Link to="/">
-            <img src={logo} alt="FlexiWork" className="logo-img" />
+            <Logo size="small" className="sidebar-logo-comp light-text" hideText={isCollapsed} />
           </Link>
         </div>
 
@@ -37,20 +30,24 @@ const Sidebar = () => {
             to="/admin/joinasclient"
             className={`menu-item ${isActive("/admin/joinasclient") ? "active" : ""}`}
           >
-            <i className="fas fa-tachometer-alt"></i>
+            <div className="icon-box">
+              <i className="fas fa-home"></i>
+            </div>
             <span className="menu-text">Dashboard</span>
           </Link>
 
           {/* Projects - Collapsible */}
-          <div className="menu-item collapsible">
+          <div className={`menu-group ${isProjectsOpen || location.pathname.includes("/project") ? "group-open" : ""}`}>
             <div
-              className={`menu-link ${isProjectsOpen || location.pathname.includes("/project") ? "active" : ""}`}
+              className={`menu-item collapsible ${location.pathname.includes("/project") ? "active" : ""}`}
               onClick={() => !isCollapsed && setIsProjectsOpen(!isProjectsOpen)}
             >
-              <i className="fas fa-project-diagram"></i>
+              <div className="icon-box">
+                <i className="fas fa-briefcase"></i>
+              </div>
               <span className="menu-text">Projects</span>
               {!isCollapsed && (
-                <i className={`fas fa-chevron-${isProjectsOpen ? "up" : "down"} arrow`}></i>
+                <i className={`fas fa-chevron-right arrow ${isProjectsOpen ? "rotated" : ""}`}></i>
               )}
             </div>
 
@@ -58,16 +55,16 @@ const Sidebar = () => {
             <div className={`submenu ${isProjectsOpen ? "open" : ""}`}>
               <Link
                 to="/admin/projects"
-                className={`submenu-item ${isActive("/admin/projects") ? "active" : ""}`}
+                className={`submenu-item ${isActive("/admin/projects") ? "sub-active" : ""}`}
               >
-                <i className="fas fa-list"></i>
+                <span className="dot"></span>
                 <span>All Projects</span>
               </Link>
               <Link
-                to="/admin/project"
-                className={`submenu-item ${isActive("/admin/project") ? "active" : ""}`}
+                to="/admin/new-project"
+                className={`submenu-item ${isActive("/admin/new-project") ? "sub-active" : ""}`}
               >
-                <i className="fas fa-plus-circle"></i>
+                <span className="dot"></span>
                 <span>Create Project</span>
               </Link>
             </div>
@@ -78,33 +75,77 @@ const Sidebar = () => {
             to="/admin/bids"
             className={`menu-item ${isActive("/admin/bids") ? "active" : ""}`}
           >
-            <i className="fas fa-gavel"></i>
+            <div className="icon-box">
+              <i className="fas fa-gavel"></i>
+            </div>
             <span className="menu-text">Bids</span>
           </Link>
 
+          {/* Users */}
           <Link
             to="/admin/users"
             className={`menu-item ${isActive("/admin/users") ? "active" : ""}`}
           >
-            <i className="fas fa-users"></i>
+            <div className="icon-box">
+              <i className="fas fa-users"></i>
+            </div>
             <span className="menu-text">Users</span>
           </Link>
 
+          {/* Chats */}
+          <Link
+            to="/admin/chats"
+            className={`menu-item ${isActive("/admin/chats") ? "active" : ""}`}
+          >
+            <div className="icon-box">
+              <i className="fas fa-comments"></i>
+            </div>
+            <span className="menu-text">Chats</span>
+          </Link>
+
+          {/* Reviews */}
           <Link
             to="/admin/reviews"
             className={`menu-item ${isActive("/admin/reviews") ? "active" : ""}`}
           >
-            <i className="fas fa-star"></i>
+            <div className="icon-box">
+              <i className="fas fa-star"></i>
+            </div>
             <span className="menu-text">Reviews</span>
           </Link>
+
+          {/* Support Queries (Superadmin only) */}
+          {user?.role === "superadmin" && (
+            <Link
+              to="/admin/support"
+              className={`menu-item ${isActive("/admin/support") ? "active" : ""}`}
+            >
+              <div className="icon-box">
+                <i className="fas fa-headset"></i>
+              </div>
+              <span className="menu-text">Support Queries</span>
+            </Link>
+          )}
         </nav>
 
         {/* Footer */}
         <div className="sidebar-footer">
-          <p className="footer-text">FlexiWork Admin</p>
-          <small>© 2025</small>
+          <div className="admin-profile-mini">
+            <div className="profile-dot"></div>
+            <span className="footer-text">Admin Panel</span>
+          </div>
+          <small className="version-text">v2.1.0</small>
         </div>
       </div>
+
+      {/* Toggle Button - Now AFTER the sidebar for CSS sibling selector to work */}
+      <button
+        className={`sidebar-toggle-btn ${isCollapsed ? "btn-collapsed" : ""}`}
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        aria-label="Toggle Sidebar"
+      >
+        <i className={`fas ${isCollapsed ? "fa-angle-right" : "fa-angle-left"}`}></i>
+      </button>
     </>
   );
 };

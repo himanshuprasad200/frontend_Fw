@@ -15,9 +15,10 @@ import {
 import { FaGlobe, FaUpload } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { login, register, clearErrors } from "../../actions/userAction";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useNavigate, Link } from "react-router-dom";
+import toast from "../../utils/CustomToast";
 import Loader from "../layout/Loader/Loader";
+import Logo from "../layout/Logo/Logo";
 
 const LoginSignUp = () => {
   const dispatch = useDispatch();
@@ -51,14 +52,18 @@ const LoginSignUp = () => {
 
   const handleRegisterInput = (e) => {
     if (e.target.name === "avatar") {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      setAvatar(file);
+
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.readyState === 2) {
           setAvatarPreview(reader.result);
-          setAvatar(reader.result);
         }
       };
-      reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(file);
     } else {
       let value = e.target.value;
       if (e.target.name === "pancard") value = value.toUpperCase();
@@ -119,33 +124,38 @@ const LoginSignUp = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className="auth-fullscreen">
-          <div className="auth-wrapper">
-            <div className="auth-card-full">
-              {/* Header */}
-              <div className="auth-header">
-                <h1>{isLogin ? "Welcome Back" : "Join FlexiWork"}</h1>
-                <p>
-                  {isLogin
-                    ? "Log in to your account"
-                    : "Create your freelancer profile"}
-                </p>
+        <div className="auth-split-fullscreen">
+          {/* Visual Side */}
+          <div className="auth-visual-side">
+            <div className="visual-content">
+              <Logo size="large" className="auth-logo-large navy-white" />
+              <div className="quote-container">
+                <h2 className="auth-quote">"Unleash Your Potential with FlexiWork."</h2>
+                <p className="auth-subquote">Where World-Class Talent Meets Limitless Opportunity.</p>
               </div>
+              <div className="visual-dots"></div>
+            </div>
+          </div>
 
-              {/* Tabs */}
-              <div className="auth-tabs">
-                <button
-                  className={isLogin ? "active" : ""}
-                  onClick={() => setIsLogin(true)}
-                >
-                  Login
-                </button>
-                <button
-                  className={!isLogin ? "active" : ""}
-                  onClick={() => setIsLogin(false)}
-                >
-                  Register
-                </button>
+          {/* Form Side */}
+          <div className="auth-form-side">
+            <div className="auth-wrapper-split">
+              <div className="auth-header-split">
+                <h1>{isLogin ? "Welcome Back" : "Join the Elite"}</h1>
+                <div className="auth-tabs-split">
+                  <button
+                    className={isLogin ? "active" : ""}
+                    onClick={() => setIsLogin(true)}
+                  >
+                    Login
+                  </button>
+                  <button
+                    className={!isLogin ? "active" : ""}
+                    onClick={() => setIsLogin(false)}
+                  >
+                    Register
+                  </button>
+                </div>
               </div>
 
               <div className="auth-content">
@@ -182,6 +192,10 @@ const LoginSignUp = () => {
                       {showLoginPass ? <MdVisibilityOff /> : <MdVisibility />}
                     </button>
                   </div>
+
+                  <Link to="/password/forgot" className="forgot-password-link">
+                    Forgot Password ?
+                  </Link>
 
                   <button type="submit" className="auth-btn">
                     {loading ? "Logging in..." : "Login Securely"}

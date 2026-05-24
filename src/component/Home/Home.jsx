@@ -1,276 +1,527 @@
 // src/component/Home/Home.jsx
-import React, { Fragment, useEffect, useRef } from "react";
-import { CgMouse } from "react-icons/cg";
+import React, { Fragment, useEffect, useState, useRef } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import {
-  FaCode, FaPaintBrush, FaBullhorn, FaVideo, FaPenFancy,
-  FaMusic, FaBriefcase, FaRobot, FaStar
+  FaSearch, FaStar, FaArrowLeft, FaArrowRight,
+  FaUsers, FaShieldAlt, FaHandshake, FaChevronLeft, FaChevronRight,
+  FaQuoteLeft, FaCheckCircle, FaThLarge, FaVideo, FaPaintBrush,
+  FaBullhorn, FaBolt, FaLock, FaMicrophone, FaBriefcase,
 } from "react-icons/fa";
+import { TbGridDots } from "react-icons/tb";
 import "./Home.css";
-import ProjectCard from "./ProjectCard.jsx";
 import MetaData from "../layout/MetaData.jsx";
 import { clearErrors, getProject } from "../../actions/projectAction.jsx";
 import { useSelector, useDispatch } from "react-redux";
-import Loader from "../layout/Loader/Loader.jsx";
-import { toast } from "react-hot-toast";
+import { toast } from "../../utils/CustomToast";
+import useDebounce from "../../hooks/useDebounce";
 
-// Import GSAP + ScrollTrigger properly
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+const popularSkills = ["UI Design", "Web Dev", "Branding", "Animation", "Copywriting"];
 
-// Register the plugin once at the top level
-gsap.registerPlugin(ScrollTrigger);
+const services = [
+  {
+    title: "3D ARTIST",
+    tags: ["3D Modelling", "Environment Design", "VFX"],
+    artists: 12,
+    reviews: 980,
+    img: "/service_3d_artist.png",
+    color: "#8b9e7a",
+  },
+  {
+    title: "VIDEO EXPLAINER",
+    tags: ["Motion Graphics", "Whiteboard", "Animation"],
+    artists: 8,
+    reviews: 1240,
+    img: "/service_video_explainer.png",
+    color: "#c2a46a",
+  },
+  {
+    title: "GRAPHIC DESIGN",
+    tags: ["Brand Identity", "Logo Design", "Print Design"],
+    artists: 20,
+    reviews: 2100,
+    img: "/service_graphic_design.png",
+    color: "#7bb0c2",
+  },
+  {
+    title: "DIGITAL MARKETING",
+    tags: ["SEO", "Social Media", "Lead Generation"],
+    artists: 15,
+    reviews: 1650,
+    img: "/service_digital_marketing.png",
+    color: "#c27b9e",
+  },
+];
+
+const whyFeatures = [
+  {
+    icon: <FaHandshake />,
+    title: "Seamless Collaboration",
+    desc: "Our user-friendly platform ensures a seamless collaborative experience. Communicate with freelancers, share files, and track project progress effortlessly.",
+  },
+  {
+    icon: <FaUsers />,
+    title: "Support and Community",
+    desc: "Join a vibrant community of freelancers and clients who are passionate about their work. Our support team is available to guide you and help resolve enquiries.",
+  },
+  {
+    icon: <FaShieldAlt />,
+    title: "Secure and Reliable",
+    desc: "Your safety and security are our top priorities. We implement robust measures to protect your data and financial transactions.",
+  },
+];
+
+const testimonials = [
+  {
+    text: "I recently hired a freelancer for a project, and I couldn't be happier with the results. Their skills exceeded my expectations in every way; communication was smooth, deadlines were met, and the quality was outstanding. I highly recommend this freelancer to anyone looking for top-notch skills and professionalism.",
+    name: "Thomas Karlow",
+    role: "CEO at Kakar",
+    company: "KAKAR",
+  },
+  {
+    text: "Working with this platform changed everything for our business. The quality of freelancers available is outstanding and the whole process was smooth from start to finish. Highly recommend to any business owner.",
+    name: "Sarah Mitchell",
+    role: "Founder at PixelBrand",
+    company: "PIXELBRAND",
+  },
+  {
+    text: "Exceptional service! The freelancer we hired delivered beyond our expectations. The whole experience was seamless and professional. We will definitely use this platform again.",
+    name: "James Carter",
+    role: "CTO at NovaTech",
+    company: "NOVATECH",
+  },
+];
+
+// Freelancer avatar grid (using placeholder service for diverse avatars)
+const freelancerAvatars = [
+  "https://i.pravatar.cc/60?img=1",
+  "https://i.pravatar.cc/60?img=2",
+  "https://i.pravatar.cc/60?img=3",
+  "https://i.pravatar.cc/60?img=4",
+  "https://i.pravatar.cc/60?img=5",
+  "https://i.pravatar.cc/60?img=6",
+  "https://i.pravatar.cc/60?img=7",
+  "https://i.pravatar.cc/60?img=8",
+  "https://i.pravatar.cc/60?img=9",
+  "https://i.pravatar.cc/60?img=10",
+  "https://i.pravatar.cc/60?img=11",
+  "https://i.pravatar.cc/60?img=12",
+  "https://i.pravatar.cc/60?img=13",
+  "https://i.pravatar.cc/60?img=14",
+  "https://i.pravatar.cc/60?img=15",
+  "https://i.pravatar.cc/60?img=16",
+  "https://i.pravatar.cc/60?img=17",
+  "https://i.pravatar.cc/60?img=18",
+  "https://i.pravatar.cc/60?img=19",
+  "https://i.pravatar.cc/60?img=20",
+];
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { loading, error, projects } = useSelector((state) => state.projects);
-  const sectionRefs = useRef([]);
+  const navigate = useNavigate();
+  const { error, projects } = useSelector((state) => state.projects);
+  
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [servicesStart, setServicesStart] = useState(0);
+  
+  // Dynamic Search State
+  const [keyword, setKeyword] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const debouncedKeyword = useDebounce(keyword, 500);
+  const searchRef = useRef(null);
 
   useEffect(() => {
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
     }
-    dispatch(getProject());
   }, [dispatch, error]);
 
-  // GSAP Scroll Animations - Now works without error
+  // Handle Click Outside to close dropdown
   useEffect(() => {
-    // Animate sections on scroll
-    sectionRefs.current.forEach((section) => {
-      if (!section) return;
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-      gsap.fromTo(
-        section.children,
-        { opacity: 0, y: 100 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          stagger: 0.2,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: section,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
-            // debug: true, // remove in production
-          },
-        }
-      );
-    });
+  // Handle Dynamic Search Fetch
+  useEffect(() => {
+     if (debouncedKeyword.trim()) {
+       setIsSearching(true);
+       dispatch(getProject(debouncedKeyword)).then(() => {
+         setIsSearching(false);
+         setShowResults(true);
+       });
+     } else {
+       setShowResults(false);
+       setIsSearching(false);
+     }
+  }, [debouncedKeyword, dispatch]);
 
-    // Animate Project Cards
-    if (projects && projects.length > 0) {
-      gsap.fromTo(
-        ".modern-project-card",
-        { opacity: 0, y: 80, scale: 0.95 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 1,
-          stagger: 0.2,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: ".projects-grid",
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
+  const handleSearchSubmit = (e) => {
+    if (e) e.preventDefault();
+    if (keyword.trim()) {
+      navigate(`/projects/${keyword}`);
+      setShowResults(false);
     }
-  }, [projects]);
+  };
 
-  const categories = [
-    { name: "Website Development", icon: <FaCode size={50} />, color: "#8b5cf6" },
-    { name: "Graphic Design", icon: <FaPaintBrush size={50} />, color: "#ec4899" },
-    { name: "Digital Marketing", icon: <FaBullhorn size={50} />, color: "#f59e0b" },
-    { name: "Video Editing", icon: <FaVideo size={50} />, color: "#ef4444" },
-    { name: "Writing & Translation", icon: <FaPenFancy size={50} />, color: "#10b981" },
-    { name: "Music & Audio", icon: <FaMusic size={50} />, color: "#06b6d4" },
-    { name: "Business", icon: <FaBriefcase size={50} />, color: "#6366f1" },
-    { name: "AI Services", icon: <FaRobot size={50} />, color: "#a855f7" },
-  ];
+  const handleResultClick = (id) => {
+    navigate(`/project/${id}`);
+    setShowResults(false);
+  };
+
+  const nextTestimonial = () =>
+    setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+  const prevTestimonial = () =>
+    setActiveTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+
+  const visibleServices = services.slice(servicesStart, servicesStart + 4);
 
   return (
     <Fragment>
-      {loading ? (
-        <Loader />
-      ) : (
-        <Fragment>
-          <MetaData title="FlexiWork — Hire Top Talent Instantly" />
+      <MetaData title="FlexiWork — Find Top Freelancers & Get Work Done" />
 
-          <div className="homepage-master">
-            {/* Wavy Background */}
-            <div className="wavy-bg">
-              <div className="wave wave1"></div>
-              <div className="wave wave2"></div>
-              <div className="wave wave3"></div>
+      <div className="lp-root">
+
+        {/* ══════════════════════════════════════════
+            SECTION 1 — HERO
+        ══════════════════════════════════════════ */}
+        {/* ══════════════════════════════════════════
+            SECTION 1 — HERO (layered layout)
+        ══════════════════════════════════════════ */}
+        <section className="lp-hero">
+          {/* FREELANCE — massive title, sits BEHIND the woman */}
+          <h1 className="lp-hero__big-title" aria-label="Freelance">FLEXIWORK</h1>
+
+          {/* Subject — sitting over "NCE" for depth */}
+          <div className="lp-hero__woman-wrap">
+            <img src="/hero_woman.png" alt="Freelancer" className="lp-hero__woman-img" />
+          </div>
+
+          {/* "Discover more" circular badge — sits in center */}
+          <div className="lp-hero__discover-badge">
+            <svg viewBox="0 0 100 100" className="lp-hero__badge-svg">
+              <path id="circle-text" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none"/>
+              <text fontSize="9.5" fill="rgba(0,0,0,0.6)" letterSpacing="2.5">
+                <textPath href="#circle-text">discover more • discover more •</textPath>
+              </text>
+            </svg>
+            <TbGridDots size={20} className="lp-hero__badge-icon" />
+          </div>
+
+          {/* Bottom content row: left info + right profile card */}
+          <div className="lp-hero__bottom">
+            {/* Left column */}
+            <div className="lp-hero__left">
+              {/* Search Bar */}
+              <form 
+                ref={searchRef}
+                className="lp-hero__search" 
+                onSubmit={handleSearchSubmit}
+              >
+                <FaSearch className="lp-hero__search-icon" />
+                <input 
+                  type="text" 
+                  placeholder="Search for any services..." 
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  onFocus={() => keyword.trim() && setShowResults(true)}
+                />
+                
+                {isSearching && <div className="lp-search-loader"></div>}
+
+                {/* Dropdown Results */}
+                {showResults && (
+                  <div className="lp-search-results-dropdown">
+                    {projects && projects.length > 0 ? (
+                      projects.slice(0, 5).map((project) => (
+                        <div 
+                          key={project._id} 
+                          className="lp-search-result-item"
+                          onClick={() => handleResultClick(project._id)}
+                        >
+                          <div className="res-icon"><FaBriefcase /></div>
+                          <div className="res-info">
+                            <span className="res-title">{project.title}</span>
+                            <span className="res-meta">By {project.name} • {project.category}</span>
+                          </div>
+                          <div className="res-price">₹{project.price?.toLocaleString()}</div>
+                        </div>
+                      ))
+                    ) : (
+                      !isSearching && <div className="lp-search-no-results">No projects found for "{keyword}"</div>
+                    )}
+                    {projects && projects.length > 5 && (
+                      <div className="lp-search-view-all" onClick={handleSearchSubmit}>
+                        View all matching projects <FaArrowRight />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <FaMicrophone className="lp-hero__mic-icon" />
+                <button type="submit" className="lp-hero__search-btn">
+                  <FaArrowRight />
+                </button>
+              </form>
+
+              {/* Popular Skills */}
+              <div className="lp-hero__skills">
+                <span className="lp-hero__skills-label">Popular skills:</span>
+                {popularSkills.map((skill, i) => (
+                  <span key={i} className="lp-hero__skill-tag">{skill}</span>
+                ))}
+              </div>
+
+              <p className="lp-hero__desc">
+                A freelance service web portal connects businesses with<br />
+                freelancers, facilitating project collaboration and hiring.
+              </p>
+
+              {/* Trusted Freelancers card */}
+              <div className="lp-hero__trust">
+                <div className="lp-hero__trust-header">
+                  <strong>Trusted Freelancers</strong>
+                  <div className="lp-hero__trust-stars">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar key={i} />
+                    ))}
+                  </div>
+                </div>
+                <div className="lp-hero__trust-row">
+                  <div className="lp-hero__trust-avatars">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <img key={i} src={`https://i.pravatar.cc/40?img=${i + 10}`} alt="User" />
+                    ))}
+                  </div>
+                  <div>
+                    <strong className="lp-hero__trust-num">200+</strong>
+                    <span className="lp-hero__trust-sub">Satisfied Customers</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* HERO SECTION */}
-            <section className="hero-section">
-              <div className="heros-content">
-                <h1 className="hero-title stylish-cursive">
-                  <span className="line">Hire Expert</span>
-                  <span className="line">
-                    <span className="highlight cursive-highlight">Freelancers</span>
-                  </span>
-                  <span className="line">For Any Job,</span>
-                  <span className="line">Online</span>
-                </h1>
-                <p className="hero-subtitle">
-                  Millions of people use <strong>FlexiWork</strong> to turn their ideas into reality.
-                </p>
-                <a href="#projects" className="cta-button premium-cta">
-                  Start Freelancing Now <CgMouse className="mouse-icon" />
-                </a>
-                <div className="trust-line">
-                  <span>Trusted by 1M+ businesses worldwide</span>
-                </div>
-              </div>
-
-              <div className="hero-graphic">
-                <div className="floating-shape s1"></div>
-                <div className="floating-shape s2"></div>
-                <div className="floating-shape s3"></div>
-                <div className="floating-shape s4"></div>
-              </div>
-            </section>
-
-            {/* 1. POPULAR SERVICES */}
-            <section className="projects-showcase" id="projects" ref={(el) => (sectionRefs.current[0] = el)}>
-              <div className="container">
-                <div className="section-header">
-                  <h2>Popular Professional Services</h2>
-                  <p>Explore the marketplace</p>
-                </div>
-                <div className="projects-grid">
-                  {projects && projects.length > 0 ? (
-                    projects.map((project) => (
-                      <ProjectCard key={project._id} project={project} />
-                    ))
-                  ) : (
-                    <p className="no-data">No services available yet.</p>
-                  )}
-                </div>
-              </div>
-            </section>
-
-            {/* 2. HOW IT WORKS */}
-            <section className="how-it-works-section" ref={(el) => (sectionRefs.current[1] = el)}>
-              <div className="container">
-                <div className="section-header">
-                  <h2>How FlexiWork Works</h2>
-                  <p>Get your project done in 3 simple steps</p>
-                </div>
-                <div className="steps-grid">
-                  <div className="step-card">
-                    <div className="step-number">1</div>
-                    <h3>Post Your Job</h3>
-                    <p>Free & fast — get proposals in minutes</p>
+            {/* Right — Profile info card */}
+            <div className="lp-hero__right">
+              <div className="lp-hero__profile-card">
+                <div className="lp-hero__card-top">
+                  <img src="https://i.pravatar.cc/50?img=47" alt="Jenny" className="lp-hero__card-avatar" />
+                  <div>
+                    <span className="lp-hero__card-handle">@jenny</span>
+                    <strong className="lp-hero__card-role">Ui/Ux Designer</strong>
                   </div>
-                  <div className="step-card">
-                    <div className="step-number">2</div>
-                    <h3>Receive Proposals</h3>
-                    <p>Top talent competes for your project</p>
+                </div>
+                <div className="lp-hero__card-stats">
+                  <div className="lp-hero__card-stat">
+                    <span className="lp-hero__stat-icon">🏆</span>
+                    <span><strong>80+</strong> projects completed</span>
                   </div>
-                  <div className="step-card">
-                    <div className="step-number">3</div>
-                    <h3>Hire & Deliver</h3>
-                    <p>Secure payment only when satisfied</p>
+                  <div className="lp-hero__card-stat">
+                    <span className="lp-hero__stat-icon">💵</span>
+                    <span><strong>$30</strong> per hour</span>
                   </div>
                 </div>
               </div>
-            </section>
-
-            {/* 3. TRUSTED BY - LOGOS NOW VISIBLE */}
-            <section className="trust-stats-section" ref={(el) => (sectionRefs.current[2] = el)}>
-              <div className="container">
-                <div className="trust-content">
-                  <h2>Trusted by World-Class Companies</h2>
-                  <p className="trust-subtitle">Join 1M+ users growing with FlexiWork</p>
-
-                  <div className="stats-grid">
-                    <div className="stat-item"><h3>100k+</h3><p>Users</p></div>
-                    <div className="stat-item"><h3>10+</h3><p>Countries</p></div>
-                    <div className="stat-item"><h3>$3M+</h3><p>Paid to Freelancers</p></div>
-                    <div className="stat-item"><h3>98%</h3><p>Satisfaction</p></div>
-                  </div>
-
-                  <div className="brand-logos">
-                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/google.svg" alt="Google" className="brand-logo" />
-                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/netflix.svg" alt="Netflix" className="brand-logo" />
-                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/samsung.svg" alt="Samsung" className="brand-logo" />
-                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/airbnb.svg" alt="Airbnb" className="brand-logo" />
-                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/paypal.svg" alt="PayPal" className="brand-logo" />
-                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/amazon.svg" alt="Amazon" className="brand-logo" />
-                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/spotify.svg" alt="Spotify" className="brand-logo" />
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* 4. CATEGORIES */}
-            <section className="categories-section" ref={(el) => (sectionRefs.current[3] = el)}>
-              <div className="container">
-                <div className="section-header">
-                  <h2>Browse Top Categories</h2>
-                  <p>Find experts in 1000+ skills</p>
-                </div>
-                <div className="categories-grid">
-                  {categories.map((cat, i) => (
-                    <div key={i} className="category-card">
-                      <div className="cat-icon" style={{ color: cat.color }}>
-                        {cat.icon}
-                      </div>
-                      <h4>{cat.name}</h4>
-                      <span>1,200+ services</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {/* 5. TESTIMONIALS */}
-            <section className="testimonials-section" ref={(el) => (sectionRefs.current[4] = el)}>
-              <div className="container">
-                <h2>What Our Clients Say</h2>
-                <div className="testimonials-grid">
-                  {[
-                    { name: "Sarah Chen", role: "CEO at TechFlow", text: "FlexiWork saved us months of hiring time." },
-                    { name: "Michael Ross", role: "Marketing Director", text: "Best talent, fastest delivery, amazing results." },
-                    { name: "Emma Lopez", role: "Startup Founder", text: "We scaled from 0 to 100K users using FlexiWork devs." },
-                  ].map((t, i) => (
-                    <div key={i} className="testimonial-card">
-                      <div className="stars">
-                        {[...Array(5)].map((_, i) => (
-                          <FaStar key={i} style={{ color: "#fbbf24" }} />
-                        ))}
-                      </div>
-                      <p>"{t.text}"</p>
-                      <div className="author">
-                        <strong>{t.name}</strong>
-                        <span>{t.role}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {/* 6. FINAL CTA */}
-            <section className="final-cta-section" ref={(el) => (sectionRefs.current[5] = el)}>
-              <div className="container">
-                <h2>Ready to Grow Faster?</h2>
-                <p>Join thousands of businesses hiring top talent today</p>
-                <a href="/signup" className="cta-button premium-cta large">
-                  Start Exploring Now <CgMouse />
-                </a>
-              </div>
-            </section>
+            </div>
           </div>
-        </Fragment>
-      )}
+
+        </section>
+
+        {/* ══════════════════════════════════════════
+            SECTION 2 — POPULAR SERVICES
+        ══════════════════════════════════════════ */}
+        <section className="lp-services">
+          <div className="lp-services__header">
+            <div>
+              <h2 className="lp-section-title">POPULAR SERVICES</h2>
+              <p className="lp-section-sub">
+                Freelancing offers a diverse range of popular services, from web development to content writing, catering to various clients' needs.
+              </p>
+            </div>
+            <div className="lp-services__nav">
+              <button
+                onClick={() => setServicesStart(Math.max(0, servicesStart - 1))}
+                disabled={servicesStart === 0}
+              >
+                <FaChevronLeft />
+              </button>
+              <button
+                onClick={() => setServicesStart(Math.min(services.length - 4, servicesStart + 1))}
+                disabled={servicesStart >= services.length - 4}
+                className="lp-services__nav-active"
+              >
+                <FaChevronRight />
+              </button>
+            </div>
+          </div>
+
+          <div className="lp-services__grid">
+            {services.map((svc, i) => (
+              <div key={i} className="lp-svc-card">
+                <div className="lp-svc-card__img-wrap">
+                  <img src={svc.img} alt={svc.title} />
+                  <div className="lp-svc-card__overlay">
+                    <h3 className="lp-svc-card__title">{svc.title}</h3>
+                    <div className="lp-svc-card__tags">
+                      {svc.tags.map((tag, j) => (
+                        <span key={j} className="lp-svc-card__tag">{tag}</span>
+                      ))}
+                    </div>
+                    <div className="lp-svc-card__meta">
+                      <span>👤 {svc.artists} Artists</span>
+                      <span>⭐ {svc.reviews} Reviews</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="lp-svc-card__footer">
+                  <Link to="/projects" className="lp-svc-card__btn">Explore</Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
+            SECTION 3 — FIND OUTSTANDING WORKMANSHIP
+        ══════════════════════════════════════════ */}
+        <section className="lp-workmanship">
+          <div className="lp-workmanship__img-wrap">
+            <img src="/workmanship_banner.png" alt="Outstanding Workmanship" />
+            <div className="lp-workmanship__overlay">
+              <span className="lp-workmanship__tag">For Talent</span>
+              <h2 className="lp-workmanship__title">
+                FIND OUTSTANDING<br />WORKMANSHIP.
+              </h2>
+              <p className="lp-workmanship__desc">
+                The outstanding workmanship displayed in the intricate craftmanship of the finest cabinet makers furniture meticulously detailed with ornate patterns and flawless finishes, is a testament to the artisan's exceptional skill and dedication to their craft.
+              </p>
+            </div>
+            <div className="lp-workmanship__play">
+              <div className="lp-workmanship__play-btn">▶</div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
+            SECTION 4 — WHY CHOOSE US
+        ══════════════════════════════════════════ */}
+        <section className="lp-why">
+          <div className="lp-why__inner">
+            {/* Left — Person + Guarantee stamp */}
+            <div className="lp-why__left">
+              <div className="lp-why__deco-burst lp-why__deco-burst--tl"></div>
+              <img src="/why_choose_us_person.png" alt="Why Choose Us" className="lp-why__person" />
+              <div className="lp-why__guarantee">
+                <div className="lp-why__guarantee-inner">
+                  <span className="lp-why__guarantee-text">GUARANTEE</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right — Features */}
+            <div className="lp-why__right">
+              <h2 className="lp-section-title centered">WHY CHOOSE US?</h2>
+              <p className="lp-section-sub centered">
+                Choose us for committed quality, exceptional service, and a commitment to exceeding your expectations every time.
+              </p>
+              <div className="lp-why__features">
+                {whyFeatures.map((feat, i) => (
+                  <div key={i} className={`lp-why__feature ${i === 0 ? "lp-why__feature--active" : ""}`}>
+                    <div className="lp-why__feature-icon">{feat.icon}</div>
+                    <div>
+                      <h4>{feat.title}</h4>
+                      <p>{feat.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
+            SECTION 5 — TESTIMONIALS
+        ══════════════════════════════════════════ */}
+        <section className="lp-testimonials">
+          <div className="lp-testimonials__inner">
+            <div className="lp-testimonials__left">
+              <h2 className="lp-section-title lp-testimonials__title">
+                WHAT OUR<br />CUSTOMERS<br />SAY
+              </h2>
+              <div className="lp-testimonials__nav">
+                <button onClick={prevTestimonial}><FaArrowLeft /></button>
+                <button onClick={nextTestimonial} className="lp-testimonials__nav-active"><FaArrowRight /></button>
+              </div>
+            </div>
+
+            <div className="lp-testimonials__right">
+              <div className="lp-testimonials__card">
+                <FaQuoteLeft className="lp-testimonials__quote-icon" />
+                <p className="lp-testimonials__text">
+                  "{testimonials[activeTestimonial].text}"
+                </p>
+                <div className="lp-testimonials__author">
+                  <img src={`https://i.pravatar.cc/50?img=${activeTestimonial + 20}`} alt="Reviewer" />
+                  <div>
+                    <strong>{testimonials[activeTestimonial].name}</strong>
+                    <span>{testimonials[activeTestimonial].role}</span>
+                  </div>
+                  <span className="lp-testimonials__company">{testimonials[activeTestimonial].company}</span>
+                </div>
+              </div>
+              {/* Dots */}
+              <div className="lp-testimonials__dots">
+                {testimonials.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`lp-testimonials__dot ${i === activeTestimonial ? "active" : ""}`}
+                    onClick={() => setActiveTestimonial(i)}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
+            SECTION 6 — EXPERIENCED FREELANCERS
+        ══════════════════════════════════════════ */}
+        <section className="lp-freelancers">
+          <div className="lp-freelancers__inner">
+            {/* Left — Avatar Grid */}
+            <div className="lp-freelancers__avatars">
+              {freelancerAvatars.map((src, i) => (
+                <img key={i} src={src} alt={`Freelancer ${i + 1}`} className="lp-freelancers__avatar" />
+              ))}
+            </div>
+
+            {/* Right — Text */}
+            <div className="lp-freelancers__text">
+              <div className="lp-freelancers__stars">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar key={i} style={{ color: "#f59e0b" }} />
+                ))}
+              </div>
+              <h2 className="lp-freelancers__title">
+                EXPERIENCED<br />FREELANCERS
+              </h2>
+              <p className="lp-freelancers__desc">
+                Experienced freelancers possess a deep understanding of their trade, delivering high-quality work and client satisfaction.
+              </p>
+              <Link to="/projects" className="lp-freelancers__cta">Start Finding</Link>
+            </div>
+          </div>
+          {/* Decorative burst bottom right */}
+          <div className="lp-freelancers__deco"></div>
+        </section>
+
+      </div>
     </Fragment>
   );
 };

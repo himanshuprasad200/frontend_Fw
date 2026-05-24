@@ -1,0 +1,183 @@
+/* UpdateUser.css - Modern Admin UI */
+
+:root {
+  --admin-bg: #f8fafc;
+  --card-bg: #ffffff;
+  --primary-gradient: linear-gradient(135deg, #0ea5e9, #0284c7);
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 85px;
+}
+
+.admin-master {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--admin-bg);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.admin-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 40px;
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-sidebar.collapsed ~ .admin-content {
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+.updateUserContainer {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  max-width: 500px;
+  margin: 40px auto;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.updateUserHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.updateUserHeading {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.updateUserHeader p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.usersCount {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-top: 8px;
+  color: #475569;
+  font-size: 0.8rem;
+}
+
+.updateUserForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.formInputGroup {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+}
+
+.formInputGroup:focus-within {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+}
+
+.formInputGroup svg {
+  color: #0ea5e9;
+  font-size: 1.1rem;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.formInputGroup input,
+.formInputGroup select {
+  border: none;
+  background: transparent;
+  width: 100%;
+  outline: none;
+  font-size: 1rem;
+  color: var(--text-main);
+  font-family: inherit;
+}
+
+.formInputGroup select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0px center;
+  background-size: 1.2rem;
+  padding-right: 2rem;
+}
+
+.updateUserBtn {
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+.updateUserBtn:hover:not(:disabled) {
+  background: #0284c7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.updateUserBtn:disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.formFooter {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.backBtn {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+}
+
+.backBtn:hover {
+  color: #0ea5e9;
+}
+
+@media (max-width: 768px) {
+  .admin-content {
+    margin-left: 0;
+    padding: 20px 15px;
+  }
+  .updateUserContainer {
+    margin: 20px auto;
+    padding: 30px 20px;
+  }
+}
+

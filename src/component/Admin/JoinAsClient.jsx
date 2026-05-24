@@ -147,10 +147,34 @@ const JoinAsClient = () => {
     datasets: [{
       data: bidStats.total > 0 ? [bidStats.approved, bidStats.pending, bidStats.rejected] : [1, 1, 1],
       backgroundColor: bidStats.total > 0 ? ["#10b981", "#f59e0b", "#ef4444"] : ["#e2e8f0", "#e2e8f0", "#e2e8f0"],
-      borderWidth: 4,
-      borderColor: "#fff",
-      hoverOffset: 16,
+      borderWidth: 0,
+      hoverOffset: 10,
     }]
+  };
+
+  const doughnutOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: "75%",
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: {
+          usePointStyle: true,
+          pointStyle: 'circle',
+          padding: 20,
+          font: { size: 12, weight: '500' },
+          color: '#64748b'
+        }
+      },
+      tooltip: {
+        backgroundColor: "rgba(15, 23, 42, 0.95)",
+        padding: 12,
+        cornerRadius: 10,
+        displayColors: false,
+      }
+    }
   };
 
   const chartOptions = {
@@ -160,13 +184,14 @@ const JoinAsClient = () => {
       legend: { display: false },
       tooltip: {
         backgroundColor: "rgba(15, 23, 42, 0.95)",
-        cornerRadius: 12,
+        padding: 12,
+        cornerRadius: 10,
         displayColors: false,
       }
     },
     scales: {
-      y: { ticks: { color: "#64748b" }, grid: { color: "rgba(14, 165, 233, 0.1)" } },
-      x: { ticks: { color: "#64748b" }, grid: { display: false } }
+      y: { ticks: { color: "#64748b", font: { size: 11 } }, grid: { color: "rgba(14, 165, 233, 0.05)" } },
+      x: { ticks: { color: "#64748b", font: { size: 11 } }, grid: { display: false } }
     }
   };
 
@@ -231,34 +256,37 @@ const JoinAsClient = () => {
             </div>
           </div>
 
-          <div className="chart-card">
-            <h3>Projects (Last 6 Months)</h3>
+          <div className="chart-card small">
+            <h3>Projects Activity</h3>
             <div className="chart-wrapper">
               {loading ? <div className="chart-skeleton">Loading...</div> :
                monthlyProjectData.values.some(v => v > 0) ? <Bar data={barData} options={chartOptions} /> :
-               <div className="no-data"><i className="fas fa-chart-bar fa-3x"></i><p>No projects in last 6 months</p></div>
+               <div className="no-data"><i className="fas fa-chart-bar fa-3x"></i><p>No projects yet</p></div>
               }
             </div>
           </div>
 
-          <div className="chart-card">
-            <h3>Bid Status</h3>
+          <div className="chart-card small">
+            <h3>Bid Approval Rate</h3>
             <div className="chart-wrapper doughnut">
               {loading ? <div className="chart-skeleton">Loading...</div> :
-               bidStats.total > 0 ? <Doughnut data={doughnutData} options={{ cutout: "68%" }} /> :
+               bidStats.total > 0 ? <Doughnut data={doughnutData} options={doughnutOptions} /> :
                <div className="no-data"><i className="fas fa-gavel fa-3x"></i><p>No bids yet</p></div>
               }
             </div>
           </div>
         </div>
 
-        <div className="quick-actions">
-          <Link to="/admin/project" className="action-btn primary">Create Project</Link>
-          <Link to="/admin/users" className="action-btn secondary">Manage Users</Link>
+        <div className="dashboard-footer">
+          <div className="quick-actions">
+            <Link to="/admin/project" className="action-btn primary">Create Project</Link>
+            <Link to="/admin/users" className="action-btn secondary">Manage Users</Link>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
 
 export default JoinAsClient;

@@ -4,7 +4,7 @@ import "./Proposal.css";
 import { useDispatch, useSelector } from "react-redux";
 import { createBid, clearErrors } from "../../actions/bidAction";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import toast from "../../utils/CustomToast";
 import Loader from "../layout/Loader/Loader";
 import { CREATE_BID_RESET } from "../../constants/bidConstant";
 
@@ -17,8 +17,8 @@ const Proposal = () => {
   const { isAuthenticated } = useSelector((state) => state.user);
 
   const [proposal, setProposal] = useState("");
-  const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState("No file chosen");
+  const [files, setFiles] = useState([]);
+  const [fileNames, setFileNames] = useState("No files chosen");
 
   // Load selected projects from localStorage
   useEffect(() => {
@@ -58,7 +58,13 @@ const Proposal = () => {
     const formData = new FormData();
     formData.append("proposal", proposal.trim());
     bidItems.forEach((item) => formData.append("bidsItems[]", item.project));
-    if (file) formData.append("file", file);
+    
+    // Append all files
+    if (files.length > 0) {
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
+    }
 
     dispatch(createBid(formData));
   };
@@ -78,8 +84,8 @@ const Proposal = () => {
       dispatch({ type: CREATE_BID_RESET });
 
       setProposal("");
-      setFile(null);
-      setFileName("No file chosen");
+      setFiles([]);
+      setFileNames("No files chosen");
 
       navigate("/success", { state: { bid }, replace: true });
     }
@@ -110,27 +116,29 @@ const Proposal = () => {
 
           <div className="formGroup">
             <label className="formLabel">
-              Attach File <span className="optional">(Optional)</span>
+              Attach Files <span className="optional">(Optional - Max 5MB each)</span>
             </label>
             <div className="fileInputWrapper">
               <input
                 type="file"
                 id="file-upload"
                 className="fileInput"
+                multiple
                 onChange={(e) => {
-                  const f = e.target.files[0];
-                  if (f) {
-                    setFile(f);
-                    setFileName(f.name);
+                  const selectedFiles = Array.from(e.target.files);
+                  if (selectedFiles.length > 0) {
+                    setFiles(selectedFiles);
+                    setFileNames(selectedFiles.map(f => f.name).join(", "));
                   }
                 }}
                 accept="image/*,video/*,.pdf,.doc,.docx"
               />
               <label htmlFor="file-upload" className="fileInputLabel">
-                Choose File
+                Choose Files
               </label>
-              <span className="fileName">{fileName}</span>
+              <span className="fileName">{fileNames}</span>
             </div>
+            <p className="file-info-text">You can attach photos, documents, or screenshots (Multiple allowed)</p>
           </div>
 
           <button

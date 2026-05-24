@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import "./ProjectDetails.css";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import toast from "../../utils/CustomToast";
 import {
   clearErrors,
   getProjectDetails,
@@ -14,33 +14,24 @@ import { NEW_REVIEW_RESET } from "../../constants/projectConstant";
 import Loader from "../layout/Loader/Loader";
 import MetaData from "../layout/MetaData";
 import ReviewCard from "./ReviewCard";
-
-// Reusable Star Rating Component
-const StarRating = ({ rating = 0, onRate, interactive = false, size = "text-2xl" }) => {
-  return (
-    <div className={`flex gap-1 ${interactive ? "cursor-pointer" : ""}`}>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <i
-          key={star}
-          className={`fa-star ${
-            star <= rating ? "fas text-yellow-400" : "far text-gray-300"
-          } ${size} transition-all hover:scale-110`}
-          onClick={() => interactive && onRate(star)}
-          style={{ cursor: interactive ? "pointer" : "default" }}
-        />
-      ))}
-    </div>
-  );
-};
+import { FiClock, FiTag, FiHash, FiMapPin, FiMessageCircle, FiStar, FiChevronRight, FiBriefcase } from "react-icons/fi";
+import { FaComments } from "react-icons/fa";
 
 const ProjectDetails = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { project, loading, error } = useSelector((state) => state.projectDetails);
+  const { project, loading, error, hasApplied } = useSelector((state) => state.projectDetails);
   const { success, error: reviewError } = useSelector((state) => state.newProjectReview);
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+
+  const canChat = isAuthenticated && (
+    hasApplied || 
+    user?.role === "admin" || 
+    user?.role === "superadmin" ||
+    project?.postedBy?._id === user?._id
+  );
 
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -68,7 +59,7 @@ const ProjectDetails = () => {
       return;
     }
     dispatch(addToBidItems(id));
-    toast.success("Project added to your proposal!");
+    toast.success("Project added to your proposals!");
     navigate("/proposal");
   };
 
@@ -89,128 +80,149 @@ const ProjectDetails = () => {
 
   return (
     <>
-      <MetaData title={`${project.title} - FlexiWork`} />
+      <MetaData title={`${project.title} | FlexiWork`} />
 
-      <div className="project-details-container">
-        {/* Breadcrumb */}
-        <div className="breadcrumb">
-          <a href="/projects">Projects</a> › {project.category}
-        </div>
+      <div className="pd-master-layout">
+        {/* Project Hero / Banner */}
+        <section className="pd-hero-section">
+           <img 
+             src={project.images?.[0]?.url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1600"} 
+             className="pd-hero-bg" 
+             alt="Project" 
+           />
+           <div className="pd-hero-overlay"></div>
+           
+           <div className="pd-hero-content">
+             <div className="pd-breadcrumb">
+               <Link to="/projects">Discovery</Link> <FiChevronRight /> <span>{project.category}</span>
+             </div>
+             <h1 className="pd-main-title">{project.title}</h1>
+             <div className="pd-quick-meta">
+               <span className="pd-badge"><FiTag /> {project.category}</span>
+               <span className="pd-badge"><FiHash /> #{id.slice(-6).toUpperCase()}</span>
+               {project.postedBy?.country && <span className="pd-badge"><FiMapPin /> {project.postedBy.country}</span>}
+             </div>
+           </div>
+        </section>
 
-        <div className="project-grid">
-          {/* Main Content */}
-          <div className="main-content">
-            {/* Title & Client */}
-            <div className="project-header">
-              <h1 className="project-title">{project.title}</h1>
-
-              <div className="client-card">
-                <img
-                  src={project.postedBy?.avatar?.url || "/Profile.png"}
-                  alt={project.postedBy?.name}
-                  className="client-avatar"
-                />
-                <div className="client-info">
-                  <h3>{project.postedBy?.name}</h3>
-                  <p>{project.postedBy?.country || "Freelancer"}</p>
-                </div>
-                <div className="client-rating">
-                  <StarRating rating={project.ratings || 0} />
-                  <span className="review-count">({project.numOfReviews} reviews)</span>
-                </div>
-              </div>
+        <div className="pd-content-grid">
+          {/* MAIN COLUMN */}
+          <main className="pd-main-panel">
+            <div className="pd-section">
+               <h2 className="pd-section-title">Project Overview</h2>
+               <p className="pd-description-text">{project.desc}</p>
             </div>
 
-            {/* Project Image */}
-            {project.images?.[0] && (
-              <div className="project-image-wrapper">
-                <img src={project.images[0].url} alt={project.title} className="project-image" />
-              </div>
-            )}
-
-            {/* Description */}
-            <div className="section">
-              <h2>Description</h2>
-              <p className="project-description">{project.desc}</p>
+            <div className="pd-section">
+               <div className="pd-section-header">
+                  <h2 className="pd-section-title">Client Feedback</h2>
+                  <button className="pd-add-review-btn" onClick={() => setShowReviewModal(true)}>
+                    + Share Your Review
+                  </button>
+               </div>
+               
+               {project.reviews?.length > 0 ? (
+                 <div className="pd-reviews-list">
+                    {project.reviews.map((rev) => (
+                      <ReviewCard key={rev._id} review={rev} />
+                    ))}
+                 </div>
+               ) : (
+                 <div className="pd-empty-reviews">
+                   <FiMessageCircle className="empty-icon" />
+                   <p>Be the first to share your experience with this client.</p>
+                 </div>
+               )}
             </div>
+          </main>
 
-            {/* Reviews */}
-            <div className="section">
-              <div className="section-header">
-                <h2>Reviews</h2>
-                <button className="btn-primary" onClick={() => setShowReviewModal(true)}>
-                  Write a Review
+          {/* SIDEBAR COLUMN */}
+          <aside className="pd-sidebar-panel">
+             {/* Sticky Card 1: Pricing & Action */}
+             <div className="pd-action-card">
+                <div className="pd-price-wrap">
+                   <span className="pd-price-label">Project Budget</span>
+                   <strong className="pd-price-value">₹{project.price?.toLocaleString()}</strong>
+                </div>
+                
+                <button 
+                  className={`pd-primary-cta ${hasApplied ? "applied" : ""}`} 
+                  onClick={addToBidHandler}
+                  disabled={hasApplied}
+                >
+                  {hasApplied ? "PROPOSAL SUBMITTED" : "PLACE YOUR BID NOW"}
                 </button>
-              </div>
+                
+                <p className="pd-cta-subtext">Verified Work | Escrow Protected Payment</p>
+             </div>
 
-              {project.reviews?.length > 0 ? (
-                <div className="reviews-list">
-                  {project.reviews.map((review) => (
-                    <ReviewCard key={review._id} review={review} />
-                  ))}
+             {/* Sticky Card 2: Client Profile */}
+             <div className="pd-client-card">
+                <h3 className="pd-sidebar-title">Client Details</h3>
+                <div className="pd-client-main">
+                   {project.postedBy?.avatar?.url ? (
+                     <img src={project.postedBy.avatar.url} className="pd-client-avatar" alt="Client" />
+                   ) : (
+                     <div className="pd-client-initials">
+                        {project.postedBy?.name?.charAt(0).toUpperCase()}
+                     </div>
+                   )}
+                   <div className="pd-client-info">
+                      <h4>{project.postedBy?.name || "Client Name"}</h4>
+                      <div className="pd-client-rating">
+                         <FiStar className="star-icon" /> <span>{project.ratings?.toFixed(1) || "0.0"}</span>
+                         <small>({project.numOfReviews} reviews)</small>
+                      </div>
+                   </div>
                 </div>
-              ) : (
-                <p className="no-reviews">No reviews yet. Be the first!</p>
-              )}
-            </div>
-          </div>
 
-          {/* Sidebar */}
-          <div className="sidebar">
-            <div className="price-card">
-              <h3>Project Budget</h3>
-              <div className="price">₹{project.price?.toLocaleString()}</div>
-              <button className="bid-btn" onClick={addToBidHandler}>
-                Place Your Bid
-              </button>
-            </div>
+                <div className="pd-client-meta-list">
+                   <div className="pd-meta-item">
+                      <FiMapPin /> <span>{project.postedBy?.country || "International"}</span>
+                   </div>
+                   <div className="pd-meta-item">
+                      <FiBriefcase /> <span>Project ID: #{id.slice(-6).toUpperCase()}</span>
+                   </div>
+                </div>
 
-            <div className="info-card">
-              <h3>Project Info</h3>
-              <div className="info-item">
-                <span>Category</span>
-                <strong>{project.category}</strong>
-              </div>
-              <div className="info-item">
-                <span>Posted By</span>
-                <strong>{project.postedBy?.name}</strong>
-              </div>
-              <div className="info-item">
-                <span>Rating</span>
-                <StarRating rating={project.ratings || 0} size="text-lg" />
-              </div>
-            </div>
-
-            <a href="mailto:flexiworkclient@gmail.com" className="contact-btn">
-              Contact Client
-            </a>
-          </div>
+                {canChat ? (
+                  <button className="pd-chat-btn" onClick={() => navigate(`/chat/${project.postedBy?._id}`)}>
+                    <FaComments /> CHAT WITH CLIENT
+                  </button>
+                ) : (
+                  <div className="pd-chat-locked">
+                    <i className="fas fa-lock"></i> Apply to unlock chat
+                  </div>
+                )}
+             </div>
+          </aside>
         </div>
       </div>
 
       {/* Review Modal */}
       {showReviewModal && (
-        <div className="modal-overlay" onClick={() => setShowReviewModal(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h2>Write Your Review</h2>
-            <div className="rating-input">
-              <p>Rate this project:</p>
-              <StarRating rating={rating} onRate={setRating} interactive size="text-5xl" />
-            </div>
-            <textarea
-              placeholder="Share your experience..."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-            <div className="modal-actions">
-              <button className="btn-secondary" onClick={() => setShowReviewModal(false)}>
-                Cancel
-              </button>
-              <button className="btn-primary" onClick={submitReview}>
-                Submit Review
-              </button>
-            </div>
-          </div>
+        <div className="pd-modal-overlay" onClick={() => setShowReviewModal(false)}>
+           <div className="pd-modal-content" onClick={e => e.stopPropagation()}>
+              <h2>Leave a Review</h2>
+              <div className="pd-star-input">
+                {[1, 2, 3, 4, 5].map(s => (
+                  <FiStar 
+                    key={s} 
+                    className={s <= rating ? "pd-star active" : "pd-star"} 
+                    onClick={() => setRating(s)}
+                  />
+                ))}
+              </div>
+              <textarea 
+                placeholder="How was your experience working with this client?" 
+                value={comment}
+                onChange={e => setComment(e.target.value)}
+              />
+              <div className="pd-modal-btns">
+                 <button className="pd-modal-cancel" onClick={() => setShowReviewModal(false)}>Cancel</button>
+                 <button className="pd-modal-submit" onClick={submitReview}>Submit</button>
+              </div>
+           </div>
         </div>
       )}
     </>

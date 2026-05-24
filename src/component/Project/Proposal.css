@@ -93,10 +93,15 @@
 .fileName {
   color: #555;
   font-size: 0.95rem;
-  max-inline-size: 300px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  max-inline-size: 100%;
+  word-break: break-word;
+}
+
+.file-info-text {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-block-start: 0.5rem;
+  font-style: italic;
 }
 
 .submitButton {

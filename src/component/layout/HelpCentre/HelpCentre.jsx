@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaQuestionCircle, FaUser, FaDollarSign, FaShieldAlt, FaHeadset, FaArrowRight, FaExclamationTriangle, FaTools } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { toast } from "../../../utils/CustomToast";
+import { FaSearch, FaQuestionCircle, FaUser, FaDollarSign, FaShieldAlt, FaHeadset, FaArrowRight, FaExclamationTriangle, FaTools, FaClock } from "react-icons/fa";
 import "./HelpCentre.css";
 
 const faqs = [
@@ -46,8 +50,20 @@ const faqs = [
 ];
 
 const HelpCenter = () => {
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(null);
+
+  // Support Modal States
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalSubject, setModalSubject] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setActiveIndex(null);
@@ -55,6 +71,47 @@ const HelpCenter = () => {
 
   const toggleFAQ = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
+  };
+
+  const openSupportModal = (subject) => {
+    setModalSubject(subject);
+    setFormData({
+      name: user?.name || "",
+      email: user?.email || "",
+      message: "",
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleModalSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { data } = await axios.post("/api/v1/support/new", {
+        name: formData.name,
+        email: formData.email,
+        subject: modalSubject,
+        message: formData.message,
+        userId: user?._id,
+      });
+
+      if (data.success) {
+        toast.success(data.message);
+        setIsModalOpen(false);
+        setFormData({ name: "", email: "", message: "" });
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const filteredFaqs = faqs
@@ -87,6 +144,14 @@ const HelpCenter = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
+
+          {isAuthenticated && (
+            <div className="track-queries-cta-hero">
+              <Link to="/support/me" className="track-link-hero">
+                <FaClock /> View & Track Your Submitted Queries
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
@@ -103,13 +168,17 @@ const HelpCenter = () => {
             <FaDollarSign className="category-icon payments" />
             <h3>Payments</h3>
             <p>Earnings, withdrawals, fees & invoices</p>
-            <a href="#payments-earnings">Explore →</a>
+            <button onClick={() => openSupportModal("Payments & Earnings Support")} className="explore-btn">
+              Explore →
+            </button>
           </div>
           <div className="category-cardd">
             <FaExclamationTriangle className="category-icon disputes" />
             <h3>Disputes & Issues</h3>
             <p>Late responses, approvals, disputes</p>
-            <a href="#disputes-late-responses">Explore →</a>
+            <button onClick={() => openSupportModal("Disputes & Late Responses Support")} className="explore-btn">
+              Explore →
+            </button>
           </div>
           <div className="category-cardd">
             <FaTools className="category-icon troubleshooting" />
@@ -174,6 +243,64 @@ const HelpCenter = () => {
           </div>
         </div>
       </div>
+
+      {/* Support Query Modal */}
+      {isModalOpen && (
+        <div className="support-modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="support-modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Submit Support Query</h2>
+              <button className="close-modal-btn" onClick={() => setIsModalOpen(false)}>&times;</button>
+            </div>
+            <div className="modal-subheader">
+              <p>Topic: <strong className="subject-highlight">{modalSubject}</strong></p>
+            </div>
+            <form onSubmit={handleModalSubmit} className="support-modal-form">
+              <div className="form-group">
+                <label>Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter your name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                  disabled={isSubmitting || isAuthenticated}
+                />
+              </div>
+              <div className="form-group">
+                <label>Email Address</label>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                  disabled={isSubmitting || isAuthenticated}
+                />
+              </div>
+              <div className="form-group">
+                <label>Your Message / Query</label>
+                <textarea
+                  placeholder="Explain your payment/earnings or dispute issue here..."
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  required
+                  rows="5"
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="cancel-btn" onClick={() => setIsModalOpen(false)} disabled={isSubmitting}>
+                  Cancel
+                </button>
+                <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                  {isSubmitting ? "Sending Request..." : "Submit Query"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -50,7 +50,7 @@ const Chat = () => {
     }
 
     const socketUrl = window.location.hostname === "localhost"
-      ? "https://backend-i86g.onrender.com"
+      ? "http://localhost:4050"
       : axios.defaults.baseURL || window.location.origin;
 
     socketRef.current = io(socketUrl, {

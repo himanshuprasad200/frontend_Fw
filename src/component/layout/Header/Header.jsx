@@ -127,6 +127,10 @@ const Navbar = () => {
         navigate("/user/earning");
       } else if (notif.type === "bid_applied") {
         navigate(user?.role === "admin" || user?.role === "superadmin" ? "/admin/bids" : "/bids");
+      } else if (notif.type === "support_received") {
+        navigate("/admin/support");
+      } else if (notif.type === "support_updated") {
+        navigate("/support/me");
       } else {
         navigate("/bids");
       }

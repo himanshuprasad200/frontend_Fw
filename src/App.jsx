@@ -33,11 +33,13 @@ import ProcessResponse from "./component/Admin/ProcessResponse";
 import UsersList from "./component/Admin/UsersList";
 import Payment from "./component/Admin/Payment";
 import AdminChats from "./component/Admin/AdminChats";
+import SupportList from "./component/Admin/SupportList";
 
 // Layout & Auth
 import RestrictedAccess from "./component/layout/Restricted/RestrictedAccess";
 import Contact from "./component/layout/Contact/Contact";
 import HelpCenter from "./component/layout/HelpCentre/HelpCentre";
+import TrackSupport from "./component/layout/HelpCentre/TrackSupport";
 
 import ScrollToTop from "./utils/ScrollToTop";
 import NewProject from "./component/Admin/NewProject";
@@ -59,7 +61,7 @@ import { useNavigate } from "react-router-dom";
 // ──────────────────────────────────────────────────────────────
 // SECURE PROTECTED ROUTE – Handles Auth + Admin Role
 // ──────────────────────────────────────────────────────────────
-const ProtectedRoute = ({ children, isAdmin = false }) => {
+const ProtectedRoute = ({ children, isAdmin = false, isSuperAdmin = false }) => {
   const { loading, isAuthenticated, user } = useSelector((state) => state.user);
 
   // Show loader while checking auth
@@ -74,6 +76,11 @@ const ProtectedRoute = ({ children, isAdmin = false }) => {
   // Not logged in → go to login
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Superadmin route but not superadmin → go to unauthorized page
+  if (isSuperAdmin && user?.role !== "superadmin") {
+    return <Navigate to="/unauthorized" replace />;
   }
 
   // Admin route but not admin or superadmin → go to unauthorized page
@@ -94,7 +101,7 @@ function App() {
   useEffect(() => {
     if (isAuthenticated && user) {
       const socketUrl = window.location.hostname === "localhost"
-        ? "https://backend-i86g.onrender.com"
+        ? "http://localhost:4050"
         : axios.defaults.baseURL || window.location.origin;
 
       const socket = io(socketUrl, { withCredentials: true });
@@ -151,6 +158,10 @@ function App() {
                 navigate("/user/earning");
               } else if (data.type === "bid_applied") {
                 navigate(user?.role === "admin" || user?.role === "superadmin" ? "/admin/bids" : "/bids");
+              } else if (data.type === "support_received") {
+                navigate("/admin/support");
+              } else if (data.type === "support_updated") {
+                navigate("/support/me");
               } else {
                 navigate("/bids");
               }
@@ -282,6 +293,14 @@ function App() {
               }
             />
             <Route
+              path="/support/me"
+              element={
+                <ProtectedRoute>
+                  <TrackSupport />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/chat/:id"
               element={
                 <ProtectedRoute>
@@ -377,6 +396,14 @@ function App() {
               element={
                 <ProtectedRoute isAdmin={true}>
                   <ProjectList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/support"
+              element={
+                <ProtectedRoute isSuperAdmin={true}>
+                  <SupportList />
                 </ProtectedRoute>
               }
             />

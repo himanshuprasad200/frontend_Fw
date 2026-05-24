@@ -1,10 +1,12 @@
 // src/component/admin/Sidebar.jsx
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import "./Sidebar.css";
 import Logo from "../layout/Logo/Logo";
 
 const Sidebar = () => {
+  const { user } = useSelector((state) => state.user);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const location = useLocation();
@@ -111,6 +113,19 @@ const Sidebar = () => {
             </div>
             <span className="menu-text">Reviews</span>
           </Link>
+
+          {/* Support Queries (Superadmin only) */}
+          {user?.role === "superadmin" && (
+            <Link
+              to="/admin/support"
+              className={`menu-item ${isActive("/admin/support") ? "active" : ""}`}
+            >
+              <div className="icon-box">
+                <i className="fas fa-headset"></i>
+              </div>
+              <span className="menu-text">Support Queries</span>
+            </Link>
+          )}
         </nav>
 
         {/* Footer */}

@@ -7,12 +7,12 @@ const ReviewCard = ({ review }) => {
     if (!review) return "Unknown date";
     
     let date;
-    if (review.createdAt) {
-      date = new Date(review.createdAt);
-    } else if (review._id && /^[0-9a-fA-F]{24}$/.test(review._id)) {
-      // Extract timestamp from MongoDB ObjectId
+    if (review._id && /^[0-9a-fA-F]{24}$/.test(review._id)) {
+      // Extract timestamp from MongoDB ObjectId (immutable, 100% accurate original date)
       const timestamp = parseInt(review._id.substring(0, 8), 16) * 1000;
       date = new Date(timestamp);
+    } else if (review.createdAt) {
+      date = new Date(review.createdAt);
     }
 
     if (!date || isNaN(date.getTime())) {

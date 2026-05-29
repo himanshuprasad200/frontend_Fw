@@ -6,31 +6,41 @@ import MetaData from "../layout/MetaData";
 import Sidebar from "./Sidebar";
 import { deleteBid, getAllBids, clearErrors } from "../../actions/bidAction";
 import { DELETE_BID_RESET } from "../../constants/bidConstant";
+import { newReviewForUser, clearErrors as clearUserErrors } from "../../actions/userAction";
+import { USER_REVIEW_RESET } from "../../constants/userConstant";
 import "./BidList.css";
 import { 
   FaEdit, FaTrash, FaEye, FaChevronLeft, FaChevronRight, FaTimes, 
   FaCreditCard, FaComments, FaCheckCircle, FaTimesCircle, FaClock,
-  FaExclamationTriangle, FaSpinner
+  FaExclamationTriangle, FaSpinner, FaStar
 } from "react-icons/fa";
 
 const BidList = () => {
   const dispatch = useDispatch();
 
-   const { error, bids } = useSelector((state) => state.allBids);
-   const { loading: isDeleting, error: deleteError, isDeleted } = useSelector((state) => state.bid);
- 
-   const [currentPage, setCurrentPage] = useState(1);
+  const { error, bids } = useSelector((state) => state.allBids);
+  const { loading: isDeleting, error: deleteError, isDeleted } = useSelector((state) => state.bid);
+  const { error: reviewError, success: reviewSuccess, loading: reviewLoading } = useSelector((state) => state.newUserReview);
+
+  const [currentPage, setCurrentPage] = useState(1);
   const bidsPerPage = 8;
   const [statusFilter, setStatusFilter] = useState("All");
 
   // Modal State
-   const [showModal, setShowModal] = useState(false);
-   const [selectedProposal, setSelectedProposal] = useState("");
-   const [selectedBidId, setSelectedBidId] = useState("");
- 
-   // Delete Modal State
-   const [showDeleteModal, setShowDeleteModal] = useState(false);
-   const [bidToDelete, setBidToDelete] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProposal, setSelectedProposal] = useState("");
+  const [selectedBidId, setSelectedBidId] = useState("");
+
+  // Delete Modal State
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [bidToDelete, setBidToDelete] = useState(null);
+
+  // Review Modal State
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [userIdToReview, setUserIdToReview] = useState("");
+  const [reviewBidId, setReviewBidId] = useState("");
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -64,6 +74,28 @@ const BidList = () => {
     setShowModal(true);
   };
 
+  const openReviewModal = (userId, bidId) => {
+    setUserIdToReview(userId);
+    setReviewBidId(bidId);
+    setReviewRating(5);
+    setReviewComment("");
+    setShowReviewModal(true);
+  };
+
+  const submitReviewHandler = (e) => {
+    e.preventDefault();
+    if (!userIdToReview) {
+      toast.error("User ID not found");
+      return;
+    }
+    const myForm = {
+      rating: reviewRating,
+      comment: reviewComment,
+      userId: userIdToReview,
+    };
+    dispatch(newReviewForUser(myForm));
+  };
+
   useEffect(() => {
     if (error) {
        toast.error(error);
@@ -73,13 +105,22 @@ const BidList = () => {
        toast.error(deleteError);
        dispatch(clearErrors());
     }
+    if (reviewError) {
+       toast.error(reviewError);
+       dispatch(clearUserErrors());
+    }
     if (isDeleted) {
        toast.success("Bid Deleted Successfully");
        setCurrentPage(1);
        dispatch({ type: DELETE_BID_RESET });
     }
+    if (reviewSuccess) {
+       toast.success("Review Posted Successfully");
+       setShowReviewModal(false);
+       dispatch({ type: USER_REVIEW_RESET });
+    }
     dispatch(getAllBids());
-  }, [dispatch, error, deleteError, isDeleted]);
+  }, [dispatch, error, deleteError, reviewError, isDeleted, reviewSuccess]);
 
   const filteredBids = bids
     ? bids.filter((bid) => {
@@ -210,6 +251,16 @@ const BidList = () => {
                                 <FaEye />
                               </Link>
 
+                              {bid.response === "Approved" && bid.user?._id && (
+                                <button 
+                                  onClick={() => openReviewModal(bid.user._id, bid._id)} 
+                                  className="bids-btn bids-review" 
+                                  title="Add Review"
+                                >
+                                  <FaStar />
+                                </button>
+                              )}
+
                               <button onClick={() => deleteBidHandler(bid._id)} className="bids-btn bids-delete" title="Delete">
                                 <FaTrash />
                               </button>
@@ -317,6 +368,98 @@ const BidList = () => {
                 )}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Review Modal */}
+      {showReviewModal && (
+        <div className="proposal-modal-overlay" onClick={() => setShowReviewModal(false)}>
+          <div className="proposal-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header" style={{ background: "linear-gradient(135deg, #0ea5e9, #0284c7)" }}>
+              <h3>Post Freelancer Review</h3>
+              <button className="modal-close" onClick={() => setShowReviewModal(false)}>
+                <FaTimes />
+              </button>
+            </div>
+            <form onSubmit={submitReviewHandler}>
+              <div className="modal-body">
+                <p className="modal-bid-id" style={{ marginBottom: "20px" }}>
+                  Rating the freelancer's performance for Bid #{reviewBidId.slice(-8).toUpperCase()}
+                </p>
+                
+                {/* Star Rating Selector */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", marginBottom: "25px" }}>
+                  <label style={{ fontWeight: "700", color: "#475569", fontSize: "0.95rem" }}>Overall Rating</label>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        type="button"
+                        key={star}
+                        onClick={() => setReviewRating(star)}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "2.5rem",
+                          color: star <= reviewRating ? "#eab308" : "#cbd5e1",
+                          transition: "transform 0.1s ease",
+                        }}
+                      >
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                  <span style={{ fontSize: "0.9rem", fontWeight: "600", color: "#64748b" }}>
+                    {reviewRating === 5 ? "Excellent" : reviewRating === 4 ? "Very Good" : reviewRating === 3 ? "Good" : reviewRating === 2 ? "Fair" : "Poor"}
+                  </span>
+                </div>
+
+                {/* Comment Box */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <label htmlFor="review-comment" style={{ fontWeight: "700", color: "#475569", fontSize: "0.95rem" }}>
+                    Your Feedback
+                  </label>
+                  <textarea
+                    id="review-comment"
+                    required
+                    value={reviewComment}
+                    onChange={(e) => setReviewComment(e.target.value)}
+                    placeholder="Describe your experience working with this freelancer..."
+                    style={{
+                      width: "100%",
+                      minHeight: "120px",
+                      padding: "12px",
+                      borderRadius: "12px",
+                      border: "1.5px solid #cbd5e1",
+                      fontFamily: "inherit",
+                      fontSize: "0.95rem",
+                      resize: "vertical",
+                      outline: "none",
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="modal-footer" style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+                <button 
+                  type="button" 
+                  className="modal-close-btn" 
+                  style={{ background: "#cbd5e1", color: "#475569" }}
+                  onClick={() => setShowReviewModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="modal-close-btn"
+                  disabled={reviewLoading}
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  {reviewLoading ? <FaSpinner className="spin" /> : null}
+                  Submit Review
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

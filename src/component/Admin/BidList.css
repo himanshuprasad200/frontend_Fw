@@ -337,6 +337,8 @@
 .bids-edit { background: #f5f3ff; color: #7c3aed; border-color: #ede9fe; }
 .bids-delete { background: #fef2f2; color: #dc2626; border-color: #fee2e2; }
 .bids-view { background: #eff6ff; color: #2563eb; border-color: #dbeafe; }
+.bids-review { background: #fffbeb; color: #d97706; border-color: #fef3c7; }
+.bids-btn.bids-review:hover { background: #fef3c7; color: #b45309; }
 
 .bids-btn:hover {
   transform: translateY(-2px);

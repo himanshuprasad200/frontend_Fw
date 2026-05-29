@@ -3,6 +3,55 @@ import { DEFAULT_AVATAR } from "../../constants/imageConstant";
 import "./ReviewCard.css";
 
 const ReviewCard = ({ review }) => {
+  const getReviewDate = (review) => {
+    if (!review) return "Unknown date";
+    
+    let date;
+    if (review.createdAt) {
+      date = new Date(review.createdAt);
+    } else if (review._id && /^[0-9a-fA-F]{24}$/.test(review._id)) {
+      // Extract timestamp from MongoDB ObjectId
+      const timestamp = parseInt(review._id.substring(0, 8), 16) * 1000;
+      date = new Date(timestamp);
+    }
+
+    if (!date || isNaN(date.getTime())) {
+      return "Some time ago";
+    }
+
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+
+    if (diffInSeconds < 0) {
+      return "just now";
+    }
+
+    if (diffInSeconds < 60) {
+      return "just now";
+    }
+
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes} minute${diffInMinutes === 1 ? "" : "s"} ago`;
+    }
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      return `${diffInHours} hour${diffInHours === 1 ? "" : "s"} ago`;
+    }
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) {
+      return `${diffInDays} day${diffInDays === 1 ? "" : "s"} ago`;
+    }
+
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   const renderStars = (rating = 0) => {
     const rounded = Math.round(rating);
     return Array.from({ length: 5 }, (_, i) => (
@@ -30,7 +79,7 @@ const ReviewCard = ({ review }) => {
           )}
           <div className="mp-meta">
             <h4 className="mp-name">{review?.name || "Anonymous User"}</h4>
-            <span className="mp-time">5 hours ago</span>
+            <span className="mp-time">{getReviewDate(review)}</span>
           </div>
         </div>
         <div className="mp-category-badge">

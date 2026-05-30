@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { FaSearch, FaTimes, FaComments, FaClock, FaUser, FaLock } from "react-icons/fa";
 import Loader from "../layout/Loader/Loader";
 import toast from "../../utils/CustomToast";
+import Avatar from "../layout/Avatar/Avatar";
 
 const AdminChats = () => {
   const [conversations, setConversations] = useState([]);
@@ -141,14 +142,11 @@ const AdminChats = () => {
                     className="chatUserCard"
                   >
                     <div className="chatCardAvatarContainer">
-                      <img
-                        src={conv.user.avatar?.url || "/default-avatar.png"}
-                        alt={conv.user.name}
+                      <Avatar
+                        src={conv.user.avatar?.url}
+                        name={conv.user.name}
+                        size="lg"
                         className="chatUserAvatar"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = "/default-avatar.png";
-                        }}
                       />
                       <span className={`statusDot ${conv.user.role || "user"}`} />
                     </div>

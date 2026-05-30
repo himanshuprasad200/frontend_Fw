@@ -170,11 +170,12 @@
 }
 
 .chatUserAvatar {
-  width: 100%;
-  height: 100%;
-  border-radius: 16px;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 16px !important;
   object-fit: cover;
   border: 2px solid #f1f5f9;
+  font-size: 1rem !important;
 }
 
 .statusDot {

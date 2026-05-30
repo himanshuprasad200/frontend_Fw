@@ -174,11 +174,12 @@
 }
 
 .userAvatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
   object-fit: cover;
   border: 2px solid #f1f5f9;
+  font-size: 0.8rem !important;
 }
 
 /* Text Cells */

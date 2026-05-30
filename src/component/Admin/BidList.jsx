@@ -14,6 +14,7 @@ import {
   FaCreditCard, FaComments, FaCheckCircle, FaTimesCircle, FaClock,
   FaExclamationTriangle, FaSpinner, FaStar
 } from "react-icons/fa";
+import Avatar from "../layout/Avatar/Avatar";
 
 const BidList = () => {
   const dispatch = useDispatch();
@@ -203,19 +204,20 @@ const BidList = () => {
                           <td style={{maxWidth: '180px', fontWeight: '600'}}>
                              {bid.bidsItems?.map(item => item.project?.title).join(', ') || "N/A"}
                           </td>
-                          <td>
-                            <div className="applicant-info">
-                              <img
-                                src={bid.user?.avatar?.url || "/default-avatar.png"}
-                                alt={bid.user?.name}
-                                className="applicant-avatar"
-                              />
-                              <div className="applicant-details">
-                                <span className="applicant-name">{bid.user?.name || "Unknown"}</span>
-                                <span className="applicant-role">{bid.user?.role || "User"}</span>
-                              </div>
-                            </div>
-                          </td>
+                           <td>
+                             <div className="applicant-info">
+                               <Avatar
+                                 src={bid.user?.avatar?.url}
+                                 name={bid.user?.name}
+                                 size="md"
+                                 className="applicant-avatar"
+                               />
+                               <div className="applicant-details">
+                                 <span className="applicant-name">{bid.user?.name || "Unknown"}</span>
+                                 <span className="applicant-role">{bid.user?.role || "User"}</span>
+                               </div>
+                             </div>
+                           </td>
                           <td style={{fontWeight: '700', color: '#1e293b'}}>
                              ₹{bid.bidsItems?.reduce((sum, item) => sum + (item.price || 0), 0).toLocaleString("en-IN")}
                           </td>

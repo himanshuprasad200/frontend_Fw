@@ -1,0 +1,46 @@
+/* Avatar Component Styles */
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Sizes */
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  font-size: 0.65rem;
+}
+
+.avatar-md {
+  width: 40px;
+  height: 40px;
+  font-size: 0.8rem;
+}
+
+.avatar-lg {
+  width: 52px;
+  height: 52px;
+  font-size: 1rem;
+}
+
+.avatar-xl {
+  width: 80px;
+  height: 80px;
+  font-size: 1.5rem;
+}
+
+/* Initials-only variant */
+.avatar-initials {
+  border-radius: 50%;
+  text-transform: uppercase;
+}

@@ -9,6 +9,7 @@ import UserOptions from "./UserOptions";
 import axios from "axios";
 import SearchModal from "../SearchModal/SearchModal";
 import { getCategories } from "../../../actions/userAction";
+import Avatar from "../Avatar/Avatar";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -272,10 +273,11 @@ const Navbar = () => {
                             className="notification-item"
                             onClick={() => handleNotificationClick(notif.senderId)}
                           >
-                            <img 
-                              src={notif.senderAvatar || "/default-avatar.png"} 
-                              alt="avatar" 
-                              className="notif-avatar" 
+                            <Avatar
+                              src={notif.senderAvatar}
+                              name={notif.senderName}
+                              size="sm"
+                              className="notif-avatar"
                             />
                             <div className="notif-content">
                               <p className="notif-name">{notif.senderName}</p>

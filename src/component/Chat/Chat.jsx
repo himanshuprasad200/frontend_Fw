@@ -7,6 +7,7 @@ import "./Chat.css";
 import { FaPaperPlane, FaArrowLeft, FaComments, FaLock, FaCheckDouble, FaImage, FaFileAlt, FaVideo, FaPaperclip, FaTimes } from "react-icons/fa";
 import Loader from "../layout/Loader/Loader";
 import toast from "../../utils/CustomToast";
+import Avatar from "../layout/Avatar/Avatar";
 
 const Chat = () => {
   const { id: targetUserId } = useParams(); // The user to chat with
@@ -185,9 +186,10 @@ const Chat = () => {
           </button>
 
           <div className="targetUserProfile">
-            <img
-              src={targetUser?.avatar?.url || "/default-avatar.png"}
-              alt={targetUser?.name}
+            <Avatar
+              src={targetUser?.avatar?.url}
+              name={targetUser?.name}
+              size="md"
               className="targetUserAvatar"
             />
             <div className="targetUserInfo">

@@ -26,6 +26,7 @@ import {
 } from "react-icons/fa";
 import Loader from "../layout/Loader/Loader";
 import { CREATE_EARNING_RESET } from "../../constants/earningConstant";
+import Avatar from "../layout/Avatar/Avatar";
 
 const ProcessResponse = () => {
   const dispatch = useDispatch();
@@ -135,10 +136,11 @@ const ProcessResponse = () => {
                     <div className="card-header-gradient"></div>
                     <div className="applicant-profile-main">
                       <div className="avatar-wrapper">
-                        <img 
-                          src={bid?.user?.avatar?.url || "/default-avatar.png"} 
-                          alt={bid?.user?.name} 
-                        />
+                         <Avatar
+                           src={bid?.user?.avatar?.url}
+                           name={bid?.user?.name}
+                           size="xl"
+                         />
                       </div>
                       <div className="profile-info">
                         <h3>{bid?.user?.name || "Applicant Name"}</h3>

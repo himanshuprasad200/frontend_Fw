@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAllUsers, clearErrors, deleteUser } from "../../actions/userAction";
 import { DELETE_USER_RESET } from "../../constants/userConstant";
 import { FaSearch, FaTimes, FaEdit, FaTrash, FaCreditCard, FaStar, FaComments, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Avatar from "../layout/Avatar/Avatar";
 
 const UsersList = () => {
   const dispatch = useDispatch();
@@ -126,9 +127,10 @@ const UsersList = () => {
                       {currentUsers.map((user) => (
                         <tr key={user._id}>
                           <td className="tableCell avatar">
-                            <img
-                              src={user.avatar?.url || "/default-avatar.png"}
-                              alt={user.name}
+                            <Avatar
+                              src={user.avatar?.url}
+                              name={user.name}
+                              size="md"
                               className="userAvatar"
                             />
                           </td>

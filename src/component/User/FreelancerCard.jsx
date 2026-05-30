@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./FreelancerCard.css";
 import { FiArrowRight, FiStar, FiUser } from "react-icons/fi";
+import Avatar from "../layout/Avatar/Avatar";
 
 const FreelancerCard = ({ freelancer }) => {
   return (
@@ -9,9 +10,10 @@ const FreelancerCard = ({ freelancer }) => {
       {/* Profile Header */}
       <div className="fc-header">
         <div className="fc-avatar-wrap">
-          <img 
-            src={freelancer.avatar?.url || "/Profile.png"} 
-            alt={freelancer.name} 
+          <Avatar
+            src={freelancer.avatar?.url}
+            name={freelancer.name}
+            size="xl"
             className="fc-avatar"
           />
         </div>

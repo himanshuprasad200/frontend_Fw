@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import toast from "../../utils/CustomToast";
-import profilePng from "../../images/Profile.png";
+import Avatar from "../layout/Avatar/Avatar";
 
 const ReviewCard = ({ review }) => {
   useEffect(() => {
@@ -24,9 +24,10 @@ const ReviewCard = ({ review }) => {
 
   return (
     <div className="userReviewCard">
-      <img
-        src={review.avatar || profilePng}
-        alt="User"
+      <Avatar
+        src={review.avatar}
+        name={review.name}
+        size="md"
         className="review-avatar"
       />
       <p className="review-name">{review.name || "Anonymous"}</p>

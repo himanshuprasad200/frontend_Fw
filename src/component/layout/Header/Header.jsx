@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaSearch, FaBars, FaTimes, FaBell, FaChevronDown, FaArrowRight } from "react-icons/fa";
-import { FiBookmark, FiCheckCircle, FiXCircle, FiDollarSign } from "react-icons/fi";
+import { FiBookmark, FiCheckCircle, FiXCircle, FiDollarSign, FiStar } from "react-icons/fi";
 import "./Header.css";
 import Logo from "../Logo/Logo";
 import { useSelector, useDispatch } from "react-redux";
@@ -132,6 +132,8 @@ const Navbar = () => {
         navigate("/admin/support");
       } else if (notif.type === "support_updated") {
         navigate("/support/me");
+      } else if (notif.type === "review_received") {
+        navigate(`/user/${user?._id}`);
       } else {
         navigate("/bids");
       }
@@ -311,6 +313,7 @@ const Navbar = () => {
                           else if (notif.type === "bid_approved") typeIcon = <FiCheckCircle />;
                           else if (notif.type === "bid_rejected") typeIcon = <FiXCircle />;
                           else if (notif.type === "payment_received") typeIcon = <FiDollarSign />;
+                          else if (notif.type === "review_received") typeIcon = <FiStar />;
 
                           return (
                             <div 

@@ -36,7 +36,7 @@ const BidList = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [bidToDelete, setBidToDelete] = useState(null);
 
-  // Review Modal State
+  // Review Modal State 
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState("");

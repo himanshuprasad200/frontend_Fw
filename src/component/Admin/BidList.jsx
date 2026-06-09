@@ -27,7 +27,7 @@ const BidList = () => {
   const bidsPerPage = 8;
   const [statusFilter, setStatusFilter] = useState("All");
 
-  // Modal State
+  // Modal State 
   const [showModal, setShowModal] = useState(false);
   const [selectedProposal, setSelectedProposal] = useState("");
   const [selectedBidId, setSelectedBidId] = useState("");

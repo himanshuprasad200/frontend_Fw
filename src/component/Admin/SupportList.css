@@ -13,7 +13,7 @@
   margin-left: var(--sidebar-width, 280px);
   transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 100vh;
-  background: #f7f7f5;
+  background: #f2f2f0;
   box-sizing: border-box;
 }
 

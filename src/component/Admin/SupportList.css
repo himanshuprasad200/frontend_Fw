@@ -3,7 +3,7 @@
 .admin-support-layout {
   display: flex;
   min-height: 100vh;
-  background: #f7f7f5; /* Warm off-white theme */
+  background: #f7f7f5; /* Warm off-white theme */ 
   font-family: 'Inter', sans-serif;
 }
 

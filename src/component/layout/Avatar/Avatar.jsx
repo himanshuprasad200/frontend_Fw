@@ -40,7 +40,7 @@ function getColor(name = "") {
 function isValidSrc(src) {
   if (!src) return false;
   if (PLACEHOLDER_URLS.includes(src)) return false;
-  // Must look like a real URL (http/https/cloudinary/etc.)
+  // Must look like a real URL (http/https/cloudinary/etc.) 
   if (!src.startsWith("http") && !src.startsWith("//") && !src.startsWith("blob")) return false;
   return true;
 }

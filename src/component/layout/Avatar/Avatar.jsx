@@ -1,4 +1,4 @@
-// src/component/layout/Avatar/Avatar.jsx
+// src/component/layout/Avatar/Avatar.jsx 
 import React, { useState } from "react";
 import "./Avatar.css";
 

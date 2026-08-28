@@ -15,7 +15,7 @@ import "./Avatar.css";
  *  style     - extra inline styles
  */
 
-// These values indicate "no real upload was made"
+// These values indicate "no real upload was made" 
 const PLACEHOLDER_URLS = ["/Profile.png", "default_avatar", "/default-avatar.png", ""];
 
 const COLORS = [

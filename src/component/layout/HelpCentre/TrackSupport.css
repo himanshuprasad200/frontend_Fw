@@ -61,7 +61,7 @@
   min-height: 350px;
 }
 
-/* Query list & Cards styles */
+/* Query list & Cards styles */ 
 .queries-list {
   display: flex;
   flex-direction: column;
